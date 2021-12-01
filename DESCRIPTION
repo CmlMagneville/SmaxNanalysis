@@ -13,3 +13,5 @@ RoxygenNote: 7.1.2
 Imports: 
     dplyr,
     hms
+URL: https://github.com/CmlMagneville/SmaxNanalysis
+BugReports: https://github.com/CmlMagneville/SmaxNanalysis/issues
