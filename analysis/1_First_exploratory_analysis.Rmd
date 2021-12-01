@@ -1,0 +1,178 @@
+---
+title: "0_First_exploratory_analysis"
+author: "Camille Magneville"
+date: "22/11/2021"
+output: pdf_document
+---
+
+# In this file
+
+* exploratory analysis based using the `SmaxN` package on the 12 cameras from
+Mayotte's campaign annotated by Capucine Brissaud
+
+* Capucine has annotated all individuals from 17 species on the 08/11/2020 for
+short duration (SD) and long duration (LD) cameras on 3 hours corresponding to
+the 3 SD periods
+
+* Using the pre-analysis of Capucine, I will only focus on the 5 species 
+that have been seen most often: *Gomphosus Caeruleus*, *Chaetodon auriga*, 
+*Chaetodon trifasciatus*, *Parapeneus macronemus* and *Thalassoma hardwicke*
+
+* to manipulate the data, I have coded some R functions in the 
+"0_Manipulate_data.R" R script.
+
+
+
+# Read abundance data
+
+
+* First, we need to call the abundance dataframes and collect them in a vector.
+I will create one vector per SD period, thus 3 vectors: 
+
+```{r}
+# Call LD df:
+pres_abs_08_A1 <- readRDS("./data/pres_abs_08_A1.rds")
+pres_abs_08_A2 <- readRDS("./data/pres_abs_08_A2.rds")
+pres_abs_08_B1 <- readRDS("./data/pres_abs_08_B1.rds")
+pres_abs_08_B2 <- readRDS("./data/pres_abs_08_B2.rds")
+pres_abs_08_C1 <- readRDS("./data/pres_abs_08_C1.rds")
+pres_abs_08_C2 <- readRDS("./data/pres_abs_08_C2.rds")
+
+# Call SD df - Pose 1:
+pres_abs_08_camD_Pose_1 <- readRDS("./data/pres_abs_08_camD_08_Pose_1.rds")
+pres_abs_08_camE_Pose_1 <- readRDS("./data/pres_abs_08_camE_08_Pose_1.rds")
+pres_abs_08_camF_Pose_1 <- readRDS("./data/pres_abs_08_camF_08_Pose_1.rds")
+pres_abs_08_camG_Pose_1 <- readRDS("./data/pres_abs_08_camG_08_Pose_1.rds")
+pres_abs_08_camH_Pose_1 <- readRDS("./data/pres_abs_08_camH_08_Pose_1.rds")
+pres_abs_08_camI_Pose_1 <- readRDS("./data/pres_abs_08_camI_08_Pose_1.rds")
+
+# Create the vector for Pose 1 but don't forget to remove the last two columns of each df...
+# ... because it's time and video length:
+list_abund_df_Pose_1 <- list(A1 = pres_abs_08_A1[, !(colnames(pres_abs_08_A1) %in% c("vid_length","time"))], 
+                          A2 = pres_abs_08_A2[, !(colnames(pres_abs_08_A2) %in% c("vid_length","time"))], 
+                          B1 = pres_abs_08_B1[, !(colnames(pres_abs_08_B1) %in% c("vid_length","time"))], 
+                          B2 = pres_abs_08_B2[, !(colnames(pres_abs_08_B2) %in% c("vid_length","time"))], 
+                          C1 = pres_abs_08_C1[, !(colnames(pres_abs_08_C1) %in% c("vid_length","time"))],
+                          C2 = pres_abs_08_C2[, !(colnames(pres_abs_08_C2) %in% c("vid_length","time"))], 
+                          D = pres_abs_08_camD_Pose_1[, !(colnames(pres_abs_08_camD_Pose_1) %in% c("vid_length","time"))], 
+                          E = pres_abs_08_camE_Pose_1[, !(colnames(pres_abs_08_camE_Pose_1) %in% c("vid_length","time"))],
+                          F = pres_abs_08_camF_Pose_1[, !(colnames(pres_abs_08_camF_Pose_1) %in% c("vid_length","time"))], 
+                          G = pres_abs_08_camG_Pose_1[, !(colnames(pres_abs_08_camG_Pose_1) %in% c("vid_length","time"))],
+                          H = pres_abs_08_camH_Pose_1[, !(colnames(pres_abs_08_camH_Pose_1) %in% c("vid_length","time"))], 
+                          I = pres_abs_08_camI_Pose_1[, !(colnames(pres_abs_08_camI_Pose_1) %in% c("vid_length","time"))])
+
+# Call SD df - Pose 2:
+pres_abs_08_camD_Pose_2 <- readRDS("./data/pres_abs_08_camD_08_Pose_2.rds")
+pres_abs_08_camE_Pose_2 <- readRDS("./data/pres_abs_08_camE_08_Pose_2.rds")
+pres_abs_08_camF_Pose_2 <- readRDS("./data/pres_abs_08_camF_08_Pose_2.rds")
+pres_abs_08_camG_Pose_2 <- readRDS("./data/pres_abs_08_camG_08_Pose_2.rds")
+pres_abs_08_camH_Pose_2 <- readRDS("./data/pres_abs_08_camH_08_Pose_2.rds")
+pres_abs_08_camI_Pose_2 <- readRDS("./data/pres_abs_08_camI_08_Pose_2.rds")
+
+# Create the vector for Pose 2 but don't forget to remove the last two columns of each df...
+# ... because it's time and video length:
+list_abund_df_Pose_2 <- list(A1 = pres_abs_08_A1[, !(colnames(pres_abs_08_A1) %in% c("vid_length","time"))], 
+                          A2 = pres_abs_08_A2[, !(colnames(pres_abs_08_A2) %in% c("vid_length","time"))], 
+                          B1 = pres_abs_08_B1[, !(colnames(pres_abs_08_B1) %in% c("vid_length","time"))], 
+                          B2 = pres_abs_08_B2[, !(colnames(pres_abs_08_B2) %in% c("vid_length","time"))], 
+                          C1 = pres_abs_08_C1[, !(colnames(pres_abs_08_C1) %in% c("vid_length","time"))],
+                          C2 = pres_abs_08_C2[, !(colnames(pres_abs_08_C2) %in% c("vid_length","time"))], 
+                          D = pres_abs_08_camD_Pose_2[, !(colnames(pres_abs_08_camD_Pose_2) %in% c("vid_length","time"))], 
+                          E = pres_abs_08_camE_Pose_2[, !(colnames(pres_abs_08_camE_Pose_2) %in% c("vid_length","time"))],
+                          F = pres_abs_08_camF_Pose_2[, !(colnames(pres_abs_08_camF_Pose_2) %in% c("vid_length","time"))], 
+                          G = pres_abs_08_camG_Pose_2[, !(colnames(pres_abs_08_camG_Pose_2) %in% c("vid_length","time"))],
+                          H = pres_abs_08_camH_Pose_2[, !(colnames(pres_abs_08_camH_Pose_2) %in% c("vid_length","time"))], 
+                          I = pres_abs_08_camI_Pose_2[, !(colnames(pres_abs_08_camI_Pose_2) %in% c("vid_length","time"))])
+
+
+# Call SD df - Pose 3:
+pres_abs_08_camD_Pose_3 <- readRDS("./data/pres_abs_08_camD_08_Pose_3.rds")
+pres_abs_08_camE_Pose_3 <- readRDS("./data/pres_abs_08_camE_08_Pose_3.rds")
+pres_abs_08_camF_Pose_3 <- readRDS("./data/pres_abs_08_camF_08_Pose_3.rds")
+pres_abs_08_camG_Pose_3 <- readRDS("./data/pres_abs_08_camG_08_Pose_3.rds")
+pres_abs_08_camH_Pose_3 <- readRDS("./data/pres_abs_08_camH_08_Pose_3.rds")
+pres_abs_08_camI_Pose_3 <- readRDS("./data/pres_abs_08_camI_08_Pose_3.rds")
+
+# Create the vector for Pose 3 but don't forget to remove the last two columns of each df...
+# ... because it's time and video length:
+list_abund_df_Pose_3 <- list(A1 = pres_abs_08_A1[, !(colnames(pres_abs_08_A1) %in% c("vid_length","time"))], 
+                          A2 = pres_abs_08_A2[, !(colnames(pres_abs_08_A2) %in% c("vid_length","time"))], 
+                          B1 = pres_abs_08_B1[, !(colnames(pres_abs_08_B1) %in% c("vid_length","time"))], 
+                          B2 = pres_abs_08_B2[, !(colnames(pres_abs_08_B2) %in% c("vid_length","time"))], 
+                          C1 = pres_abs_08_C1[, !(colnames(pres_abs_08_C1) %in% c("vid_length","time"))],
+                          C2 = pres_abs_08_C2[, !(colnames(pres_abs_08_C2) %in% c("vid_length","time"))], 
+                          D = pres_abs_08_camD_Pose_3[, !(colnames(pres_abs_08_camD_Pose_3) %in% c("vid_length","time"))], 
+                          E = pres_abs_08_camE_Pose_3[, !(colnames(pres_abs_08_camE_Pose_3) %in% c("vid_length","time"))],
+                          F = pres_abs_08_camF_Pose_3[, !(colnames(pres_abs_08_camF_Pose_3) %in% c("vid_length","time"))], 
+                          G = pres_abs_08_camG_Pose_3[, !(colnames(pres_abs_08_camG_Pose_3) %in% c("vid_length","time"))],
+                          H = pres_abs_08_camH_Pose_3[, !(colnames(pres_abs_08_camH_Pose_3) %in% c("vid_length","time"))], 
+                          I = pres_abs_08_camI_Pose_3[, !(colnames(pres_abs_08_camI_Pose_3) %in% c("vid_length","time"))])
+```
+
+
+* Then we have to compute the distance dataframe that gathers distances between the cameras: 
+
+
+**CODE to load the distance dataframe in the same order **
+```{r}
+dist_df <- read.csv("./data/dist_df.csv")
+rownames(dist_df) <- dist_df[, 1]
+dist_df <- dist_df[, -1]
+```
+
+
+* We will have a look at the differences between the different maxN measurments for each species for the 3 SD period (7:30-8:30, 11:30-12:30, 15:30-16:30) using the `SmaxN` package:
+
+**CODE to install the `SmaxN` package:**
+```{r}
+#install the SmaxN package:
+if (!requireNamespace("remotes", quietly = TRUE)) {
+  install.packages("remotes")
+}
+
+## Install < SmaxN > package from GitHub ----
+remotes::install_github("CmlMagneville/SmaxN", build_vignettes = TRUE)
+
+## Call it:
+library(SmaxN)
+```
+
+
+
+# Species 1 - Gomphosus caeruleus
+
+
+* We will create a unique dataframe for *Gomphosus caeruleus* for each SD Pose:
+
+**CODE to compute a unique df containing abundance across cameras for Gomphosus caeruleus**
+```{r}
+# Pose 1:
+GC_Pose1 <- gather.abund.df(list_abund_df = list_abund_df_Pose_1, species_nm = "Gomphosus_caeruleus",
+                            time_start = "07:30:00", time_stop = "08:30:00")
+GC_P1_abund_df <- GC_Pose1$abund_df
+
+# Pose 2:
+GC_Pose2 <- gather.abund.df(list_abund_df = list_abund_df_Pose_2, species_nm = "Gomphosus_caeruleus",
+                            time_start = "11:30:00", time_stop = "12:30:00")
+GC_P2_abund_df <- GC_Pose2$abund_df
+
+# Pose 3:
+## probleme: la camera C1 ne va que jusque 16:25 -> pourquoi? a corriger
+
+```
+
+
+
+* Then we can compute the different abundance metrics, **using 2m/s as the maximal speed** of *Gomphosus caeruleus*:
+
+**CODE to compute abundance metrics**
+```{r}
+# Pose 1:
+GC_P1 <- compute.max.abund(dist_df = dist_df, fish_speed = 2, abund_df   = GC_P1_abund_df)
+
+# Pose 2:
+GC_P2 <- compute.max.abund(dist_df = dist_df, fish_speed = 2, abund_df   = GC_P2_abund_df)
+
+
+```
+
