@@ -1,3 +1,17 @@
+###########################################################################
+##
+## Script to code functions to manipulate df before computing maxN values
+##
+## 1_Manipulate_table_function
+##
+## 11/2021
+##
+## Camille Magneville
+##
+###########################################################################
+
+
+
 #' Create a dataframe with abundance data for different cameras and a given
 #' species
 #'
@@ -82,8 +96,8 @@ gather.abund.df <- function(list_abund_df, species_nm,
   rownames(data) <- rownames(cam_keep[[1]])
 
   # then, if more than one camera (df in cam_keep) to keep:
-  if (length(list_abund_df) > 1) {
-    for (i in c(2:length(list_abund_df))) {
+  if (length(cam_keep) > 1) {
+    for (i in c(2:length(cam_keep))) {
       df <- as.data.frame(cam_keep[[i]][, species_nm])
       rownames(df) <- rownames(cam_keep[[i]])
       data <- dplyr::bind_cols(data, df)
