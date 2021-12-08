@@ -2,7 +2,7 @@
 ##
 ## Script to build df to plot maxN values and plot
 ##
-## 1_Manipulate_table_function
+## 2_Plot_functions.R
 ##
 ## 11/2021
 ##

@@ -2,7 +2,7 @@
 ##
 ## Script to code functions to manipulate df before computing maxN values
 ##
-## 1_Manipulate_table_function
+## 1_Manipulate_table_function.R
 ##
 ## 11/2021
 ##

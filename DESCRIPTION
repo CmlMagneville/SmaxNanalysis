@@ -12,6 +12,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
     dplyr,
-    hms
+    ggplot2,
+    here,
+    hms,
+    SmaxN
 URL: https://github.com/CmlMagneville/SmaxNanalysis
 BugReports: https://github.com/CmlMagneville/SmaxNanalysis/issues
