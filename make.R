@@ -27,6 +27,8 @@ remotes::install_github("CmlMagneville/SmaxN", build_vignettes = TRUE)
 # Load the functions so make them available for use:
 source(here::here("R", "1_Manipulate_table_function.R"))
 source(here::here("R", "2_Plot_functions.R"))
+source(here::here("R", "3_Compute_combinaisons_functions.R"))
+
 
 
 # Run the script for the exercice dplyr:

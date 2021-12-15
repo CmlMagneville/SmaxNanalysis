@@ -15,6 +15,7 @@ Imports:
     ggplot2,
     here,
     hms,
+    rlist,
     SmaxN
 URL: https://github.com/CmlMagneville/SmaxNanalysis
 BugReports: https://github.com/CmlMagneville/SmaxNanalysis/issues
