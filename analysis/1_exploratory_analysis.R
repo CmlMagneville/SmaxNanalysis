@@ -136,7 +136,9 @@ CT_Pose2 <- gather.abund.df(list_abund_df = list_abund_df_Pose_2, species_nm = "
 CT_P2_abund_df <- CT_Pose2$abund_df
 
 # Pose 3:
-## probleme: la camera C1 ne va que jusque 16:25 -> pourquoi? a corriger
+CT_Pose3 <- gather.abund.df(list_abund_df = list_abund_df_Pose_3, species_nm = "Chaetodon_trifasciatus",
+                            time_start = "15:30:00", time_stop = "16:30:00")
+CT_P3_abund_df <- CT_Pose3$abund_df
 
 
 # Then we can compute the different abundance metrics, **using 2m/s as the maximal speed** of *Chaetodon trifasciatus*:
@@ -144,13 +146,15 @@ CT_P2_abund_df <- CT_Pose2$abund_df
 # Pose 1:
 CT_P1 <- SmaxN::compute.max.abund(dist_df = dist_df, fish_speed = 2, abund_df   = CT_P1_abund_df)
 
-# Pose 2:
+# Pose 2: remove camD from dist_df because CT is not seen during Pose 2 on camD
 CT_P2 <- SmaxN::compute.max.abund(dist_df = dist_df[-6, -6], fish_speed = 2, abund_df   = CT_P2_abund_df)
 
+# Pose 3:
+CT_P3 <- SmaxN::compute.max.abund(dist_df = dist_df, fish_speed = 2, abund_df   = CT_P3_abund_df)
 
 # Then we can prepare data to do the plot:
 
-maxN_plot_df <- prepare.maxN.plot(list_maxN  = c(CT_P1, CT_P2),
+maxN_plot_df <- prepare.maxN.plot(list_maxN  = c(CT_P1, CT_P2, CT_P3),
                                   indices_nm = c("maxN_cam", "maxN",
                                                  "SmaxN", "SmaxN_row"))
 

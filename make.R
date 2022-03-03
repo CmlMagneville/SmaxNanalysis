@@ -30,8 +30,15 @@ source(here::here("R", "2_Plot_functions.R"))
 source(here::here("R", "3_Compute_combinaisons_functions.R"))
 
 
+## Load the analysis scripts:
 
-# Run the script for the exercice dplyr:
+
+# 1 - Exploratory analysis: Compute the different metrics and plot for C. trifasciatus:
 source(here::here("analysis", "1_exploratory_analysis.R"))
+
+# 2 -
+
+
+
 
 
