@@ -1,6 +1,7 @@
 ###########################################################################
 ##
 ## Script to code functions to manipulate df before computing maxN values
+## and automoatize the computation of df for all/some species
 ##
 ## 1_Manipulate_table_function.R
 ##
@@ -111,5 +112,82 @@ gather.abund.df <- function(list_abund_df, species_nm,
   ## 4 - Return
   return(list(abund_df = data,
               cam_nm = names(cam_keep)))
+
+}
+
+
+
+#' Automatise the computation of abundance df for each Pose for a given
+#' set of species
+#'
+#' This function computes a list of abundance dataframe for the different
+#' Poses for a given set of species or all species
+#'
+#' @param abund_allposes_list a list containing the three dataframes of the
+#' three poses
+#'
+#' @param species_set a vector containing the name of species for which
+#' dataframes must be retrieved
+#'
+#' @return the function returns a list for each species of list containing the
+#' three df for the given species and the three poses
+#'
+
+automat.abund.df <- function(abund_allposes_list,
+                             species_set) {
+
+
+
+  # create a list that will contain the abundance df for all species for all poses:
+  abund_allsp_list <- list()
+
+  # loop on the species:
+  for (j in sp_set) {
+
+    # create a list that will contain the df for the 3 poses of the given sp:
+    sp_list <- list()
+
+    # loop on the different poses:
+    for (i in (1:length(abund_allposes_list))) {
+
+      # get the list for the given pose:
+      abund_list <- abund_allposes_list[[i]]
+
+      # check that species is present during the given pose:
+      if (j %in% colnames(abund_list[[1]])) {
+
+        # if first Pose:
+        if (i == 1) {
+          abund_gather <- gather.abund.df(list_abund_df = abund_list, species_nm = j,
+                                          time_start = "07:30:00", time_stop = "08:30:00")
+          abund_df1 <- abund_gather$abund_df
+        }
+
+        # if second Pose:
+        if (i == 2) {
+          abund_gather <- gather.abund.df(list_abund_df = abund_list, species_nm = j,
+                                          time_start = "11:30:00", time_stop = "12:30:00")
+          abund_df2 <- abund_gather$abund_df
+        }
+
+        # if third Pose:
+        if (i == 3) {
+          abund_gather <- gather.abund.df(list_abund_df = abund_list, species_nm = j,
+                                          time_start = "15:30:00", time_stop = "16:30:00")
+          abund_df3 <- abund_gather$abund_df
+        }
+
+      }
+
+      # update the species list with the df of the 3 poses:
+      sp_list <- list(abund_df1, abund_df2, abund_df3)
+
+      # update the global list:
+      abund_allsp_list[[j]] <-  sp_list
+    }
+  }
+
+  # return the global list of abundance df:
+  return(abund_allsp_list)
 
 }
