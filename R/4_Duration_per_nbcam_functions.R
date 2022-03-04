@@ -3,7 +3,7 @@
 ## Scripts to compute and plot the number of seconds each species spend in front a
 ## different number of cameras
 ##
-## 4_Duration_per_nbcam.R
+## 4_Duration_per_nbcam_functions.R
 ##
 ## 03/03/2022
 ##
