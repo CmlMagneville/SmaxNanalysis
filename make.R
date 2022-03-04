@@ -28,6 +28,7 @@ remotes::install_github("CmlMagneville/SmaxN", build_vignettes = TRUE)
 source(here::here("R", "1_Manipulate_table_function.R"))
 source(here::here("R", "2_Plot_functions.R"))
 source(here::here("R", "3_Compute_combinaisons_functions.R"))
+source(here::here("R", "4_Compute_duration_per_nbcam.R"))
 
 
 ## Load the analysis scripts:
