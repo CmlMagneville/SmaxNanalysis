@@ -26,9 +26,9 @@ remotes::install_github("CmlMagneville/SmaxN", build_vignettes = TRUE)
 
 # Load the functions so make them available for use:
 source(here::here("R", "1_Manipulate_table_function.R"))
-source(here::here("R", "2_Plot_functions.R"))
+source(here::here("R", "2_Plot_maxN_functions.R"))
 source(here::here("R", "3_Compute_combinaisons_functions.R"))
-source(here::here("R", "4_Compute_duration_per_nbcam.R"))
+source(here::here("R", "4_Duration_per_nbcam_functions.R"))
 
 
 ## Load the analysis scripts:
@@ -37,7 +37,12 @@ source(here::here("R", "4_Compute_duration_per_nbcam.R"))
 # 1 - Exploratory analysis: Compute the different metrics and plot for C. trifasciatus:
 source(here::here("analysis", "1_exploratory_analysis.R"))
 
-# 2 -
+# 2 - Plot the duration of presence of species in front on different cameras simulteaneously:
+source(here::here("analysis", "2_Plot_duration_nb_cam_analysis.R"))
+
+
+
+
 
 
 
