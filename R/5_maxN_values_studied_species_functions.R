@@ -47,7 +47,7 @@
 #'
 
 
-automat.maxN.setsp <- function(species_set, abund_list, dist_sp, fish_speed) {
+automat.maxN.setsp <- function(species_set, abund_list, dist_df, fish_speed) {
 
   # restrict the abund_list to the studied species:
   clean_abund_list <- abund_list[which(names(abund_list) %in% species_set)]
@@ -110,4 +110,111 @@ automat.maxN.setsp <- function(species_set, abund_list, dist_sp, fish_speed) {
 }
 
 
+#' Create the plot showing delta between maxN values for a set of species
+#'
+#' This function computes a plot showing SmaxN, maxN, SmaxN_row (values on y)
+#' for a given set of species (x) and the three poses (several colors)
+#' and save the plot in outputs folder
+#'
+#' @param maxN_all a dataframe containing all maxN values, deltas, species
+#' names and poses (obtained from automat.maxN.setsp() function)
+#'
+#' @param colors a vector containiing the different colors for the three poses
+#'
+#' @return a ggplot2 plot showing delta1 = SmaxN - maxN and
+#' delta2 = SmaxN - SmaxN_row (values on y) for a set of species (x) and the
+#' different poses and different facets for deltas
+#'
+#' @export
+#'
+
+
+deltas.plot <- function(maxN_all, colors) {
+
+  # factorise poses:
+  maxN_all$pose_nb <- as.factor(maxN_all$pose_nb)
+
+  # factorise species:
+  maxN_all$species_nm <- as.factor(maxN_all$species_nm)
+
+  # compute deltas:
+  maxN_all$delta_SmaxN_maxN <- maxN_all$SmaxN - maxN_all$maxN
+  maxN_all$delta_SmaxN_SmaxNrow <- maxN_all$SmaxN - maxN_all$SmaxN_row
+
+
+  # plot for delta 1:
+  plot_delta1 <- ggplot2::ggplot(data = maxN_all,
+                                 ggplot2::aes(x = species_nm, y = delta_SmaxN_maxN)) +
+
+    ggplot2::geom_jitter(ggplot2::aes(fill = pose_nb, colour = pose_nb),
+                        shape = 21, size = 2.5,
+                        width = 0.15,
+                        height = 0) +
+
+    ggplot2::scale_fill_manual(values = colors,
+                               name = "Pose number") +
+
+    ggplot2::scale_colour_manual(values = colors,
+                               name = "Pose number") +
+
+    ggplot2::scale_alpha_manual(labels = NULL) +
+
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+                 panel.background = ggplot2::element_rect(fill = "white",
+                                                          colour = "grey"),
+                 panel.grid.major = ggplot2::element_line(colour = "grey")) +
+
+  ggplot2::xlab("Species name") +
+
+  ggplot2::ylab("Delta 1 = SmaxN - maxN")
+
+
+  # plot for delta 2:
+  plot_delta2 <- ggplot2::ggplot(data = maxN_all,
+                                 ggplot2::aes(x = species_nm, y = delta_SmaxN_SmaxNrow)) +
+
+    ggplot2::geom_jitter(ggplot2::aes(fill = pose_nb, colour = pose_nb),
+                         shape = 21, size = 2.5,
+                         width = 0.15,
+                         height = 0) +
+
+    ggplot2::scale_fill_manual(values = colors,
+                               name = "Pose number") +
+
+    ggplot2::scale_colour_manual(values = colors,
+                                 name = "Pose number") +
+
+    ggplot2::scale_alpha_manual(labels = NULL) +
+
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+                   panel.background = ggplot2::element_rect(fill = "white",
+                                                            colour = "grey"),
+                   panel.grid.major = ggplot2::element_line(colour = "grey")) +
+
+    ggplot2::xlab("Species name") +
+
+    ggplot2::ylab("Delta 2 = SmaxN - SmaxN_row")
+
+  # gather the two plots using patchwork:
+  patchwork_plot <- plot_delta1 + plot_delta2 +
+    patchwork::plot_layout(byrow = TRUE, ncol = 2, nrow = 1,
+                           guides = "collect")
+
+
+  # save in outputs:
+  # save the plot in the outputs folder:
+  ggplot2::ggsave(filename = here::here("outputs/2_Deltas_maxN.pdf"),
+                  plot = patchwork_plot,
+                  device = "pdf",
+                  scale = 1,
+                  height = 4000,
+                  width = 7500,
+                  units = "px",
+                  dpi = 600)
+
+  # return the plot:
+  return(patchwork_plot)
+
+
+}
 
