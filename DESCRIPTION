@@ -16,6 +16,7 @@ Imports:
     here,
     hms,
     magrittr,
+    patchwork,
     rlist,
     SmaxN,
     tibble
