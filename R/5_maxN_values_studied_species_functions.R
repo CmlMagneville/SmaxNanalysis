@@ -16,8 +16,7 @@
 #' the three poses
 #'
 #' This function computes a dataframes containing maxN,SmaxN, maxN_row,
-#' delta1 = SmaxN - maxN, delta2 = SmaxN - SmaxN_row for a given set of
-#' species and the three poses
+#' for a given set of species and the three poses
 #'
 #' @param species_set a vector containing the latin name of the studied species
 #' given with no space but underscore "_" between Genera and Species names
@@ -38,8 +37,8 @@
 #'  to say if the camera pooling is done at the second level),
 #'  \code{fish_speed = NULL}
 #'
-#' @return a dataframe with seven columns: maxN,SmaxN, maxN_row,
-#' delta1 = SmaxN - maxN, delta2 = SmaxN - SmaxN_row, Species_nm, Poses
+#' @return a dataframe with five columns: maxN,SmaxN, maxN_row,
+#' Species_nm, Poses
 #'
 #' @importFrom magrittr %>%
 #'
