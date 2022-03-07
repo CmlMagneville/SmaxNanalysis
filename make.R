@@ -30,6 +30,7 @@ source(here::here("R", "2_Plot_maxN_functions.R"))
 source(here::here("R", "3_Compute_combinaisons_functions.R"))
 source(here::here("R", "4_Duration_per_nbcam_functions.R"))
 source(here::here("R", "5_maxN_values_studied_species_functions.R"))
+source(here::here("R", "6_SmaxN_3h_across_camnb_functions.R"))
 
 ## Load the analysis scripts:
 
@@ -42,6 +43,9 @@ source(here::here("analysis", "2_Plot_duration_nb_cam_analysis.R"))
 
 # 3 - Plot the deltas between Smaxn & maxN and between SmaxN & SmaxN_row:
 source(here::here("analysis", "3_maxN_values_delta_analysis.R"))
+
+# 4 - Plot the evolution of SmaxN according to increasing nb of cameras:
+source(here::here("analysis", "4_SmaxN_increasing_nbcam_analysis.R"))
 
 
 
