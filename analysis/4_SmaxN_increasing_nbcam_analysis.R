@@ -44,7 +44,13 @@ abund_cam_allposes_list <- create.abundlist.allcam.poses(cam_set = cam_set,
 # create a list of abund df for each combination of the cameras ...
 # ... with all poses fusionned in one df:
 abund_combcam_allposes_list <- create.abund.list.camcombn(cam_set = cam_set,
-                                       abund_cam_allposes_list = abund_cam_allposes_list )
+                                       abund_cam_allposes_list = abund_cam_allposes_list)
+
+
+# create the df for plot:
+maxN_combcam <- compute.maxN.combcam(abund_combcam_list = abund_combcam_allposes_list,
+                                 dist_df = dist_df,
+                                 fish_speed = 2)
 
 
 
