@@ -45,6 +45,7 @@ source(here::here("analysis", "2_Plot_duration_nb_cam_analysis.R"))
 source(here::here("analysis", "3_maxN_values_delta_analysis.R"))
 
 # 4 - Plot the evolution of SmaxN according to increasing nb of cameras:
+# ... Note: take so long (8h) to be compute maxN for combinaisons!
 source(here::here("analysis", "4_SmaxN_increasing_nbcam_analysis.R"))
 
 
