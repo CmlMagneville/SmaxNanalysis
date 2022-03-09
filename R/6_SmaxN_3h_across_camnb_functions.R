@@ -166,7 +166,7 @@ create.abund.list.camcombn <- function(cam_set,
     # loop on the different combinations:
     for (j in (1:length(comb_cam))) {
 
-      print(paste0("Combination", sep = " ", 1, sep = " ", "starts"))
+      print(paste0("Combination", sep = " ", j, sep = " ", "starts"))
 
 
       # get the names of the camera(s) for the studied combination:
@@ -242,58 +242,62 @@ compute.maxN.combcam <- function(abund_combcam_list,
                                  dist_df,
                                  fish_speed) {
 
+
   # create a dataframe which will cintain maxN values for all sp:
-  maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
-  colnames(maxN_all) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_row")
+  maxN_all <- as.data.frame(matrix(ncol = 6, nrow = 1))
+  colnames(maxN_all) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
 
 
   # loop on species:
-  for (i in (1:length(clean_abund_list))) {
+  for (i in (1:length(abund_combcam_list))) {
 
-    print(paste0(names(clean_abund_list[i]), sep = " ", "starts"))
+    print(paste0(names(abund_combcam_list[i]), sep = " ", "starts"))
 
 
     # create a dataframe which will contain maxN data for the studied sp:
-    maxN_sp <- as.data.frame(matrix(ncol = 5, nrow = 1))
-    colnames(maxN_sp) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_row")
+    maxN_sp <- as.data.frame(matrix(ncol = 6, nrow = 1))
+    colnames(maxN_sp) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
 
-    # loop on the different poses:
-    for (j in (1:length(clean_abund_list[[i]]))) {
+    # loop on the different combinaisons:
+    for (j in (1:length(abund_combcam_list[[i]]))) {
 
-      print(paste0("Pose", sep = " ", j, p = " ", "starts"))
+      print(paste0("Combinaison", sep = " ", j, p = " ", "starts"))
 
 
-      # compute maxN values (be cereful that dist_df has the right nb columns):
-      maxN_data <- SmaxN::compute.max.abund(dist_df = dist_df[which(rownames(dist_df) %in% colnames(clean_abund_list[[i]][[j]])),
-                                                              which(colnames(dist_df) %in% colnames(clean_abund_list[[i]][[j]]))],
+      # compute maxN values (be careful that dist_df has the right nb columns):
+      data_dist <- as.data.frame(dist_df[which(rownames(dist_df) %in% colnames(abund_combcam_list[[i]][[j]])),
+                                         which(colnames(dist_df) %in% colnames(abund_combcam_list[[i]][[j]]))])
+      colnames(data_dist) <- colnames(abund_combcam_list[[i]][[j]])
+      rownames(data_dist) <- colnames(abund_combcam_list[[i]][[j]])
+      maxN_data <- SmaxN::compute.max.abund(dist_df = data_dist,
                                             fish_speed = fish_speed,
-                                            abund_df = clean_abund_list[[i]][[j]])
+                                            abund_df = abund_combcam_list[[i]][[j]])
+
 
       # put maxN values in the maxN_sp df:
-      new_row <- tibble::tibble(species_nm = names(clean_abund_list[i]),
-                                pose_nb = j,
+      new_row <- tibble::tibble(species_nm = names(abund_combcam_list[i]),
+                                cam_nb = length(names(abund_combcam_list[[i]][[j]])),
+                                comb_nm = paste(names(abund_combcam_list[[i]][[j]]), collapse = '_'),
                                 maxN = maxN_data$maxN,
                                 SmaxN = maxN_data$SmaxN,
                                 SmaxN_row = maxN_data$SmaxN_row)
       maxN_sp <- dplyr::add_row(maxN_sp, new_row)
 
-      print(paste0("Pose", sep = " ", j, p = " ", "ends"))
+      print(paste0("Combinaison", sep = " ", j, p = " ", "ends"))
 
 
     }
 
     maxN_all <- dplyr::bind_rows(maxN_all, maxN_sp)
 
-    print(paste0(names(clean_abund_list[i]), sep = " ", "ends"))
+    print(paste0(names(abund_combcam_list[i]), sep = " ", "ends"))
 
   }
 
+  # save the maxN_all df:
+  saveRDS(maxN_all, here::here("transformed_data", "maxN_combcam.rds"))
 
-
-
-
-
-
-
+  # return
+  return(maxN_all)
 
 }
