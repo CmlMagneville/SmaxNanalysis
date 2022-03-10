@@ -301,3 +301,97 @@ compute.maxN.combcam <- function(abund_combcam_list,
   return(maxN_all)
 
 }
+
+
+
+#' Create the plot showing SmaxN values for an increasing number of cameras
+#'
+#' This function computes plots showing SmaxN and maxN values across an
+#' increasing number of cameras for 3h for each species (one plot = one sp)
+#'
+#' @param maxN_combcam a dataframe containing all maxN values, deltas, species
+#' names and poses (obtained from automat.maxN.setsp() function)
+#'
+#' @param colors a vector containing the different colors for SmaxN and maxN
+#'
+#' @return a ggplot2 object showing the plots of SmaxN and maxN for each
+#' species and this plot is saved as pdf in the output folder
+#'
+#' @export
+#'
+
+
+
+combcam.plot <- function(maxN_combcam, colors, alpha, shape, size) {
+
+  # numerise cameras:
+  maxN_combcam$cam_nb <- as.numeric(maxN_combcam$cam_nb)
+
+  # remove NA rows:
+  maxN_combcam <- maxN_combcam[which(! is.na(maxN_combcam$species_nm)), ]
+
+  # make in long format:
+  long_maxN_combcam <- reshape2::melt(maxN_combcam[, - ncol(maxN_combcam)],
+                                      id.vars = c("species_nm", "cam_nb", "comb_nm"),
+                                      variable.name = 'metric', value.name = 'values')
+
+
+  # plot:
+  plot_combcam <- ggplot2::ggplot(data = long_maxN_combcam) +
+
+    ggplot2::geom_point(ggplot2::aes(x = cam_nb, y = values, colour = metric,
+                                     fill = metric, alpha = metric, shape = metric,
+                                     size = metric)) +
+
+    ggplot2::geom_smooth(ggplot2::aes(x = cam_nb, y = values, colour = metric,
+                                      fill = metric),
+                         method = "loess", show.legend = FALSE) +
+
+
+    ggplot2::scale_fill_manual(values = colors,
+                               name = "Metric") +
+
+    ggplot2::scale_colour_manual(values = colors,
+                                 name = "Metric") +
+
+    ggplot2::scale_alpha_manual(values = alpha,
+                                labels = NULL) +
+
+    ggplot2::scale_shape_manual(values = shape,
+                                name = "Metric") +
+
+    ggplot2::scale_size_manual(values = size,
+                              name = "Metric") +
+
+    ggplot2::scale_x_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+
+    ggplot2::facet_wrap(~ species_nm, ncol = 3) +
+
+    ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
+                                                            colour = "grey"),
+                   panel.grid.major = ggplot2::element_line(colour = "grey")) +
+
+    ggplot2::guides(colour = "none", alpha = "none", size = "none") +
+
+    ggplot2::xlab("Camera number") +
+
+    ggplot2::ylab("SmaxN vs maxN")
+
+
+
+  # save in outputs:
+  # save the plot in the outputs folder:
+  ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam.pdf"),
+                  plot = plot_combcam,
+                  device = "pdf",
+                  scale = 1,
+                  height = 5000,
+                  width = 9000,
+                  units = "px",
+                  dpi = 600)
+
+  # return the plot:
+  return(plot_combcam)
+
+
+}
