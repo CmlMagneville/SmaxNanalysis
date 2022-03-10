@@ -47,11 +47,28 @@ abund_combcam_allposes_list <- create.abund.list.camcombn(cam_set = cam_set,
                                        abund_cam_allposes_list = abund_cam_allposes_list)
 
 
-# create the df for plot:
-maxN_combcam <- compute.maxN.combcam(abund_combcam_list = abund_combcam_allposes_list,
-                                 dist_df = dist_df,
-                                 fish_speed = 2)
+# create the df for plot (really long process so uncomment if want to run again):
+# maxN_combcam <- compute.maxN.combcam(abund_combcam_list = abund_combcam_allposes_list,
+#                                 dist_df = dist_df,
+#                                 fish_speed = 2)
 
 
 
 ## 2 - Plot ####
+
+
+## Load data:
+maxN_combcam <- readRDS(here::here("transformed_data", "maxN_combcam.rds"))
+
+
+## Plot:
+colors <- c("gray86", "#66c2a5")
+alpha <- c(1, 1)
+shape <- c(22, 21)
+size <- c(2, 1)
+
+combcam_plot <- combcam.plot(maxN_combcam = maxN_combcam,
+                             colors = colors,
+                             alpha = alpha,
+                             shape = shape,
+                             size = size)
