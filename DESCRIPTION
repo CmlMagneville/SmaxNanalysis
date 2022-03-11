@@ -19,6 +19,7 @@ Imports:
     patchwork,
     rlist,
     SmaxN,
+    stringr,
     tibble
 URL: https://github.com/CmlMagneville/SmaxNanalysis
 BugReports: https://github.com/CmlMagneville/SmaxNanalysis/issues

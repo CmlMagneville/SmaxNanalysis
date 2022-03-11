@@ -230,6 +230,12 @@ create.abund.list.camcombn <- function(cam_set,
 #'  to say if the camera pooling is done at the second level),
 #'  \code{fish_speed = NULL}
 #'
+#' @param analysis_type type of analysis to do
+#' as this function can be used either for the combination of camera analysis
+#' or for the timespan analysis. Can be either "combcam" for
+#' the analysis of camera combination or "timespan" for the
+#' analysis of timespans.
+#'
 #' @return a dataframe containing for each combination of cameras, maxN values
 #'
 #' @importFrom magrittr %>%
@@ -240,12 +246,20 @@ create.abund.list.camcombn <- function(cam_set,
 
 compute.maxN.combcam <- function(abund_combcam_list,
                                  dist_df,
-                                 fish_speed) {
+                                 fish_speed,
+                                 analysis_type) {
 
 
   # create a dataframe which will cintain maxN values for all sp:
   maxN_all <- as.data.frame(matrix(ncol = 6, nrow = 1))
-  colnames(maxN_all) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
+
+  if (analysis_type == "combcam") {
+    colnames(maxN_all) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
+  }
+
+  if (analysis_type == "timespan") {
+    colnames(maxN_all) <- c("species_nm", "time_span", "pose_nb", "maxN", "SmaxN", "SmaxN_row")
+  }
 
 
   # loop on species:
@@ -256,7 +270,14 @@ compute.maxN.combcam <- function(abund_combcam_list,
 
     # create a dataframe which will contain maxN data for the studied sp:
     maxN_sp <- as.data.frame(matrix(ncol = 6, nrow = 1))
-    colnames(maxN_sp) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
+
+    if (analysis_type == "combcam") {
+      colnames(maxN_sp) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
+    }
+
+    if (analysis_type == "timespan") {
+      colnames(maxN_sp) <- c("species_nm", "time_span", "pose_nb", "maxN", "SmaxN", "SmaxN_row")
+    }
 
     # loop on the different combinaisons:
     for (j in (1:length(abund_combcam_list[[i]]))) {
@@ -275,12 +296,24 @@ compute.maxN.combcam <- function(abund_combcam_list,
 
 
       # put maxN values in the maxN_sp df:
-      new_row <- tibble::tibble(species_nm = names(abund_combcam_list[i]),
-                                cam_nb = length(names(abund_combcam_list[[i]][[j]])),
-                                comb_nm = paste(names(abund_combcam_list[[i]][[j]]), collapse = '_'),
-                                maxN = maxN_data$maxN,
-                                SmaxN = maxN_data$SmaxN,
-                                SmaxN_row = maxN_data$SmaxN_row)
+      if (analysis_type == "combcam") {
+        new_row <- tibble::tibble(species_nm = names(abund_combcam_list[i]),
+                                  cam_nb = length(names(abund_combcam_list[[i]][[j]])),
+                                  comb_nm = paste(names(abund_combcam_list[[i]][[j]]), collapse = '_'),
+                                  maxN = maxN_data$maxN,
+                                  SmaxN = maxN_data$SmaxN,
+                                  SmaxN_row = maxN_data$SmaxN_row)
+      }
+
+      if (analysis_type == "timespan") {
+        new_row <- tibble::tibble(species_nm = names(abund_combcam_list[i]),
+                                  time_span = stringr::str_sub(names(abund_combcam_list[[i]])[j], 1, 4),
+                                  pose_nb = stringr::str_sub(names(abund_combcam_list[[i]])[j], -2, -1),
+                                  maxN = maxN_data$maxN,
+                                  SmaxN = maxN_data$SmaxN,
+                                  SmaxN_row = maxN_data$SmaxN_row)
+      }
+
       maxN_sp <- dplyr::add_row(maxN_sp, new_row)
 
       print(paste0("Combinaison", sep = " ", j, p = " ", "ends"))
@@ -295,7 +328,12 @@ compute.maxN.combcam <- function(abund_combcam_list,
   }
 
   # save the maxN_all df:
-  saveRDS(maxN_all, here::here("transformed_data", "maxN_combcam.rds"))
+  if (analysis_type == "combcam") {
+    saveRDS(maxN_all, here::here("transformed_data", "maxN_combcam.rds"))
+  }
+  if (analysis_type == "timespan") {
+    saveRDS(maxN_all, here::here("transformed_data", "maxN_timespans.rds"))
+  }
 
   # return
   return(maxN_all)

@@ -50,7 +50,8 @@ abund_combcam_allposes_list <- create.abund.list.camcombn(cam_set = cam_set,
 # create the df for plot (really long process so uncomment if want to run again):
 # maxN_combcam <- compute.maxN.combcam(abund_combcam_list = abund_combcam_allposes_list,
 #                                 dist_df = dist_df,
-#                                 fish_speed = 2)
+#                                 fish_speed = 2,
+#                                 analysis_type = "combcam")
 
 
 
