@@ -31,6 +31,7 @@ source(here::here("R", "3_Compute_combinaisons_functions.R"))
 source(here::here("R", "4_Duration_per_nbcam_functions.R"))
 source(here::here("R", "5_maxN_values_studied_species_functions.R"))
 source(here::here("R", "6_SmaxN_3h_across_camnb_functions.R"))
+source(here::here("R", "7_SmaxN_time_functions.R"))
 
 ## Load the analysis scripts:
 
@@ -48,6 +49,10 @@ source(here::here("analysis", "3_maxN_values_delta_analysis.R"))
 # ... Note: take so long (8h) to be compute maxN for combinaisons so ...
 # ... associated lines are commented: uncomment if want to run again
 source(here::here("analysis", "4_SmaxN_increasing_nbcam_analysis.R"))
+
+# 5 - Plot the evolution of SmaxN and maxN to increasing amount of time:
+source(here::here("analysis", "5_SmaxN_increasing_timespan_analysis.R"))
+
 
 
 
