@@ -145,8 +145,15 @@ create.abund.list.timespan <- function(spans_set,
 
 timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
 
-  # remove "_" from the time spans and numerise:
-  # how to do it?
+  # remove the "_" in the pose_nb and timespans columns:
+  maxN_timespans$time_span <- gsub("_", "", as.character(maxN_timespans$time_span))
+  maxN_timespans$pose_nb <- gsub("_", "", as.character(maxN_timespans$pose_nb))
+
+  # pose_nb as factor:
+  maxN_timespans$pose_nb <- as.factor(maxN_timespans$pose_nb)
+
+  # timespan as numeric:
+  maxN_timespans$time_span <- as.numeric(maxN_timespans$time_span)
 
   # remove NA rows:
   maxN_timespans <- maxN_timespans[which(! is.na(maxN_timespans$species_nm)), ]
@@ -157,17 +164,20 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
                                       variable.name = 'metric', value.name = 'values')
 
 
-  # plot JE ME SUIS ARRETE ICI:
-  plot_combcam <- ggplot2::ggplot(data = long_maxN_combcam) +
+  # plot:
+  plot_timespan <- ggplot2::ggplot(data = long_maxN_timespans) +
 
-    ggplot2::geom_point(ggplot2::aes(x = cam_nb, y = values, colour = metric,
-                                     fill = metric, alpha = metric, shape = metric,
-                                     size = metric)) +
+    ggplot2::geom_point(ggplot2::aes(x = time_span, y = values), alpha = 0) +
 
-    ggplot2::geom_smooth(ggplot2::aes(x = cam_nb, y = values, colour = metric,
+    ggplot2::geom_smooth(ggplot2::aes(x = time_span, y = values, colour = metric,
                                       fill = metric),
                          method = "loess", show.legend = FALSE) +
 
+    # ggplot2::geom_jitter(ggplot2::aes(x = time_span, y = values, colour = metric,
+    #                                  fill = metric, alpha = metric, shape = metric,
+    #                                  size = metric),
+    #                      width = 100,
+    #                      height = 0) +
 
     ggplot2::scale_fill_manual(values = colors,
                                name = "Metric") +
@@ -184,17 +194,19 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
     ggplot2::scale_size_manual(values = size,
                                name = "Metric") +
 
-    ggplot2::scale_x_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+    ggplot2::scale_x_continuous(breaks = c(600, 1200, 1800, 2400, 3000, 3600)) +
+
+    ggplot2::scale_y_continuous(breaks = c(1:10)) +
 
     ggplot2::facet_wrap(~ species_nm, ncol = 3) +
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
-                                                            colour = "grey"),
-                   panel.grid.major = ggplot2::element_line(colour = "grey")) +
+                                                            colour = "grey80"),
+                   panel.grid.major = ggplot2::element_line(colour = "grey80")) +
 
     ggplot2::guides(colour = "none", alpha = "none", size = "none") +
 
-    ggplot2::xlab("Camera number") +
+    ggplot2::xlab("Recording time (s)") +
 
     ggplot2::ylab("SmaxN vs maxN")
 
@@ -202,8 +214,8 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
 
   # save in outputs:
   # save the plot in the outputs folder:
-  ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam.pdf"),
-                  plot = plot_combcam,
+  ggplot2::ggsave(filename = here::here("outputs/4_maxN_timespans.pdf"),
+                  plot = plot_timespan,
                   device = "pdf",
                   scale = 1,
                   height = 5000,

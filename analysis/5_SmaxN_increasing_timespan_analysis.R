@@ -47,7 +47,15 @@ maxN_timespans <- compute.maxN.combcam(abund_combcam_list = abund_time_list,
 
 # 3 - Plot ####
 
+colors <- c("gray85", "#66c2a5")
+alpha <- c(1, 1)
+shape <- c(22, 21)
+size <- c(2, 1)
 
-
-
+# plot and save in trasformed data forlder:
+plot_time <- timespans.plot(maxN_timespans = maxN_timespans,
+                            colors = colors,
+                            alpha = alpha,
+                            shape = shape,
+                            size = size)
 
