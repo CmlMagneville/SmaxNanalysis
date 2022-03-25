@@ -142,7 +142,7 @@ automat.abund.df <- function(abund_allposes_list,
   abund_allsp_list <- list()
 
   # loop on the species:
-  for (j in sp_set) {
+  for (j in species_set) {
 
     # create a list that will contain the df for the 3 poses of the given sp:
     sp_list <- list()

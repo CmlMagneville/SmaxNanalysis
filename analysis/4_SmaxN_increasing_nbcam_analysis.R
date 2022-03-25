@@ -32,26 +32,29 @@ cam_set <- c("A1", "A2", "B1", "B2", "C1", "C2",
              "D", "E", "F", "G", "H", "I")
 
 
-# create a list of abund df with all poses fusioned in one df and ...
-# ... 12 number of cameras (even if the species is not seen by several cam ...
-# ... during a given pose, the abund df has 12 columns):
+# create a list of abund df with all cameras (12) (even if the species ...
+# ... is not seen by several cam thus the abund df has 12 columns).
+# ... the list is build as follow:
+# ... species 1
+# ... _______ species 1 pose 1
+# ... _______ species 1 pose 2
+# ... _______ species 1 pose 3
 
-abund_cam_allposes_list <- create.abundlist.allcam.poses(cam_set = cam_set,
+abund_allcam_list <- create.abundlist.allcam.poses(cam_set = cam_set,
                                                    species_set = species_set,
                                                    abund_list = abund_list)
 
 
-# create a list of abund df for each combination of the cameras ...
-# ... with all poses fusionned in one df:
-abund_combcam_allposes_list <- create.abund.list.camcombn(cam_set = cam_set,
-                                       abund_cam_allposes_list = abund_cam_allposes_list)
+# create a list of abund df for each combination of the cameras:
+abund_combcam_list <- create.abund.list.camcombn(cam_set = cam_set,
+                                       abund_allcam_list = abund_allcam_list)
 
 
 # create the df for plot (really long process so uncomment if want to run again):
-# maxN_combcam <- compute.maxN.combcam(abund_combcam_list = abund_combcam_allposes_list,
-#                                 dist_df = dist_df,
-#                                 fish_speed = 2,
-#                                 analysis_type = "combcam")
+maxN_combcam <- final.combcam(abund_combcam_list = abund_combcam_list,
+                              dist_df = dist_df,
+                              fish_speed = 1,
+                              analysis_type = "combcam")
 
 
 
