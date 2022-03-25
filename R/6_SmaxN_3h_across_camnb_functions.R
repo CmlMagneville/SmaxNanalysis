@@ -242,8 +242,8 @@ create.abund.list.camcombn <- function(cam_set,
   names(final_list) <- c("Pose1", "Pose2", "Pose3")
 
   # save the final_list which contains abundance data for each species ...
-  # ... for each camera:
-  saveRDS(final_list, here::here("transformed_data", "abund_list_camcomnb.rds"))
+  # ... for each camera: NO BECAUSE TO HEAVY TO GO ON GITHUB
+  # saveRDS(final_list, here::here("transformed_data", "abund_list_camcomnb.rds"))
 
   # return:
   return(final_list)

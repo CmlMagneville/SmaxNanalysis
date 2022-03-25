@@ -45,7 +45,10 @@ abund_allcam_list <- create.abundlist.allcam.poses(cam_set = cam_set,
                                                    abund_list = abund_list)
 
 
-# create a list of abund df for each combination of the cameras:
+# create a list of abund df for each combination of the cameras BUT ...
+# ... : But this list is to heavy to be saved on Github so must run ...
+# ... this step and the next one only once and the dataframe from the next ...
+# ... step will be saved.
 abund_combcam_list <- create.abund.list.camcombn(cam_set = cam_set,
                                        abund_allcam_list = abund_allcam_list)
 
