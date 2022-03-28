@@ -478,7 +478,7 @@ final.combcam <- function(abund_combcam_list, dist_df,
 
 
   # bind the three df:
-  final_combcam <- bind_rows(combcam_pose1_final, combcam_pose2_final,
+  final_combcam <- dplyr::bind_rows(combcam_pose1_final, combcam_pose2_final,
                              combcam_pose3_final)
 
 
@@ -515,13 +515,28 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size) {
   # numerise cameras:
   maxN_combcam$cam_nb <- as.numeric(maxN_combcam$cam_nb)
 
+  # factorise pose_nb:
+  maxN_combcam$Pose_nb <- as.factor(maxN_combcam$Pose_nb)
+
   # remove NA rows:
   maxN_combcam <- maxN_combcam[which(! is.na(maxN_combcam$species_nm)), ]
 
   # make in long format:
-  long_maxN_combcam <- reshape2::melt(maxN_combcam[, - ncol(maxN_combcam)],
-                                      id.vars = c("species_nm", "cam_nb", "comb_nm"),
+  long_maxN_combcam <- reshape2::melt(maxN_combcam[, - (ncol(maxN_combcam) - 1)],
+                                      id.vars = c("species_nm", "cam_nb", "comb_nm", "Pose_nb"),
                                       variable.name = 'metric', value.name = 'values')
+
+  # create a list of new labels for species:
+  sp_labs <- c("C. auriga", "C. trifasciatus", "G. caeruleus",
+               "O. longirostris", "P. hexophtalma",
+               "P. macronemus", "T. hardwicke")
+  names(sp_labs) <- c("Chaetodon_auriga", "Chaetodon_trifasciatus", "Gomphosus_caeruleus",
+                      "Oxymonacanthus_longirostris", "Parapercis_hexophtalma",
+                      "Parupeneus_macronemus", "Thalassoma_hardwicke")
+
+  # create a list of new labels for poses:
+  pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
+  names(pose_labs) <- c("Pose_1", "Pose_2", "Pose_3")
 
 
   # plot:
@@ -553,11 +568,15 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size) {
 
     ggplot2::scale_x_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
 
-    ggplot2::facet_wrap(~ species_nm, ncol = 3) +
+    ggplot2::facet_grid(cols = ggplot2::vars(Pose_nb),
+                        rows = ggplot2::vars(species_nm),
+                        labeller = ggplot2::labeller(species_nm = sp_labs,
+                                                     Pose_nb = pose_labs)) +
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey"),
-                   panel.grid.major = ggplot2::element_line(colour = "grey")) +
+                   panel.grid.major = ggplot2::element_line(colour = "grey"),
+                   strip.text.y = ggplot2::element_text(size = 8)) +
 
     ggplot2::guides(colour = "none", alpha = "none", size = "none") +
 
@@ -569,12 +588,12 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size) {
 
   # save in outputs:
   # save the plot in the outputs folder:
-  ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam.pdf"),
+  ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam_vers2.pdf"),
                   plot = plot_combcam,
                   device = "pdf",
                   scale = 1,
                   height = 5000,
-                  width = 9000,
+                  width = 8000,
                   units = "px",
                   dpi = 600)
 
