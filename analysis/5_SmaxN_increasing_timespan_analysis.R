@@ -15,8 +15,8 @@
 
 ## 1 - Load data ####
 
-# Load abundance data all poses melted:
-abund_list <- readRDS(here::here("transformed_data", "abund_list_fusionposes_allcam.rds"))
+# abundance data:
+abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
 
 # Load distance data (dist between the cameras):
 dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
@@ -29,11 +29,34 @@ dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
 # Get the timespans to work on:
 spans_set <- c(600, 1200, 1800, 2400, 3000, 3600)
 
+# get the names of species which are of interest:
+species_set <- c("Gomphosus_caeruleus", "Parupeneus_macronemus",
+                 "Chaetodon_auriga", "Parapercis_hexophtalma",
+                 "Chaetodon_trifasciatus", "Thalassoma_hardwicke",
+                 "Oxymonacanthus_longirostris")
+
+# get the names of cameras for which combinaisns must be computed:
+cam_set <- c("A1", "A2", "B1", "B2", "C1", "C2",
+             "D", "E", "F", "G", "H", "I")
+
+
+# Get the list of abundance df for each pose and each species with all cam:
+abund_allcam_list <- create.abundlist.allcam.poses(cam_set = cam_set,
+                                                   species_set = species_set,
+                                                   abund_list = abund_list)
+
+
 # Get the list of abundance data with each element is a list for a given ...
 # ... species of all abundance dataframes with more or less rows ie ...
 # ... more or less minutes:
-abund_time_list <- create.abund.list.timespan(spans_set = spans_set,
-                                       abund_cam_allposes_list = abund_list)
+# abund_time_list <- create.abund.list.timespan(spans_set = spans_set,
+#                                        abund_cam_allposes_list = abund_list)
+
+
+# Create a list of abund df for each timespan BUT ...
+# ... : But this list is to heavy to be saved on Github so must run ...
+# ... this step and the next one only once and the dataframe from the next ...
+# ... step will be saved.
 
 
 # Compute maxN values for each timespan using combcam function because ...

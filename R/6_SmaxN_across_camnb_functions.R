@@ -3,7 +3,7 @@
 ## Script to prepare data and plot the evolution of SmaxN across an increasing
 ## number of cameras for the three poses altogether(3h timespan)
 ##
-## 6_SmaxN_3h_across_camnb_functions.R
+## 6_SmaxN_across_camnb_functions.R
 ##
 ## 07/03/2022
 ##
