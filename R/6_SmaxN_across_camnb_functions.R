@@ -297,14 +297,16 @@ compute.maxN.combcam <- function(abund_combcam_list,
 
 
   # create a dataframe which will cintain maxN values for all sp:
-  maxN_all <- as.data.frame(matrix(ncol = 6, nrow = 1))
+
 
   if (analysis_type == "combcam") {
+    maxN_all <- as.data.frame(matrix(ncol = 6, nrow = 1))
     colnames(maxN_all) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
   }
 
   if (analysis_type == "timespan") {
-    colnames(maxN_all) <- c("species_nm", "time_span", "pose_nb", "maxN", "SmaxN", "SmaxN_row")
+    maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
+    colnames(maxN_all) <- c("species_nm", "time_span", "maxN", "SmaxN", "SmaxN_row")
   }
 
 
@@ -315,14 +317,15 @@ compute.maxN.combcam <- function(abund_combcam_list,
 
 
     # create a dataframe which will contain maxN data for the studied sp:
-    maxN_sp <- as.data.frame(matrix(ncol = 6, nrow = 1))
 
     if (analysis_type == "combcam") {
+      maxN_sp <- as.data.frame(matrix(ncol = 6, nrow = 1))
       colnames(maxN_sp) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
     }
 
     if (analysis_type == "timespan") {
-      colnames(maxN_sp) <- c("species_nm", "time_span", "pose_nb", "maxN", "SmaxN", "SmaxN_row")
+      maxN_sp <- as.data.frame(matrix(ncol = 5, nrow = 1))
+      colnames(maxN_sp) <- c("species_nm", "time_span", "maxN", "SmaxN", "SmaxN_row")
     }
 
     # loop on the different combinaisons:
@@ -354,7 +357,6 @@ compute.maxN.combcam <- function(abund_combcam_list,
       if (analysis_type == "timespan") {
         new_row <- tibble::tibble(species_nm = names(abund_combcam_list[i]),
                                   time_span = stringr::str_sub(names(abund_combcam_list[[i]])[j], 1, 4),
-                                  pose_nb = stringr::str_sub(names(abund_combcam_list[[i]])[j], -2, -1),
                                   maxN = maxN_data$maxN,
                                   SmaxN = maxN_data$SmaxN,
                                   SmaxN_row = maxN_data$SmaxN_row)
@@ -441,7 +443,7 @@ final.combcam <- function(abund_combcam_list, dist_df,
       combcam_pose1 <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list[[n]],
                                            dist_df = dist_df,
                                            fish_speed = fish_speed,
-                                           analysis_type = "combcam")
+                                           analysis_type = analysis_type)
     }
 
     #  if pose 2:
@@ -449,15 +451,15 @@ final.combcam <- function(abund_combcam_list, dist_df,
       combcam_pose2 <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list[[n]],
                                             dist_df = dist_df,
                                             fish_speed = fish_speed,
-                                            analysis_type = "combcam")
+                                            analysis_type = analysis_type)
     }
 
-    #  if pose 2:
+    #  if pose 3:
     if (n == 3) {
       combcam_pose3 <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list[[n]],
                                             dist_df = dist_df,
                                             fish_speed = fish_speed,
-                                            analysis_type = "combcam")
+                                            analysis_type = analysis_type)
     }
 
   } # end loop on the 3 poses

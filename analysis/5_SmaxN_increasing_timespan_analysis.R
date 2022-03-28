@@ -49,22 +49,16 @@ abund_allcam_list <- create.abundlist.allcam.poses(cam_set = cam_set,
 # Get the list of abundance data with each element is a list for a given ...
 # ... species of all abundance dataframes with more or less rows ie ...
 # ... more or less minutes:
-# abund_time_list <- create.abund.list.timespan(spans_set = spans_set,
-#                                        abund_cam_allposes_list = abund_list)
-
-
-# Create a list of abund df for each timespan BUT ...
-# ... : But this list is to heavy to be saved on Github so must run ...
-# ... this step and the next one only once and the dataframe from the next ...
-# ... step will be saved.
-
+abund_time_list <- create.abund.list.timespan(spans_set = spans_set,
+                                       abund_allcam_list = abund_allcam_list)
 
 # Compute maxN values for each timespan using combcam function because ...
 # ... works the same :
-maxN_timespans <- compute.maxN.combcam(abund_combcam_list = abund_time_list,
-                                       dist_df = dist_df,
-                                       fish_speed = 2,
-                                       analysis_type = "timespan")
+maxN_timespans <-  final.combcam(abund_combcam_list = abund_time_list,
+                                 dist_df = dist_df,
+                                 fish_speed = 1,
+                                 analysis_type = "timespan")
+
 
 
 

@@ -35,92 +35,109 @@
 
 
 create.abund.list.timespan <- function(spans_set,
-                                       abund_cam_allposes_list) {
+                                       abund_allcam_list) {
 
 
 
-  # create the abundance list which will contain for each species ...
-  # ... one df per studied tiemspan:
-  abund_list_final <- list()
+  # create the abundance lists which will contain for each species ...
+  # ... one df per studied tiemspan, for each pose:
+  abund_list_final_pose1 <- list()
+  abund_list_final_pose2 <- list()
+  abund_list_final_pose3 <- list()
 
 
   # for all species:
-  for (i in (1:length(abund_cam_allposes_list))) {
+  for (i in (1:length(abund_allcam_list))) {
 
 
     # create a list that will contain new abundance data for each species:
     abund_time_sp_list <- list()
 
+    # create a list that will contain the df for the studied species:
+    # ... one for each pose:
+    final_sp_list_pose1 <- list()
+    final_sp_list_pose2 <- list()
+    final_sp_list_pose3 <- list()
 
-    # create three df refering each to one pose and gather them in a list:
-    pose <- abund_cam_allposes_list[[i]]
-    pose1 <- pose[which(rownames(pose) %in% as.character(hms::as_hms(c(hms::as_hms("07:30:00"):hms::as_hms("08:30:00"))))), ]
-    pose2 <- pose[which(rownames(pose) %in% as.character(hms::as_hms(c(hms::as_hms("11:30:00"):hms::as_hms("12:30:00"))))), ]
-    pose3 <- pose[which(rownames(pose) %in% as.character(hms::as_hms(c(hms::as_hms("15:30:00"):hms::as_hms("16:30:00"))))), ]
-    pose_abund_list <- list(pose1, pose2, pose3)
 
-    # loop on the three poses (as the timespan can not be within two poses ...
-    # ... ex 5 minutes in Pose1 and 5 minutes in Pose2):
-    for (j in (1:length(pose_abund_list))) {
+    # loop on the three poses:
+    for (k in (1:length(abund_allcam_list[[i]]))) {
 
-      # create a counter that will give a unique id nb to each abundance df ...
-      # ... for each pose_timespan_rep (pose1_10min_rep1 -> 1, pose 1_10min_rep2 -> id2)
-      id <- 1
+      # retrieve the studied abundance df (for the studied species and pose):
+      data <- abund_allcam_list[[i]][[k]]
 
 
       # loop on the timespans:
-      for (k in (1:length(spans_set))) {
+      for (t in (1:length(spans_set))) {
 
 
           # get the first n rows of the abundance data:
-          n <- spans_set[k]
-          data <- pose_abund_list[[j]]
+          n <- spans_set[t]
           data_span <- data[c(1:n), ]
 
-          # store it in the new abundance list:
-          abund_time_sp_list <- rlist::list.append(abund_time_sp_list, data_span)
 
-          # rename the element with timespan and repetition info:
-          names(abund_time_sp_list)[length(abund_time_sp_list)] <- paste0(n, sep = "_",
-                                                                              "pose", sep ="", j,
-                                                                              sep = "_", id)
-
-          # remove the first n rows from the abundance data:
-          data <- data[-c(1:n), ]
-
-          # update id value
-          id <- id + 1
-
-          # then, while there is enough rows in the abund df, continue to store ...
-          # ... abund df for the studied timespan:
-          while(nrow(data) >= n) {
-
-            data_span <- data[c(1:n), ]
-            abund_time_sp_list <- rlist::list.append(abund_time_sp_list, data_span)
-            names(abund_time_sp_list)[length(abund_time_sp_list)] <- paste0(n, sep = "_",
-                                                                                "pose", sep ="", j,
-                                                                                sep = "_", id)
-            data <- data[-c(1:n), ]
-            id <- id +1
-
+          # store the new df with only interested rows in the pose list:
+          # if pose 1:
+          if (k == 1) {
+            final_sp_list_pose1 <- rlist::list.append(final_sp_list_pose1, data_span)
+            names(final_sp_list_pose1)[length(final_sp_list_pose1)] <- n
           }
 
+          # if pose 2:
+          if (k == 2) {
+            final_sp_list_pose2 <- rlist::list.append(final_sp_list_pose2, data_span)
+            names(final_sp_list_pose2)[length(final_sp_list_pose2)] <- n
+          }
+
+          # if pose 3:
+          if (k == 3) {
+            final_sp_list_pose3 <- rlist::list.append(final_sp_list_pose3, data_span)
+            names(final_sp_list_pose2)[length(final_sp_list_pose2)] <- n
+          }
 
       } # end loop on timepans
 
+
+      # add the list of the given species to the final list according to the ...
+      # ... pose number:
+
+      # if pose 1:
+      if (k == 1) {
+        abund_list_final_pose1 <- rlist::list.append(abund_list_final_pose1, final_sp_list_pose1)
+        # rename with species name:
+        names(abund_list_final_pose1)[i] <- names(abund_allcam_list)[i]
+      }
+
+      # if pose 2:
+      if (k == 2) {
+        abund_list_final_pose2 <- rlist::list.append(abund_list_final_pose2, final_sp_list_pose2)
+        # rename with species name:
+        names(abund_list_final_pose2)[i] <- names(abund_allcam_list)[i]
+      }
+
+      # if pose 3:
+      if (k == 3) {
+        abund_list_final_pose3 <- rlist::list.append(abund_list_final_pose3, final_sp_list_pose3)
+        # rename with species name:
+        names(abund_list_final_pose3)[i] <- names(abund_allcam_list)[i]
+      }
+
+      print(paste0(k, sep = " ", "ends"))
+
+
     } # end loop on poses
 
-    # add the abund list of the species to the final abund list:
-    abund_list_final <- rlist::list.append(abund_list_final, abund_time_sp_list)
-    names(abund_list_final)[length(abund_list_final)] <- names(abund_cam_allposes_list)[i]
+    # create a list of poses list:
+    final_list <- list(abund_list_final_pose1, abund_list_final_pose2, abund_list_final_pose3)
+    names(final_list) <- c("Pose1", "Pose2", "Pose3")
 
   } # end loop on species
 
   # save the final df in transformed_data folder
-  saveRDS(abund_list_final, here::here("transformed_data", "abund_list_timespans.rds"))
+  saveRDS(final_list, here::here("transformed_data", "abund_list_timespans.rds"))
 
   # return the final abund list:
-  return(abund_list_final)
+  return(final_list)
 
 }
 
