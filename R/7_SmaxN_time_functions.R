@@ -92,7 +92,7 @@ create.abund.list.timespan <- function(spans_set,
           # if pose 3:
           if (k == 3) {
             final_sp_list_pose3 <- rlist::list.append(final_sp_list_pose3, data_span)
-            names(final_sp_list_pose2)[length(final_sp_list_pose2)] <- n
+            names(final_sp_list_pose3)[length(final_sp_list_pose3)] <- n
           }
 
       } # end loop on timepans
@@ -160,14 +160,14 @@ create.abund.list.timespan <- function(spans_set,
 #' @export
 #'
 
-timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
+timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size) {
 
   # remove the "_" in the pose_nb and timespans columns:
   maxN_timespans$time_span <- gsub("_", "", as.character(maxN_timespans$time_span))
-  maxN_timespans$pose_nb <- gsub("_", "", as.character(maxN_timespans$pose_nb))
+  maxN_timespans$Pose_nb <- gsub("_", "", as.character(maxN_timespans$Pose_nb))
 
   # pose_nb as factor:
-  maxN_timespans$pose_nb <- as.factor(maxN_timespans$pose_nb)
+  maxN_timespans$Pose_nb <- as.factor(maxN_timespans$Pose_nb)
 
   # timespan as numeric:
   maxN_timespans$time_span <- as.numeric(maxN_timespans$time_span)
@@ -176,25 +176,39 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
   maxN_timespans <- maxN_timespans[which(! is.na(maxN_timespans$species_nm)), ]
 
   # make in long format:
-  long_maxN_timespans <- reshape2::melt(maxN_timespans[, - ncol(maxN_timespans)],
-                                      id.vars = c("species_nm", "time_span", "pose_nb"),
+  long_maxN_timespans <- reshape2::melt(maxN_timespans[, - (ncol(maxN_timespans) - 1)],
+                                      id.vars = c("species_nm", "time_span", "Pose_nb"),
                                       variable.name = 'metric', value.name = 'values')
+
+  # create a list of new labels for species:
+  sp_labs <- c("C. auriga", "C. trifasciatus", "G. caeruleus",
+               "O. longirostris", "P. hexophtalma",
+               "P. macronemus", "T. hardwicke")
+  names(sp_labs) <- c("Chaetodon_auriga", "Chaetodon_trifasciatus", "Gomphosus_caeruleus",
+                      "Oxymonacanthus_longirostris", "Parapercis_hexophtalma",
+                      "Parupeneus_macronemus", "Thalassoma_hardwicke")
+
 
 
   # plot:
   plot_timespan <- ggplot2::ggplot(data = long_maxN_timespans) +
 
-    ggplot2::geom_point(ggplot2::aes(x = time_span, y = values), alpha = 0) +
+     # ggplot2::geom_point(ggplot2::aes(x = time_span, y = values, colour = Pose_nb,
+     #                                  shape = metric),
+     #                                  fill = NA, show.legend = FALSE) +
+
 
     ggplot2::geom_smooth(ggplot2::aes(x = time_span, y = values, colour = metric,
-                                      fill = metric),
-                         method = "loess", show.legend = FALSE) +
+                                       fill = metric),
+                          method = "loess", show.legend = FALSE) +
 
-    # ggplot2::geom_jitter(ggplot2::aes(x = time_span, y = values, colour = metric,
-    #                                  fill = metric, alpha = metric, shape = metric,
-    #                                  size = metric),
-    #                      width = 100,
-    #                      height = 0) +
+
+    ggplot2::geom_jitter(ggplot2::aes(x = time_span, y = values, colour = metric,
+                                      fill =  metric, alpha =  metric, shape = Pose_nb,
+                                      size = metric),
+                         width = 80,
+                         height = 0) +
+
 
     ggplot2::scale_fill_manual(values = colors,
                                name = "Metric") +
@@ -205,8 +219,8 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
     ggplot2::scale_alpha_manual(values = alpha,
                                 labels = NULL) +
 
-    ggplot2::scale_shape_manual(values = shape,
-                                name = "Metric") +
+    ggplot2::scale_shape_manual(values = shape_pose,
+                                name = "Pose number") +
 
     ggplot2::scale_size_manual(values = size,
                                name = "Metric") +
@@ -215,13 +229,14 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
 
     ggplot2::scale_y_continuous(breaks = c(1:10)) +
 
-    ggplot2::facet_wrap(~ species_nm, ncol = 3) +
+    ggplot2::facet_wrap(~ species_nm, ncol = 3,
+                        labeller = ggplot2::labeller(species_nm = sp_labs)) +
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey80"),
                    panel.grid.major = ggplot2::element_line(colour = "grey80")) +
 
-    ggplot2::guides(colour = "none", alpha = "none", size = "none") +
+    ggplot2::guides(alpha = "none", size = "none") +
 
     ggplot2::xlab("Recording time (s)") +
 
@@ -229,19 +244,21 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape, size) {
 
 
 
+
+
   # save in outputs:
   # save the plot in the outputs folder:
-  ggplot2::ggsave(filename = here::here("outputs/4_maxN_timespans.pdf"),
+  ggplot2::ggsave(filename = here::here("outputs/4_maxN_timespans_vers3.pdf"),
                   plot = plot_timespan,
                   device = "pdf",
                   scale = 1,
-                  height = 5000,
+                  height = 6000,
                   width = 9000,
                   units = "px",
                   dpi = 600)
 
   # return the plot:
-  return(plot_combcam)
+  return(plot_timespan)
 
 
 }
