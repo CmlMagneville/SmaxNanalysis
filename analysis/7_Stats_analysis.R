@@ -29,7 +29,33 @@ cor.SmaxN.plot(maxN_all = maxN_all,
 
 
 
+# 2 - Test significant differences of SmaxN with an increasing number of cameras ####
 
+
+# Load data:
+maxN_comb_cam <- readRDS(here::here("transformed_data", "maxN_combcam.rds"))
+
+# Param:
+SmaxN_df <- maxN_comb_cam
+metric <- "cam_nb"
+
+# plot:
+kruskal.SmaxN.plot(SmaxN_df, metric)
+
+
+
+# 3 - Test significant differences of SmaxN with an increasing recording time ####
+
+
+# Load data:
+maxN_timespan <- readRDS(here::here("transformed_data", "maxN_timespans.rds"))
+
+# Param:
+SmaxN_df <- maxN_timespan
+metric <- "timespan"
+
+# plot:
+kruskal.SmaxN.plot(SmaxN_df, metric)
 
 
 

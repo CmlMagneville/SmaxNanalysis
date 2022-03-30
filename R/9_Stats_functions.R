@@ -134,7 +134,6 @@ cor.SmaxN.plot<- function(maxN_all, colors_poses, comp_metric) {
   }
 
 
-
   # test correlation:
   cor_maxN <- cor.test(x = maxN_all$maxN, y = maxN_all$SmaxN, method = 'spearman')
   cor_SmaxNrow <- cor.test(x = maxN_all$SmaxN_row, y = maxN_all$SmaxN, method = 'spearman')
@@ -144,7 +143,127 @@ cor.SmaxN.plot<- function(maxN_all, colors_poses, comp_metric) {
 
   return(return_list)
 
+
 }
+
+
+
+#' Plot SmaxN  across number of cameras or time and compute Kruskall Wallis test
+#'
+#' This function computes Kruskall Wallis test to see if SmaxN is significantly
+#' different across an increasing number of cameras or time
+#'
+#' @param SmaxN_df a dataframe from the final.combcam() function with SmaxN
+#' with an increasing number of cameras or with increasing recording time
+#'
+#' @param metric a caracter string refering to the metric to which SmaxN must
+#' be confronted. It can either be "cam_nb" or "timespan".
+#'
+#' @return a plot saved in the output folder and the results of the Kruskall-Wallis
+#' test
+#'
+#' @export
+#'
+
+
+
+kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
+
+
+  # remove NA rows:
+  SmaxN_df <- SmaxN_df[which(! is.na(SmaxN_df$species_nm)), ]
+
+
+  # if SmaxN compared to cam_nb:
+  if (metric == "cam_nb") {
+
+    # numerise for the plot the nb of cam:
+    SmaxN_df$cam_nb <- as.numeric(SmaxN_df$cam_nb)
+
+
+    # plot:
+    plot_SmaxN <- ggplot2::ggplot(data = SmaxN_df) +
+
+      ggplot2::geom_jitter(ggplot2::aes(x = cam_nb, y = SmaxN), color = "grey") +
+
+      ggplot2::geom_smooth(ggplot2::aes(x = cam_nb, y = SmaxN), color = "aquamarine3",
+                           method = "loess", show.legend = FALSE) +
+
+      ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
+                                                              colour = "grey"),
+                     panel.grid.major = ggplot2::element_line(colour = "grey"),
+                     strip.text.y = ggplot2::element_text(size = 8))
+
+    ggplot2::ggsave(filename = here::here("outputs/Stat_2_SmaxN_nb_cam.pdf"),
+                    plot = plot_SmaxN,
+                    device = "pdf",
+                    scale = 1,
+                    height = 4000,
+                    width = 4500,
+                    units = "px",
+                    dpi = 600)
+
+    # columns in the right format:
+    SmaxN_df$cam_nb <- as.factor(SmaxN_df$cam_nb)
+    levels(SmaxN_df$cam_nb)
+
+    SmaxN_df$maxN <- as.numeric(SmaxN_df$maxN)
+    SmaxN_df$SmaxN <- as.numeric(SmaxN_df$SmaxN)
+
+    # Kruskall-Wallis test:
+    test <- kruskal.test(SmaxN_df$SmaxN ~ SmaxN_df$cam_nb)
+  }
+
+
+  # if SmaxN compared to time spans:
+  if (metric == "timespan") {
+
+    # numerise for the plot the nb of cam:
+    SmaxN_df$time_span <- as.numeric(SmaxN_df$time_span)
+
+
+    # plot:
+    plot_SmaxN <- ggplot2::ggplot(data = SmaxN_df) +
+
+      ggplot2::geom_jitter(ggplot2::aes(x = time_span, y = SmaxN), color = "grey") +
+
+      ggplot2::geom_smooth(ggplot2::aes(x = time_span, y = SmaxN), color = "aquamarine3",
+                           method = "loess", show.legend = FALSE) +
+
+      ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
+                                                              colour = "grey"),
+                     panel.grid.major = ggplot2::element_line(colour = "grey"),
+                     strip.text.y = ggplot2::element_text(size = 8))
+
+
+    ggplot2::ggsave(filename = here::here("outputs/Stat_2_SmaxN_timespan.pdf"),
+                    plot = plot_SmaxN,
+                    device = "pdf",
+                    scale = 1,
+                    height = 4000,
+                    width = 4500,
+                    units = "px",
+                    dpi = 600)
+
+    # columns in the right format:
+    SmaxN_df$time_span <- as.factor(SmaxN_df$time_span)
+    levels(SmaxN_df$time_span)
+
+    SmaxN_df$SmaxN <- as.numeric(SmaxN_df$SmaxN)
+
+    # Kruskall-Wallis test:
+    test <- kruskal.test(SmaxN_df$SmaxN ~ SmaxN_df$time_span)
+  }
+
+
+
+  # return list:
+  return_list <- list(plot_SmaxN, test)
+
+  return(return_list)
+
+}
+
 
 
 
