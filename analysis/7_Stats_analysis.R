@@ -60,3 +60,8 @@ kruskal.SmaxN.plot(SmaxN_df, metric)
 
 
 
+# 4 - Test significant differences between SmaxN with different speed (for all species) ####
+
+
+
+

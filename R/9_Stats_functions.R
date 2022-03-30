@@ -210,8 +210,9 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
     SmaxN_df$maxN <- as.numeric(SmaxN_df$maxN)
     SmaxN_df$SmaxN <- as.numeric(SmaxN_df$SmaxN)
 
-    # Kruskall-Wallis test:
+    # Kruskall-Wallis and associated Dunn tests:
     test <- kruskal.test(SmaxN_df$SmaxN ~ SmaxN_df$cam_nb)
+    dunn <- FSA::dunnTest(SmaxN_df$SmaxN ~ SmaxN_df$cam_nb)
   }
 
 
@@ -251,14 +252,16 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
 
     SmaxN_df$SmaxN <- as.numeric(SmaxN_df$SmaxN)
 
-    # Kruskall-Wallis test:
+    # Kruskall-Wallis and associated Dunn test:
     test <- kruskal.test(SmaxN_df$SmaxN ~ SmaxN_df$time_span)
+    dunn <- FSA::dunnTest(SmaxN_df$SmaxN ~ SmaxN_df$time_span)
+
   }
 
 
 
   # return list:
-  return_list <- list(plot_SmaxN, test)
+  return_list <- list(plot_SmaxN, test, dunn)
 
   return(return_list)
 
