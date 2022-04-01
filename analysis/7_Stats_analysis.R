@@ -19,12 +19,16 @@ maxN_all <- readRDS(here::here("transformed_data", "maxN_all.rds"))
 
 # param:
 maxN_all <- maxN_all
-colors_poses <- c("#66c2a5", "#fc8d62", "#8da0cb")
+color_poses <- c("#fdae61", "#abdda4", "#2b83ba")
+shape_sp <- c(3, 10, 4, 13, 21, 23, 24)
 comp_metric <- "SmaxN_row"
 
-# call fct to do the plot and the analysis:
+# call fct to do the plot and the analysis (can do it for each pose also
+# ... by using maxN_all[which(pose_nb == 1), ] but here keep all poses ...
+# ... to save the graph with all poses:
 cor.SmaxN.plot(maxN_all = maxN_all,
-               colors_poses = colors_poses,
+               color_poses = color_poses,
+               shape_sp = shape_sp,
                comp_metric = comp_metric)
 
 
@@ -39,8 +43,16 @@ maxN_comb_cam <- readRDS(here::here("transformed_data", "maxN_combcam.rds"))
 SmaxN_df <- maxN_comb_cam
 metric <- "cam_nb"
 
-# plot:
+# plot and kruskall-wallis (finally not used in the paper):
 kruskal.SmaxN.plot(SmaxN_df, metric)
+
+## 2 - a/  Compute GLMM for camera number effect (pose and species random effects)
+
+
+## 2 - a/ Compute GLMM for metric and camera number effect (pose and sp random)
+
+
+
 
 
 

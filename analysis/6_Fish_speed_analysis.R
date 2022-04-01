@@ -47,7 +47,7 @@ maxN_all_df_speed2 <- automat.maxN.setsp(species_set = species_set,
 
 maxN_speed1 <- maxN_all_df_speed1
 maxN_speed2 <- maxN_all_df_speed2
-color_sp <-c("#8c510a", "#bf812d", "#dfc27d", "#c7eae5", "#80cdc1",
+color_sp <- c("#8c510a", "#bf812d", "#dfc27d", "#c7eae5", "#80cdc1",
              "#35978f", "#01665e")
 alpha <- 0.8
 size <- 2.5
