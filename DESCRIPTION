@@ -17,11 +17,11 @@ Imports:
     here,
     hms,
     magrittr,
+    MASS,
     patchwork,
     rlist,
     SmaxN,
     stringr,
     tibble,
-    vcd
 URL: https://github.com/CmlMagneville/SmaxNanalysis
 BugReports: https://github.com/CmlMagneville/SmaxNanalysis/issues

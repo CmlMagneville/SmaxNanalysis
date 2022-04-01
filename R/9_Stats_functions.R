@@ -320,10 +320,10 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
 #' related SmaxN_df column)
 #'
 #' @param X_var a vector gathering the name of the effect variable(s) (name(s)
-#' must be the same of the related SmaxN_df column)
+#' must be the same of the related SmaxN_df column). Just one or two X var allowed.
 #'
 #' @param X_var_random a vector gathering the name of the random effect variable(s)
-#' (name(s) must be the same of the related SmaxN_df column)
+#' (name(s) must be the same of the related SmaxN_df column). If no, NA.
 #'
 #' @param family_law the family of the glmm
 #'
@@ -343,6 +343,25 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
 glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
                          family_law, check_resid, compute_RNakag) {
 
+
+  # remove NA rows:
+  SmaxN_df <- SmaxN_df[which(! is.na(SmaxN_df$species_nm)), ]
+
+  # use right classes:
+  SmaxN_df[, Y_var] <- as.numeric(SmaxN_df[, Y_var])
+  SmaxN_df[, X_var] <- as.factor(SmaxN_df[, X_var])
+
+
+  # model:
+  if (length(X_var) == 1) {
+    if (is.na(X_var_random)) {
+      model <- glmmTMB::glmmTMB(Y_var ~ X_var, family = family_law,
+                                data = SmaxN_df)
+# DON'T KNOW HOW TO MAKE IT WORK BY USING Y_VAR AND X_VAR (working when using SmaxN ~ time_span, family = "poisson",
+#... data = SmaxN_df) but no when using variables...
+    }
+
+  }
 
 
 

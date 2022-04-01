@@ -47,6 +47,21 @@ metric <- "cam_nb"
 kruskal.SmaxN.plot(SmaxN_df, metric)
 
 
+## 2 - 0/ Which distribution to use for SmaxN? ####
+
+
+# Check Poisson (randomly distributed):
+theoretic_count <-rpois(126, mean(SmaxN_df$SmaxN))
+tc_df <- data.frame(theoretic_count)
+
+ggplot2::ggplot(SmaxN_df, ggplot2::aes(SmaxN)) +
+  ggplot2::geom_bar(fill = "#1E90FF") +
+  ggplot2::geom_bar(data = tc_df, ggplot2::aes(theoretic_count,fill = "#1E90FF", alpha = 0.5)) +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position="none")
+
+
+
 ## 2 - a/  Compute GLMM for camera number effect (pose and species random effects)
 
 SmaxN_df <- maxN_comb_cam
@@ -84,7 +99,7 @@ kruskal.SmaxN.plot(SmaxN_df, metric)
 
 SmaxN_df <- maxN_comb_cam
 Y_var <- "SmaxN"
-X_var <- "cam_nb"
+X_var <- "time_span"
 X_var_random <- c("species_nm", "pose_nb")
 family_law <- "poisson"
 check_resid <- TRUE
