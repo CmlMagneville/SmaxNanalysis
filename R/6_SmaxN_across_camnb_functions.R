@@ -485,7 +485,14 @@ final.combcam <- function(abund_combcam_list, dist_df,
 
 
   # save the final df:
-  saveRDS(final_combcam, here::here("transformed_data", "final_combcam.rds"))
+  if (analysis_type == "combcam") {
+    saveRDS(final_combcam, here::here("transformed_data", "final_combcam.rds"))
+
+  }
+  if (analysis_type == "timespan") {
+    saveRDS(final_combcam, here::here("transformed_data", "final_timespans.rds"))
+
+  }
 
   # return the final df:
   return(final_combcam)

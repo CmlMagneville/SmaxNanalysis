@@ -21,6 +21,7 @@ Imports:
     rlist,
     SmaxN,
     stringr,
-    tibble
+    tibble,
+    vcd
 URL: https://github.com/CmlMagneville/SmaxNanalysis
 BugReports: https://github.com/CmlMagneville/SmaxNanalysis/issues
