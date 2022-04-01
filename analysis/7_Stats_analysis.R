@@ -37,7 +37,7 @@ cor.SmaxN.plot(maxN_all = maxN_all,
 
 
 # Load data:
-maxN_comb_cam <- readRDS(here::here("transformed_data", "maxN_combcam.rds"))
+maxN_comb_cam <- readRDS(here::here("transformed_data", "final_combcam.rds"))
 
 # Param:
 SmaxN_df <- maxN_comb_cam
@@ -46,10 +46,20 @@ metric <- "cam_nb"
 # plot and kruskall-wallis (finally not used in the paper):
 kruskal.SmaxN.plot(SmaxN_df, metric)
 
+
 ## 2 - a/  Compute GLMM for camera number effect (pose and species random effects)
 
+SmaxN_df <- maxN_comb_cam
+Y_var <- "SmaxN"
+X_var <- "cam_nb"
+X_var_random <- c("species_nm", "pose_nb")
+family_law <- "poisson"
+check_resid <- TRUE
+compute_RNakag <- TRUE
 
-## 2 - a/ Compute GLMM for metric and camera number effect (pose and sp random)
+
+
+## 2 - b/ Compute GLMM for metric and camera number effect (pose and sp random)
 
 
 
@@ -70,6 +80,19 @@ metric <- "timespan"
 kruskal.SmaxN.plot(SmaxN_df, metric)
 
 
+## 3 - a/  Compute GLMM for timespan effect (pose and species random effects)
+
+SmaxN_df <- maxN_comb_cam
+Y_var <- "SmaxN"
+X_var <- "cam_nb"
+X_var_random <- c("species_nm", "pose_nb")
+family_law <- "poisson"
+check_resid <- TRUE
+compute_RNakag <- TRUE
+
+
+
+## 3 - b/ Compute GLMM for metric and timespan effect (pose and sp random)
 
 
 # 4 - Test significant differences between SmaxN with different speed (for all species) ####

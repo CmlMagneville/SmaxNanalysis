@@ -309,23 +309,42 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
 
 
 
-#' Plot SmaxN  across number of cameras or time and compute Kruskall Wallis test
+#' Compute a GLMM and test it
 #'
-#' This function computes Kruskall Wallis test to see if SmaxN is significantly
-#' different across an increasing number of cameras or time
+#' This function computes a GLMM after studying the Y distribution, give the
+#' related ANOVA table and test it
 #'
-#' @param SmaxN_df a dataframe from the final.combcam() function with SmaxN
-#' with an increasing number of cameras or with increasing recording time
+#' @param SmaxN_df a dataframe with the different variables to use in the model
 #'
-#' @param metric a caracter string refering to the metric to which SmaxN must
-#' be confronted. It can either be "cam_nb" or "timespan".
+#' @param Y_var the name of the answer variable (name must be the same of the
+#' related SmaxN_df column)
 #'
-#' @return a plot saved in the output folder and the results of the Kruskall-Wallis
-#' test
+#' @param X_var a vector gathering the name of the effect variable(s) (name(s)
+#' must be the same of the related SmaxN_df column)
+#'
+#' @param X_var_random a vector gathering the name of the random effect variable(s)
+#' (name(s) must be the same of the related SmaxN_df column)
+#'
+#' @param family_law the family of the glmm
+#'
+#' @param check_resid a boolean value (TRUE/FALSE) telling whether the residuals of the
+#' model are checked or not
+#'
+#' @param compute_RNakag a boolean value (TRUE/FALSE) telling whether the Nakagawa's R2
+#' is computing or not
+#'
+#' @return a plot of the repartition of
 #'
 #' @export
 #'
 
 
 
-kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
+glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
+                         family_law, check_resid, compute_RNakag) {
+
+
+
+
+
+}
