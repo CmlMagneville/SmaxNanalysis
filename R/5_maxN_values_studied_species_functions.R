@@ -136,9 +136,13 @@ deltas.plot <- function(maxN_all, colors) {
   # factorise species:
   maxN_all$species_nm <- as.factor(maxN_all$species_nm)
 
+  # if SmaxN and maxN equal 0 then remove rows because otherwise a difference of 0
+  # ... can be due to same SmaxN and maxN or to SmaxN = maxN = 0 (no individuals)
+  maxN_all <- maxN_all[which(maxN_all$SmaxN != 0), ]
+
   # compute deltas:
-  maxN_all$delta_SmaxN_maxN <- maxN_all$SmaxN - maxN_all$maxN
-  maxN_all$delta_SmaxN_SmaxNrow <- maxN_all$SmaxN - maxN_all$SmaxN_row
+  maxN_all$delta_SmaxN_maxN <- maxN_all$maxN / maxN_all$SmaxN
+  maxN_all$delta_SmaxN_SmaxNrow <- maxN_all$SmaxN_row / maxN_all$SmaxN
 
 
   # plot for delta 1:
@@ -163,9 +167,13 @@ deltas.plot <- function(maxN_all, colors) {
                                                           colour = "grey"),
                  panel.grid.major = ggplot2::element_line(colour = "grey")) +
 
+  ggplot2::scale_y_continuous(limits = c(0, 1),
+                                breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
+                                           0.7, 0.8, 0.9, 1)) +
+
   ggplot2::xlab("Species name") +
 
-  ggplot2::ylab("Delta 1 = SmaxN - maxN")
+  ggplot2::ylab("Delta 1 = maxN / SmaxN")
 
 
   # plot for delta 2:
@@ -190,9 +198,13 @@ deltas.plot <- function(maxN_all, colors) {
                                                             colour = "grey"),
                    panel.grid.major = ggplot2::element_line(colour = "grey")) +
 
+    ggplot2::scale_y_continuous(limits = c(0, 1),
+                                breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
+                                           0.7, 0.8, 0.9, 1)) +
+
     ggplot2::xlab("Species name") +
 
-    ggplot2::ylab("Delta 2 = SmaxN - SmaxN_row")
+    ggplot2::ylab("Delta 2 = SmaxN_row / SmaxN")
 
   # gather the two plots using patchwork:
   patchwork_plot <- plot_delta1 + plot_delta2 +

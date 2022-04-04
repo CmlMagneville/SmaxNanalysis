@@ -19,7 +19,7 @@ maxN_all <- readRDS(here::here("transformed_data", "maxN_all.rds"))
 
 # param:
 maxN_all <- maxN_all
-color_poses <- c("#fdae61", "#abdda4", "#2b83ba")
+color_poses <- c("#66c2a5", "#fc8d62", "#8da0cb")
 shape_sp <- c(3, 10, 4, 13, 21, 23, 24)
 comp_metric <- "SmaxN_row"
 
