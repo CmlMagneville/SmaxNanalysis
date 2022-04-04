@@ -16,7 +16,7 @@
 #' of species
 #'
 #' This function computes and save in the outputs folder a plot showing SmaxN
-#' values for two different fish speeds and a set of species
+#' values for two different fish speeds (y and x) and a set of species (shapes)
 #'
 #' @param maxN_speed1 a dataframe from the automat.maxN.setsp() function
 #' gathering maxN values for each species of the set and for each pose computed
@@ -128,6 +128,40 @@ speed.plot <- function(maxN_speed1, maxN_speed2, color_sp, alpha, size, shape_po
 }
 
 
+
+
+
+#' Create and save the plot of SmaxN ratio for two different fish speeds and a set
+#' of species
+#'
+#' This function computes and save in the outputs folder a plot showing the
+#' SmaxN ratio between two speeds (y) for a set of species x
+#'
+#' @param maxN_speed1 a dataframe from the automat.maxN.setsp() function
+#' gathering maxN values for each species of the set and for each pose computed
+#' with the first speed
+#'
+#' @param maxN_speed2 a dataframe from the automat.maxN.setsp() function
+#' gathering maxN values for each species of the set and for each pose computed
+#' with the second speed
+#'
+#' @param color_poses a vector containing the names or hexadecimal code of the three
+#' colors used to plot the different poses
+#'
+#' @param alpha a vector containing the values of the two
+#' transparencies used to plot the different speed
+#'
+#' @param size a numerical value referring to the size of the points used to
+#' plot SmaxN
+#'
+#' @param shape a numerical value referring to the shape of the points used to
+#' plot SmaxN for each pose
+#'
+#' @return a plot with y = SmaxN values with two different colors for the two
+#' different speeds, x = species
+#'
+#' @export
+#'
 
 speed.plot2 <- function(maxN_speed1, maxN_speed2, color_poses, alpha, size, shape) {
 
