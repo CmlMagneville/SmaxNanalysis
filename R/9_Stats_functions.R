@@ -351,8 +351,15 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
   SmaxN_df[, Y_var] <- as.numeric(SmaxN_df[, Y_var])
   SmaxN_df[, X_var] <- as.factor(SmaxN_df[, X_var])
 
-  if (! is.na(X_var_random)) {
+  # if one random effect, change its class:
+  if (! is.na(X_var_random[1]) & length(X_var_random) == 1) {
     SmaxN_df[, X_var_random] <- as.factor(SmaxN_df[, X_var_random])
+  }
+
+  # if two random effect, change their class:
+  if (! is.na(X_var_random[1]) & length(X_var_random) == 2) {
+    SmaxN_df[, X_var_random[1]] <- as.factor(SmaxN_df[, X_var_random[1]])
+    SmaxN_df[, X_var_random[2]] <- as.factor(SmaxN_df[, X_var_random[2]])
   }
 
 
@@ -368,17 +375,17 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
     }
 
-    # if one random effect:
+    # if one random effect CALLING VARIABLES STILL DOES WORK:
     if (! is.na(X_var_random) & length(X_var_random) == 1) {
-      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + 1|get(X_var_random), family = family_law,
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + (1|get(X_var_random)), family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
     }
 
     # if two random effects:
     if (! is.na(X_var_random) & length(X_var_random) == 1) {
-      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + 1|get(X_var_random[1])
-                                + 1|get(X_var_random[2]),
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + (1|get(X_var_random[1]))
+                                + (1|get(X_var_random[2])),
                                 family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)

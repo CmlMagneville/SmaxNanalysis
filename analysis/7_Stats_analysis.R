@@ -51,7 +51,7 @@ kruskal.SmaxN.plot(SmaxN_df, metric)
 
 
 # Check Poisson (randomly distributed):
-theoretic_count <-rpois(126, mean(SmaxN_df$SmaxN))
+theoretic_count <-rpois(nrow(SmaxN_df), mean(SmaxN_df$SmaxN))
 tc_df <- data.frame(theoretic_count)
 
 ggplot2::ggplot(SmaxN_df, ggplot2::aes(SmaxN)) +
@@ -67,7 +67,7 @@ ggplot2::ggplot(SmaxN_df, ggplot2::aes(SmaxN)) +
 SmaxN_df <- maxN_comb_cam
 Y_var <- "SmaxN"
 X_var <- "cam_nb"
-X_var_random <- c("species_nm", "pose_nb")
+X_var_random <- c("species_nm", "Pose_nb")
 family_law <- "poisson"
 check_resid <- TRUE
 compute_RNakag <- TRUE
