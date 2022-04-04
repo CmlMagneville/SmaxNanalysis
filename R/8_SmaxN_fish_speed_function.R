@@ -127,3 +127,78 @@ speed.plot <- function(maxN_speed1, maxN_speed2, color_sp, alpha, size, shape_po
 
 }
 
+
+
+speed.plot2 <- function(maxN_speed1, maxN_speed2, color_poses, alpha, size, shape) {
+
+
+  ## bind the two dfs and only keep SmaxN values:
+
+  # only keep SmaxN Pose and species information:
+  maxN_speed1_final <- maxN_speed1[, c(1, 2, 4)]
+  maxN_speed2_final <- maxN_speed2[, c(1, 2, 4)]
+
+  # rename columns of SmaxN
+  colnames(maxN_speed1_final)[ncol(maxN_speed1_final)] <- "SmaxN_speed1"
+  colnames(maxN_speed2_final)[ncol(maxN_speed2_final)] <- "SmaxN_speed2"
+
+  # bind the two dfs:
+  final_speed_df <- dplyr::left_join(maxN_speed1_final,
+                                     maxN_speed2_final)
+
+  # factorise:
+  final_speed_df$species_nm <- as.factor(final_speed_df$species_nm)
+  final_speed_df$pose_nb <- as.factor(final_speed_df$pose_nb)
+
+
+  # plot:
+  speed_plot <- ggplot2::ggplot(data = final_speed_df) +
+
+    ggplot2::geom_jitter(ggplot2::aes(y = SmaxN_speed2/SmaxN_speed1, x = species_nm, colour = pose_nb,
+                                      fill = pose_nb), alpha = alpha,
+                         size = size,
+                         shape = shape,
+                         width = 0.01,
+                         height = 0.01) +
+
+    ggplot2::scale_fill_manual(values = color_poses,
+                               name = "Pose",
+                               labels = c("Pose 1: 7:30-8:30",
+                                          "Pose 2: 11:30-12:30",
+                                          "Pose 3: 15:30-16:30")) +
+
+    ggplot2::scale_colour_manual(values = color_poses,
+                                 name = NULL) +
+
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+                   panel.background = ggplot2::element_rect(fill = "white",
+                                                            colour = "grey"),
+                   panel.grid.major = ggplot2::element_line(colour = "grey")) +
+
+    ggplot2::xlab("Species names") +
+
+    ggplot2::ylab("SmaxN 1 m/s / SmaxN 0.5 m/s ") +
+
+    ggplot2::scale_y_continuous(limits = c(0.5, 1.1),
+                                breaks = c(0.5, 0.6, 0.7,
+                                           0.8, 0.9, 1, 1.1)) +
+
+    ggplot2::guides(colour = "none", alpha = "none", size = "none")
+
+
+  # save in outputs:
+  # save the plot in the outputs folder:
+  ggplot2::ggsave(filename = here::here("outputs/6_Fish_speed_SmaxN.pdf"),
+                  plot = speed_plot,
+                  device = "pdf",
+                  scale = 1,
+                  height = 4000,
+                  width = 5000,
+                  units = "px",
+                  dpi = 600)
+
+  # return the plot:
+  return(speed_plot)
+
+}
+

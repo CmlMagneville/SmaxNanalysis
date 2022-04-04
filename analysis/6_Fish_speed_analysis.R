@@ -27,11 +27,11 @@ species_set <- c("Gomphosus_caeruleus", "Parupeneus_macronemus",
 
 # compute the df with all info for the plot with same fish speed for all species:
 # ... note: if not same fish spped for all species, change the automat.maxN.setsp
-# ... function for speed = 1 m/s:
+# ... function for speed = 0.5 m/s:
 maxN_all_df_speed1 <- automat.maxN.setsp(species_set = species_set,
                                   abund_list = abund_list,
                                   dist_df = dist_df,
-                                  fish_speed = 1)
+                                  fish_speed = 0.5)
 
 # compute the df with all info for the plot with same fish speed for all species:
 # ... note: if not same fish spped for all species, change the automat.maxN.setsp
@@ -39,7 +39,7 @@ maxN_all_df_speed1 <- automat.maxN.setsp(species_set = species_set,
 maxN_all_df_speed2 <- automat.maxN.setsp(species_set = species_set,
                                          abund_list = abund_list,
                                          dist_df = dist_df,
-                                         fish_speed = 2)
+                                         fish_speed = 1)
 
 
 ## 2 - Plot ####
@@ -47,17 +47,16 @@ maxN_all_df_speed2 <- automat.maxN.setsp(species_set = species_set,
 
 maxN_speed1 <- maxN_all_df_speed1
 maxN_speed2 <- maxN_all_df_speed2
-color_sp <- c("#8c510a", "#bf812d", "#dfc27d", "#c7eae5", "#80cdc1",
-             "#35978f", "#01665e")
+color_poses <- c("#66c2a5", "#fc8d62", "#8da0cb")
 alpha <- 0.8
 size <- 2.5
-shape_pose <- c(22, 21, 24)
+shape <- 22
 
 
 
-fish_speed <- speed.plot(maxN_speed1 = maxN_all_df_speed1, maxN_speed2 = maxN_all_df_speed2,
-           color_sp = color_sp,
+fish_speed <- speed.plot2(maxN_speed1 = maxN_all_df_speed1, maxN_speed2 = maxN_all_df_speed2,
+           color_poses = color_poses,
            alpha = alpha,
            size = size,
-           shape_pose = shape_pose)
+           shape = shape)
 
