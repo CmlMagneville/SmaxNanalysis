@@ -351,19 +351,93 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
   SmaxN_df[, Y_var] <- as.numeric(SmaxN_df[, Y_var])
   SmaxN_df[, X_var] <- as.factor(SmaxN_df[, X_var])
 
+  if (! is.na(X_var_random)) {
+    SmaxN_df[, X_var_random] <- as.factor(SmaxN_df[, X_var_random])
+  }
 
-  # model:
+
+  # MODEL BUILDING:
+
+  # if one explanatory variable:
   if (length(X_var) == 1) {
+
+    # ...  and no random effect:
     if (is.na(X_var_random)) {
-      model <- glmmTMB::glmmTMB(Y_var ~ X_var, family = family_law,
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var), family = family_law,
                                 data = SmaxN_df)
-# DON'T KNOW HOW TO MAKE IT WORK BY USING Y_VAR AND X_VAR (working when using SmaxN ~ time_span, family = "poisson",
-#... data = SmaxN_df) but no when using variables...
+      anova_model <- glmmTMB:::Anova.glmmTMB(model)
+    }
+
+    # if one random effect:
+    if (! is.na(X_var_random) & length(X_var_random) == 1) {
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + 1|get(X_var_random), family = family_law,
+                                data = SmaxN_df)
+      anova_model <- glmmTMB:::Anova.glmmTMB(model)
+    }
+
+    # if two random effects:
+    if (! is.na(X_var_random) & length(X_var_random) == 1) {
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + 1|get(X_var_random[1])
+                                + 1|get(X_var_random[2]),
+                                family = family_law,
+                                data = SmaxN_df)
+      anova_model <- glmmTMB:::Anova.glmmTMB(model)
+    }
+
+  }
+
+
+  # if two explanatory variable:
+  if (length(X_var) == 2) {
+
+    # ...  and no random effect:
+    if (is.na(X_var_random)) {
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]),
+                                family = family_law,
+                                data = SmaxN_df)
+      anova_model <- glmmTMB:::Anova.glmmTMB(model)
+    }
+
+    # if one random effect:
+    if (! is.na(X_var_random) & length(X_var_random) == 1) {
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]) +
+                                  1|get(X_var_random),
+                                family = family_law,
+                                data = SmaxN_df)
+      anova_model <- glmmTMB:::Anova.glmmTMB(model)
+    }
+
+    # if two random effects:
+    if (! is.na(X_var_random) & length(X_var_random) == 1) {
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]) +
+                                  1|get(X_var_random[1])
+                                + 1|get(X_var_random[2]),
+                                family = family_law,
+                                data = SmaxN_df)
+      anova_model <- glmmTMB:::Anova.glmmTMB(model)
     }
 
   }
 
 
 
+  # MODEL TESTING:
+
+  if (check_testing == TRUE) {
+    simulationOutput <- DHARMa::simulateResiduals(fittedModel = model, plot = TRUE)
+    plot(simulationOutput)
+  }
+
+  if (compute_RNakag == TRUE) {
+    r2 <- performance::r2_nakagawa(model, by_group = FALSE, tolerance = 1e-5)
+  }
+
+
+
+  # create the list to be returned:
+  returned_list <- list(anova_model, r2)
+
+  # return:
+  return(returned_list)
 
 }
