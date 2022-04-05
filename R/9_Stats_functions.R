@@ -323,7 +323,9 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
 #' must be the same of the related SmaxN_df column). Just one or two X var allowed.
 #'
 #' @param X_var_random a vector gathering the name of the random effect variable(s)
-#' (name(s) must be the same of the related SmaxN_df column). If no, NA.
+#' (name(s) must be the same of the related SmaxN_df column). If no, NA. BUT
+#' the code does not use the names in the vector and uses species_nm if one
+#' random effect and species_nm and pose_nb if two random effects.
 #'
 #' @param family_law the family of the glmm
 #'
@@ -340,7 +342,7 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
 
 
 
-glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
+glmm.compute <- function(SmaxN_df, Y_var, X_var,X_var_random,
                          family_law, check_resid, compute_RNakag) {
 
 
@@ -348,7 +350,7 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
   SmaxN_df <- SmaxN_df[which(! is.na(SmaxN_df$species_nm)), ]
 
   # use right classes:
-  SmaxN_df[, Y_var] <- as.numeric(SmaxN_df[, Y_var])
+  SmaxN_df[, Y_var] <- as.integer(SmaxN_df[, Y_var])
   SmaxN_df[, X_var] <- as.factor(SmaxN_df[, X_var])
 
   # if one random effect, change its class:
@@ -365,6 +367,9 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
 
   # MODEL BUILDING:
 
+  # attach the data so can call get() function:
+  attach(SmaxN_df)
+
   # if one explanatory variable:
   if (length(X_var) == 1) {
 
@@ -375,17 +380,19 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
     }
 
-    # if one random effect CALLING VARIABLES STILL DOES WORK:
+    # if one random effect:
+    # CALLING VARIABLES STILL DOES NOT WORK: JUST FORGET
+    # ... ADDING A VAR FOR RADOM AND DIRECLTY ADD RANDOM EFFECTS NAMES
     if (! is.na(X_var_random) & length(X_var_random) == 1) {
-      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + (1|get(X_var_random)), family = family_law,
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + (1 + species_nm), family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
     }
 
     # if two random effects:
-    if (! is.na(X_var_random) & length(X_var_random) == 1) {
-      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + (1|get(X_var_random[1]))
-                                + (1|get(X_var_random[2])),
+    if (! is.na(X_var_random) & length(X_var_random) == 2) {
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + (1 + species_nm)
+                                + (1 + Pose_nb),
                                 family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
@@ -398,7 +405,7 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
   if (length(X_var) == 2) {
 
     # ...  and no random effect:
-    if (is.na(X_var_random)) {
+    if (is.na(X_var_random[1])) {
       model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]),
                                 family = family_law,
                                 data = SmaxN_df)
@@ -406,19 +413,19 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
     }
 
     # if one random effect:
-    if (! is.na(X_var_random) & length(X_var_random) == 1) {
+    if (! is.na(X_var_random[1]) & length(X_var_random) == 1) {
       model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]) +
-                                  1|get(X_var_random),
+                                  (1 + species_nm),
                                 family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
     }
 
     # if two random effects:
-    if (! is.na(X_var_random) & length(X_var_random) == 1) {
+    if (! is.na(X_var_random[1]) & length(X_var_random) == 2) {
       model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]) +
-                                  1|get(X_var_random[1])
-                                + 1|get(X_var_random[2]),
+                                  (1 + species_nm)
+                                + (1 + Pose_nb),
                                 family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
@@ -430,9 +437,10 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
 
   # MODEL TESTING:
 
-  if (check_testing == TRUE) {
+  if (check_resid == TRUE) {
     simulationOutput <- DHARMa::simulateResiduals(fittedModel = model, plot = TRUE)
     plot(simulationOutput)
+    outliers <- DHARMa::testOutliers(simulationOutput, type = "bootstrap")
   }
 
   if (compute_RNakag == TRUE) {
@@ -442,7 +450,7 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var, X_var_random,
 
 
   # create the list to be returned:
-  returned_list <- list(anova_model, r2)
+  returned_list <- list(model, anova_model, outliers, r2)
 
   # return:
   return(returned_list)

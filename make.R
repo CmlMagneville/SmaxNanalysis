@@ -32,6 +32,8 @@ source(here::here("R", "4_Duration_per_nbcam_functions.R"))
 source(here::here("R", "5_maxN_values_studied_species_functions.R"))
 source(here::here("R", "6_SmaxN_across_camnb_functions.R"))
 source(here::here("R", "7_SmaxN_time_functions.R"))
+source(here::here("R", "8_SmaxN_fish_speed_function.R"))
+source(here::here("R", "9_Stats_functions.R"))
 
 ## Load the analysis scripts:
 
@@ -52,6 +54,12 @@ source(here::here("analysis", "4_SmaxN_increasing_nbcam_analysis.R"))
 
 # 5 - Plot the evolution of SmaxN and maxN to increasing amount of time:
 source(here::here("analysis", "5_SmaxN_increasing_timespan_analysis.R"))
+
+# 6 - Plot the effect of fish speed on SmaxN:
+source(here::here("analysis", "6_Fish_speed_analysis.R"))
+
+# 7 - Do statistical analysis
+source(here::here("analysis", "7_Stats_analysis.R"))
 
 
 

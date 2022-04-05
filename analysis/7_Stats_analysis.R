@@ -51,16 +51,22 @@ kruskal.SmaxN.plot(SmaxN_df, metric)
 
 
 # Check Poisson (randomly distributed):
-theoretic_count <-rpois(nrow(SmaxN_df), mean(SmaxN_df$SmaxN))
+theoretic_count <- rpois(nrow(SmaxN_df[which(! is.na(SmaxN_df$species_nm)), ])
+                         , mean(SmaxN_df[which(! is.na(SmaxN_df$species_nm)), "SmaxN"]))
 tc_df <- data.frame(theoretic_count)
 
-ggplot2::ggplot(SmaxN_df, ggplot2::aes(SmaxN)) +
+ggplot2::ggplot(SmaxN_df[which(! is.na(SmaxN_df$species_nm)), ], ggplot2::aes(SmaxN)) +
   ggplot2::geom_bar(fill = "#1E90FF") +
   ggplot2::geom_bar(data = tc_df, ggplot2::aes(theoretic_count,fill = "#1E90FF", alpha = 0.5)) +
   ggplot2::theme_classic() +
   ggplot2::theme(legend.position="none")
 
+# other way to test:
+poisson <- MASS::fitdistr(SmaxN_df$SmaxN, "Poisson")
+car::qqp(SmaxN_df$SmaxN, "pois", lambda = poisson$estimate)
 
+nbinom <- MASS::fitdistr(SmaxN_df$SmaxN, "Negative Binomial")
+car::qqp(SmaxN_df$SmaxN, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$estimate[[2]])
 
 ## 2 - a/  Compute GLMM for camera number effect (pose and species random effects)
 
@@ -71,6 +77,19 @@ X_var_random <- c("species_nm", "Pose_nb")
 family_law <- "poisson"
 check_resid <- TRUE
 compute_RNakag <- TRUE
+
+model_cam_nb <- glmm.compute(SmaxN_df = SmaxN_df,
+                             Y_var = Y_var,
+                             X_var = X_var,
+                             X_var_random = X_var_random,
+                             family_law = family_law,
+                             check_resid = TRUE,
+                             compute_RNakag = TRUE)
+
+
+# other tests:
+performance::check_model(model)
+
 
 
 
