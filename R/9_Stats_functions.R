@@ -351,7 +351,19 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var,X_var_random,
 
   # use right classes:
   SmaxN_df[, Y_var] <- as.integer(SmaxN_df[, Y_var])
-  SmaxN_df[, X_var] <- as.factor(SmaxN_df[, X_var])
+
+
+  # if one x variable, change its class:
+  if (length(X_var) == 1) {
+    SmaxN_df[, X_var] <- as.factor(SmaxN_df[, X_var])
+  }
+
+  # if two random effect, change their class:
+  if (length(X_var) == 2) {
+    SmaxN_df[, X_var[1]] <- as.factor(SmaxN_df[, X_var[1]])
+    SmaxN_df[, X_var[2]] <- as.factor(SmaxN_df[, X_var[2]])
+  }
+
 
   # if one random effect, change its class:
   if (! is.na(X_var_random[1]) & length(X_var_random) == 1) {
@@ -401,12 +413,12 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var,X_var_random,
   }
 
 
-  # if two explanatory variable:
+  # if two explanatory variable (interactions):
   if (length(X_var) == 2) {
 
-    # ...  and no random effect:
+    # ...  and no random effect :
     if (is.na(X_var_random[1])) {
-      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]),
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) * get(X_var[2]),
                                 family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
@@ -423,7 +435,7 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var,X_var_random,
 
     # if two random effects:
     if (! is.na(X_var_random[1]) & length(X_var_random) == 2) {
-      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) + get(X_var[2]) +
+      model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) * get(X_var[2]) +
                                   (1 + species_nm)
                                 + (1 + Pose_nb),
                                 family = family_law,

@@ -23,11 +23,12 @@ dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
 species_set <- c("Gomphosus_caeruleus", "Parupeneus_macronemus",
                  "Chaetodon_auriga", "Parapercis_hexophtalma",
                  "Chaetodon_trifasciatus", "Thalassoma_hardwicke",
-                 "Oxymonacanthus_longirostris", "Naso_brevirostris",
-                 "Sufflamen_chrysopterum", "Canthigaster_bennetti",
-                 "Cephalopholis_argus", "Cetoscarus_ocellatus",
-                 "Chaetodon_trifascialis", "Chlorurus_sordidus",
-                 "Chromis_weberi", "Zebrasoma_scopas", "Caranx_melampygus")
+                 "Oxymonacanthus_longirostris")
+                 #  , "Naso_brevirostris",
+                 # "Sufflamen_chrysopterum", "Canthigaster_bennetti",
+                 # "Cephalopholis_argus", "Cetoscarus_ocellatus",
+                 # "Chaetodon_trifascialis", "Chlorurus_sordidus",
+                 # "Chromis_weberi", "Zebrasoma_scopas", "Caranx_melampygus")
 
 # compute the df with all info for the plot with same fish speed for all species:
 # ... note: if not same fish spped for all species, change the automat.maxN.setsp

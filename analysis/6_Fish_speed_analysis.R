@@ -33,6 +33,9 @@ maxN_all_df_speed1 <- automat.maxN.setsp(species_set = species_set,
                                   dist_df = dist_df,
                                   fish_speed = 0.5)
 
+saveRDS(maxN_all_df_speed1, here::here("transformed_data", "maxN_all_df_speed1.rds"))
+
+
 # compute the df with all info for the plot with same fish speed for all species:
 # ... note: if not same fish spped for all species, change the automat.maxN.setsp
 # ... function for speed = 1 m/s:
@@ -40,6 +43,8 @@ maxN_all_df_speed2 <- automat.maxN.setsp(species_set = species_set,
                                          abund_list = abund_list,
                                          dist_df = dist_df,
                                          fish_speed = 1)
+
+saveRDS(maxN_all_df_speed2, here::here("transformed_data", "maxN_all_df_speed2.rds"))
 
 
 ## 2 - Plot ####
@@ -50,7 +55,7 @@ maxN_speed2 <- maxN_all_df_speed2
 color_poses <- c("#66c2a5", "#fc8d62", "#8da0cb")
 alpha <- 0.8
 size <- 2.5
-shape <- 22
+shape <- 21
 
 
 
