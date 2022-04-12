@@ -93,7 +93,8 @@ model_cam_nb <- glmm.compute(SmaxN_df = SmaxN_df,
 
 
 # other tests:
-performance::check_model(model)
+performance::check_model(model_cam_nb[[1]])
+performance::model_performance(model_cam_nb[[1]])
 
 
 
