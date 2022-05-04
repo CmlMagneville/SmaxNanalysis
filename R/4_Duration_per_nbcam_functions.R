@@ -176,15 +176,14 @@ plot.duration.nbcam <- function(duration_cam_sp_df) {
                                    ggplot2::aes(x = reorder(species_nm, -tot_presence),
                                                 y = duration)) +
 
-    ggplot2::geom_bar(ggplot2::aes(fill = cam_nb), stat = "identity") +
-
-    ggplot2::scale_fill_manual(values=c("#bae4bc", "#7bccc4", "#43a2ca", "#0868ac"),
-                               name = "camera number") +
+    ggplot2::geom_bar(ggplot2::aes(fill = cam_nb), stat = "identity")  +
 
     ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
                    panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey"),
                    panel.grid.major = ggplot2::element_line(colour = "grey")) +
+
+    ggplot2::labs("Camera number") +
 
     ggplot2::xlab("species name")
 

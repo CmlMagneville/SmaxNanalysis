@@ -41,6 +41,8 @@
 #' cameras and there are as many rows as there are timesteps (second) between
 #' time_start and time_stop.
 #'
+#' @importFrom magrittr %>%
+#'
 
 
 gather.abund.df <- function(list_abund_df, species_nm,
@@ -156,6 +158,7 @@ automat.abund.df <- function(abund_allposes_list,
       # check that species is present during the given pose:
       if (j %in% colnames(abund_list[[1]])) {
 
+
         # if first Pose:
         if (i == 1) {
           abund_gather <- gather.abund.df(list_abund_df = abund_list, species_nm = j,
@@ -179,12 +182,13 @@ automat.abund.df <- function(abund_allposes_list,
 
       }
 
+    }
+
       # update the species list with the df of the 3 poses:
       sp_list <- list(abund_df1, abund_df2, abund_df3)
 
       # update the global list:
       abund_allsp_list[[j]] <-  sp_list
-    }
   }
 
   # return the global list of abundance df:

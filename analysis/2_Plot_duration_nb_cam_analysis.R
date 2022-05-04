@@ -167,7 +167,7 @@ saveRDS(all_abund_list, here::here("transformed_data", "all_abund_list.rds"))
 # ... different camera number simulteaneoulsy
 
 
-duration_cam_sp <- compute.all.duration.nbcam(abund_list)
+duration_cam_sp <- compute.all.duration.nbcam(all_abund_list)
 
 
 # 5 - Plot the graph showing presence duration in front of one or several ... ####

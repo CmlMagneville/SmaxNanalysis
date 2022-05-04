@@ -23,7 +23,7 @@ dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
 species_set <- c("Gomphosus_caeruleus", "Parupeneus_macronemus",
                  "Chaetodon_auriga", "Parapercis_hexophtalma",
                  "Chaetodon_trifasciatus", "Thalassoma_hardwicke",
-                 "Oxymonacanthus_longirostris")
+                 "Oxymonacanthus_longirostris", "Ac_Cten_dark")
                  #  , "Naso_brevirostris",
                  # "Sufflamen_chrysopterum", "Canthigaster_bennetti",
                  # "Cephalopholis_argus", "Cetoscarus_ocellatus",
