@@ -4,7 +4,7 @@
 ##
 ## make.R
 ##
-## 08/12/2021
+## 08/12/2021 - 06/2022
 ##
 ## Camille Magneville
 ##
@@ -21,7 +21,7 @@ devtools::install_deps()
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
-remotes::install_github("CmlMagneville/SmaxN", build_vignettes = TRUE)
+remotes::install_github("CmlMagneville/SmaxN", build_vignettes = TRUE, force = TRUE)
 
 
 # Load the functions so make them available for use:

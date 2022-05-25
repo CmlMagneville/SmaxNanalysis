@@ -30,16 +30,29 @@ species_set <- c("Gomphosus_caeruleus", "Parupeneus_macronemus",
                  # "Chaetodon_trifascialis", "Chlorurus_sordidus",
                  # "Chromis_weberi", "Zebrasoma_scopas", "Caranx_melampygus")
 
-# compute the df with all info for the plot with same fish speed for all species:
+
+## compute the df with all info for the plot with same fish speed for all species:
 # ... note: if not same fish spped for all species, change the automat.maxN.setsp
 # ... function
-maxN_all_df <- automat.maxN.setsp(species_set = species_set,
-                                  abund_list = abund_list,
-                                  dist_df = dist_df,
-                                  fish_speed = 1)
 
-# save the df:
+
+# PREPARE DATA
+# restrict the abund_list to the studied species:
+clean_abund_list <- abund_list[which(names(abund_list) %in% species_set)]
+
+# create a dataframe which will cintain maxN values for all sp:
+maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
+colnames(maxN_all) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
+
+
+# completer ici .....................................
+
+# remove rows with NA:
+maxN_all <- maxN_all[which(! is.na(maxN_all$species_nm)), ]
+
+# save:
 saveRDS(maxN_all_df, here::here("transformed_data", "maxN_all.rds"))
+
 
 
 

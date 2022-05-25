@@ -188,12 +188,9 @@ speed.plot2 <- function(maxN_speed1, maxN_speed2, color_poses, alpha, size, shap
   # plot:
   speed_plot <- ggplot2::ggplot(data = final_speed_df) +
 
-    ggplot2::geom_jitter(ggplot2::aes(y = SmaxN_speed2/SmaxN_speed1, x = species_nm, colour = pose_nb,
+    ggplot2::geom_bar(ggplot2::aes(y = SmaxN_speed2/SmaxN_speed1, x = species_nm, colour = pose_nb,
                                       fill = pose_nb), alpha = alpha,
-                         size = size,
-                         shape = shape,
-                         width = 0.01,
-                         height = 0.01) +
+                         width = 0.01) +
 
     ggplot2::scale_fill_manual(values = color_poses,
                                name = "Pose",
