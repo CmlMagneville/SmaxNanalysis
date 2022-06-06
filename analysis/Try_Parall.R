@@ -178,7 +178,7 @@ time.taken <- end.time - start.time
 
 
 
-data <- clean_abund_list[[i]][[3]]
+data <- clean_abund_list[[i]][[1]]
 start.time <- Sys.time()
 Pose2_demi <- SmaxN::SmaxN.computation(dist_df = dist_df[which(rownames(dist_df) %in% colnames(data)),
                                                          which(colnames(dist_df) %in% colnames(data))],

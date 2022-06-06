@@ -24,20 +24,152 @@
 #'
 
 
-SmaxN.single.inp <- function(list_input) {
-  SmaxN::SmaxN.computation(dist_df = list_input$dist_df,
-                           speed = list_input$speed,
-                           abund_df = list_input$abund_df)
+SmaxN.single.inp <- function(i) {
+  SmaxN::SmaxN.computation(dist_df = paral_list[[i]]$dist_df,
+                           speed = paral_list[[i]]$speed,
+                           abund_df = paral_list[[i]]$abund_df)
 }
 
-#' Create a dataframe containing maxN values for the studied species and
+# Don't use anymore because compute for only one species at a time:
+#' #' Create a dataframe containing maxN values for the studied species and
+#' #' the three poses
+#' #'
+#' #' This function computes a dataframes containing maxN,SmaxN, maxN_row,
+#' #' for a given set of species and the three poses. This function uses
+#' #' parallelisation.
+#' #'
+#' #' @param species_set a vector containing the latin name of the studied species
+#' #' given with no space but underscore "_" between Genera and Species names
+#' #'
+#' #' @param abund_list a list gathering the abundance dataframes of the different
+#' #' Poses (dataframes with cameras = columns and time = rows)
+#' #'
+#' #' @param dist_df  a numerical dataframe containing the distance between each
+#' #'  pair of camera. There are as many rows as there are cameras and there are
+#' #'  as many columns as there are cameras, thus the dataframe is symmetrical
+#' #'  and the diagonal is filled with 0. \strong{Rows names and columns names
+#' #'  must be cameras names}. \strong{BE CAREFUL that the cameras are
+#' #' the same and in the same order in the dist_df and in the abund_df!}
+#' #'
+#' #' @param fish_speed a numerical value refering to the maximal speed of the
+#' #'  studied species. \strong{Speed must be given in meters per second}. If the
+#' #'  computation of maxN values should not take into account fish speed (that is
+#' #'  to say if the camera pooling is done at the second level),
+#' #'  \code{fish_speed = NULL}
+#' #'
+#' #'  @param os a chacaretr string refering to the operating system used as the
+#' #'  parallelisation process differs following the os. can either be "windows" or
+#' #'  "linux". (mac not done)
+#' #'
+#' #' @return a dataframe with five columns: maxN,SmaxN, maxN_row,
+#' #' Species_nm, Poses
+#' #'
+#' #' @importFrom magrittr %>%
+#' #'
+#' #' @export
+#' #'
+#'
+#'
+#'
+#'
+#' automat.maxN.setsp <- function(species_set, abund_list, dist_df, fish_speed) {
+#'
+#'
+#'   # create a dataframe which will contain all data:
+#'   maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
+#'   colnames(maxN_all) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
+#'
+#'
+#'   # returns the number of available hardware threads, and if it is FALSE, returns the number of physical cores:
+#'   no_cores <- parallel::detectCores(logical = TRUE)
+#'
+#'   # allocate this nb of available cores to R:
+#'   cl <- parallel::makeCluster(no_cores-1)
+#'   doParallel::registerDoParallel(cl)
+#'
+#'
+#'
+#'   # restrict the abund_list to the studied species:
+#'   clean_abund_list <- abund_list[which(names(abund_list) %in% species_set)]
+#'
+#'
+#'   # loop on species:
+#'   for (i in (1:length(clean_abund_list))) {
+#'
+#'     # create a dataframe which will contain maxN data for the studied sp:
+#'     maxN_sp <- as.data.frame(matrix(ncol = 5, nrow = 1))
+#'     colnames(maxN_sp) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
+#'
+#'
+#'       # create the list containing the objects on which to parallise:
+#'       # (be careful that dist_df has the right nb columns):
+#'
+#'       paral_list <- list()
+#'
+#'       # loop on the different poses:
+#'       for (j in (1:length(clean_abund_list[[i]]))) {
+#'
+#'         paral_list <- append(paral_list, list(list(dist_df = dist_df[which(rownames(dist_df) %in% colnames(clean_abund_list[[i]][[j]])),
+#'                                                                   which(colnames(dist_df) %in% colnames(clean_abund_list[[i]][[j]]))],
+#'                                               speed = fish_speed,
+#'                                               abund_df = clean_abund_list[[i]][[j]])))
+#'
+#'       } # end creating the list to parallelise
+#'
+#'       if (os == "windows") {
+#'         start.time <- Sys.time()
+#'         maxN_data <- parallel::parLapply(cl, paral_list, fun = SmaxN.single.inp)
+#'         end.time <- Sys.time()
+#'         time.taken <- end.time - start.time
+#'       }
+#'
+#'       if (os == "linux") {
+#'         start.time <- Sys.time()
+#'         maxN_data <- parallel::mclapply(paral_list, fun = SmaxN.single.inp)
+#'         end.time <- Sys.time()
+#'         time.taken <- end.time - start.time
+#'       }
+#'
+#'       # put maxN values in the maxN_sp df for the three poses:
+#'       for (j in (1:length(maxN_data))) {
+#'
+#'         new_row <- tibble::tibble(species_nm = names(clean_abund_list)[i],
+#'                                   pose_nb = j,
+#'                                   maxN = maxN_data[[j]]$maxN,
+#'                                   SmaxN = maxN_data[[j]]$SmaxN,
+#'                                   SmaxN_timestep = maxN_data[[j]]$SmaxN_timestep,
+#'         )
+#'         maxN_sp <- dplyr::add_row(maxN_sp, new_row)
+#'
+#'       }
+#'
+#'       # add species data to the global data:
+#'       maxN_all <- dplyr::bind_rows(maxN_all, maxN_sp)
+#'
+#'     } # end loop on species
+#'
+#'
+#'    # remove NA rows:
+#'    maxN_all <- maxN_all[which(! is.na(maxN_all$species_nm)), ]
+#'
+#'    # Close Cluster:
+#'    stopCluster(cl)
+#'
+#'   # return global maxN:
+#'   return(list(maxN_all, time.taken))
+#'
+#' }
+
+
+
+#' Create a dataframe containing maxN values for one studied species and
 #' the three poses
 #'
 #' This function computes a dataframes containing maxN,SmaxN, maxN_row,
-#' for a given set of species and the three poses. This function uses
+#' for a one species and the three poses. This function uses
 #' parallelisation.
 #'
-#' @param species_set a vector containing the latin name of the studied species
+#' @param species_nm a caracter string containing the latin name of the studied species
 #' given with no space but underscore "_" between Genera and Species names
 #'
 #' @param abund_list a list gathering the abundance dataframes of the different
@@ -60,6 +192,9 @@ SmaxN.single.inp <- function(list_input) {
 #'  parallelisation process differs following the os. can either be "windows" or
 #'  "linux". (mac not done)
 #'
+#'  @param nb_cores is a nuemric value refering to the number of cores on which
+#'  the process should be parallelised (do not need more than 3 cores as 3 poses)
+#'
 #' @return a dataframe with five columns: maxN,SmaxN, maxN_row,
 #' Species_nm, Poses
 #'
@@ -70,94 +205,72 @@ SmaxN.single.inp <- function(list_input) {
 
 
 
+automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os, nb_cores) {
 
-automat.maxN.setsp <- function(species_set, abund_list, dist_df, fish_speed) {
-
-
-  # create a dataframe which will contain all data:
-  maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
-  colnames(maxN_all) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
-
-
-  # returns the number of available hardware threads, and if it is FALSE, returns the number of physical cores:
-  no_cores <- parallel::detectCores(logical = TRUE)
-
-  # allocate this nb of available cores to R:
-  cl <- parallel::makeCluster(no_cores-1)
-  doParallel::registerDoParallel(cl)
-
-
+  if (os == "windows") {
+    # allocate 3 cores to this process (server has 100 cores and only need 3 for the
+    # ... poses):
+    cl <- parallel::makeCluster(3)
+    doParallel::registerDoParallel(cl)
+  }
 
   # restrict the abund_list to the studied species:
-  clean_abund_list <- abund_list[which(names(abund_list) %in% species_set)]
+  clean_abund_list <- list()
+  clean_abund_list <- abund_list[which(names(abund_list) == species_nm)]
 
+  # create a dataframe which will contain maxN data for the studied sp:
+  maxN_sp <- as.data.frame(matrix(ncol = 5, nrow = 1))
+  colnames(maxN_sp) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
 
-  # loop on species:
-  for (i in (1:length(clean_abund_list))) {
+  paral_list <- list()
 
-    # create a dataframe which will contain maxN data for the studied sp:
-    maxN_sp <- as.data.frame(matrix(ncol = 5, nrow = 1))
-    colnames(maxN_sp) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
+  # loop on the different poses:
+  for (j in (1:length(clean_abund_list[[1]]))) {
 
+    paral_list <- append(paral_list, list(list(dist_df = dist_df[which(rownames(dist_df) %in% colnames(clean_abund_list[[1]][[j]])),
+                                                                 which(colnames(dist_df) %in% colnames(clean_abund_list[[1]][[j]]))],
+                                               speed = fish_speed,
+                                               abund_df = clean_abund_list[[1]][[j]])))
 
-      # create the list containing the objects on which to parallise:
-      # (be careful that dist_df has the right nb columns):
+  } # end creating the list to parallelise
 
-      paral_list <- list()
+  if (os == "windows") {
+    start.time <- Sys.time()
+    maxN_data <- parallel::parLapply(cl, paral_list, fun = SmaxN.single.inp)
+    end.time <- Sys.time()
+    time.taken <- end.time - start.time
+  }
 
-      # loop on the different poses:
-      for (j in (1:length(clean_abund_list[[i]]))) {
+  if (os == "linux") {
+    start.time <- Sys.time()
+    maxN_data <- parallel::mclapply(X = 1:length(paral_list), FUN = SmaxN.single.inp, mc.cores = nb_cores)
+    end.time <- Sys.time()
+    time.taken <- end.time - start.time
+  }
 
-        paral_list <- append(paral_list, list(list(dist_df = dist_df[which(rownames(dist_df) %in% colnames(clean_abund_list[[i]][[j]])),
-                                                                  which(colnames(dist_df) %in% colnames(clean_abund_list[[i]][[j]]))],
-                                              speed = fish_speed,
-                                              abund_df = clean_abund_list[[i]][[j]])))
+  # put maxN values in the maxN_sp df for the three poses:
+  for (j in (1:length(maxN_data))) {
 
-      } # end creating the list to parallelise
+    new_row <- tibble::tibble(species_nm = species_nm,
+                              pose_nb = j,
+                              maxN = maxN_data[[j]][1],
+                              SmaxN = maxN_data[[j]][2],
+                              SmaxN_timestep = maxN_data[[j]][3],
+    )
+    maxN_sp <- dplyr::add_row(maxN_sp, new_row)
 
-      if (os == "windows") {
-        start.time <- Sys.time()
-        maxN_data <- parallel::parLapply(cl, paral_list, fun = SmaxN::SmaxN.single.inp)
-        end.time <- Sys.time()
-        time.taken <- end.time - start.time
-      }
+  }
 
-      if (os == "linux") {
-        start.time <- Sys.time()
-        maxN_data <- parallel::mclapply(paral_list, fun = SmaxN.single.inp)
-        end.time <- Sys.time()
-        time.taken <- end.time - start.time
-      }
-
-      # put maxN values in the maxN_sp df for the three poses:
-      for (j in (1:length(maxN_data))) {
-
-        new_row <- tibble::tibble(species_nm = names(clean_abund_list)[i],
-                                  pose_nb = j,
-                                  maxN = maxN_data[[j]]$maxN,
-                                  SmaxN = maxN_data[[j]]$SmaxN,
-                                  SmaxN_timestep = maxN_data[[j]]$SmaxN_timestep,
-        )
-        maxN_sp <- dplyr::add_row(maxN_sp, new_row)
-
-      }
-
-      # add species data to the global data:
-      maxN_all <- dplyr::bind_rows(maxN_all, maxN_sp)
-
-    } # end loop on species
-
-
-   # remove NA rows:
-   maxN_all <- maxN_all[which(! is.na(maxN_all$species_nm)), ]
-
-   # Close Cluster:
-   stopCluster(cl)
+  if (os == "windows") {
+    # Close Cluster:
+    stopCluster(cl)
+  }
 
   # return global maxN:
-  return(list(maxN_all, time.taken))
+  return(list(maxN_sp, time.taken))
 
 }
+
 
 
 #' Create the plot showing delta between maxN values for a set of species
