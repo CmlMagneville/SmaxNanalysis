@@ -56,7 +56,7 @@ dist_df <- paral_list[[1]]$dist_df
 speed <- paral_list[[1]]$speed
 
 start <- Sys.time()
-Ac_Cten_P1 <- SmaxN.computation(abund_df, speed, dist_df)
+Ac_Cten_P1 <- SmaxN::SmaxN.computation(abund_df, speed, dist_df)
 stop <- Sys.time()
 time_taken_Ac_Cten_P1 <- stop - start
 
@@ -69,7 +69,7 @@ dist_df <- paral_list[[2]]$dist_df
 speed <- paral_list[[2]]$speed
 
 start <- Sys.time()
-Ac_Cten_P2 <- SmaxN.computation(abund_df, speed, dist_df)
+Ac_Cten_P2 <- SmaxN::SmaxN.computation(abund_df, speed, dist_df)
 stop <- Sys.time()
 time_taken_Ac_Cten_P2 <- stop - start
 
@@ -83,7 +83,7 @@ dist_df <- paral_list[[3]]$dist_df
 speed <- paral_list[[3]]$speed
 
 start <- Sys.time()
-Ac_Cten_P3 <- SmaxN.computation(abund_df, speed, dist_df)
+Ac_Cten_P3 <- SmaxN::SmaxN.computation(abund_df, speed, dist_df)
 stop <- Sys.time()
 time_taken_Ac_Cten_P3 <- stop - start
 

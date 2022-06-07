@@ -243,7 +243,12 @@ automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os,
 
   if (os == "linux") {
     start.time <- Sys.time()
-    maxN_data <- parallel::mclapply(X = 1:length(paral_list), FUN = SmaxN.single.inp, mc.cores = nb_cores)
+    maxN_data <- parallel::mclapply(X = 1:length(paral_list), FUN = function(i) {
+      SmaxN::SmaxN.computation(dist_df = paral_list[[i]]$dist_df,
+                               speed = paral_list[[i]]$speed,
+                               abund_df = paral_list[[i]]$abund_df)
+    },
+    mc.cores = nb_cores)
     end.time <- Sys.time()
     time.taken <- end.time - start.time
   }
