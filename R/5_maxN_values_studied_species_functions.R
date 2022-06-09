@@ -218,10 +218,6 @@ automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os,
   clean_abund_list <- list()
   clean_abund_list <- abund_list[which(names(abund_list) == species_nm)]
 
-  # create a dataframe which will contain maxN data for the studied sp:
-  maxN_sp <- as.data.frame(matrix(ncol = 5, nrow = 1))
-  colnames(maxN_sp) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
-
   paral_list <- list()
 
   # loop on the different poses:
@@ -236,7 +232,11 @@ automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os,
 
   if (os == "windows") {
     start.time <- Sys.time()
-    maxN_data <- parallel::parLapply(cl, paral_list, fun = SmaxN.single.inp)
+    maxN_data <- parallel::parLapply(cl, paral_list, fun = function(i) {
+      SmaxN::SmaxN.computation(dist_df = paral_list[[i]]$dist_df,
+                               speed = paral_list[[i]]$speed,
+                               abund_df = paral_list[[i]]$abund_df)
+    })
     end.time <- Sys.time()
     time.taken <- end.time - start.time
   }
@@ -253,26 +253,13 @@ automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os,
     time.taken <- end.time - start.time
   }
 
-  # put maxN values in the maxN_sp df for the three poses:
-  for (j in (1:length(maxN_data))) {
-
-    new_row <- tibble::tibble(species_nm = species_nm,
-                              pose_nb = j,
-                              maxN = maxN_data[[j]][1],
-                              SmaxN = maxN_data[[j]][2],
-                              SmaxN_timestep = maxN_data[[j]][3],
-    )
-    maxN_sp <- dplyr::add_row(maxN_sp, new_row)
-
-  }
-
   if (os == "windows") {
     # Close Cluster:
     stopCluster(cl)
   }
 
   # return global maxN:
-  return(list(maxN_sp, time.taken))
+  return(maxN_data)
 
 }
 
