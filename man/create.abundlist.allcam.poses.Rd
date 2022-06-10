@@ -4,13 +4,13 @@
 \alias{create.abundlist.allcam.poses}
 \title{Create list of abundance dataframes with all cameras}
 \usage{
-create.abundlist.allcam.poses(cam_set, species_set, abund_list)
+create.abundlist.allcam.poses(cam_set, species_nm, abund_list)
 }
 \arguments{
 \item{cam_set}{a vector containing the names of cameras to use (camera names
 should be written as caracter stings)}
 
-\item{species_set}{a vector containing the names species to study (latin
+\item{species_nm}{a character string containing the name species to study (latin
 names with no spaces and underscores "_" between Genera and species names)}
 
 \item{abund_list}{a list gathering the abundance dataframes (one for each

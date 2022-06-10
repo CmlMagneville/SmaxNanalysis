@@ -253,11 +253,6 @@ automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os,
     time.taken <- end.time - start.time
   }
 
-  if (os == "windows") {
-    # Close Cluster:
-    stopCluster(cl)
-  }
-
   # return global maxN:
   return(maxN_data)
 

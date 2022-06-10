@@ -20,7 +20,7 @@
 #' For each species, the dataframes contain the
 #' full number of camers (ie 12)
 #'
-#' @param species_set a vector containing the names species to study (latin
+#' @param species_nm a character string containing the name species to study (latin
 #' names with no spaces and underscores "_" between Genera and species names)
 #'
 #' @param cam_set a vector containing the names of cameras to use (camera names
@@ -35,76 +35,56 @@
 #'
 
 create.abundlist.allcam.poses <- function(cam_set,
-                                species_set,
+                                species_nm,
                                 abund_list) {
 
 
   # only select species of species_set:
-  clean_abund_list <- abund_list[which(names(abund_list) %in% species_set)]
+  clean_abund_list <- abund_list[which(names(abund_list) %in% species_nm)]
 
-  # create a new abund_list that will contain df with 12 columns:
+  # create a new abund_list that will contain df with 9 (ICRS) 12 (paper) columns:
   final_abund_list <- list()
 
-  # loop on species:
-  for (i in (1:length(clean_abund_list))) {
+  # loop on poses:
+  for (i in (1:length(clean_abund_list[[1]]))) {
 
-    print(paste0(names(clean_abund_list)[i], sep = " ", "starts"))
+    print(paste0("Pose", sep = " ", i, sep = " ", "starts"))
 
-    # create a new list for species with df with right nb of columns (12):
-    final_abund_sp_list <- list()
+    # get the studied df:
+    data <- clean_abund_list[[1]][[i]]
 
-    # loop on the different poses to add column if needed:
-    for (j in (1:length(clean_abund_list[[i]]))) {
+    # if not the right number of columns: CHANGE HERE PAPER
+    if (ncol(data) != 9) {
 
-      print(paste0("Pose", sep = " ", j, sep = " ", "starts"))
+      # get the names and nb of columns missing: CHANGE HERE PAPER
+      coln <- colnames(data)
+      right_coln <- c("H", "F", "D", "C2", "C1",
+                      "B2", "B1", "A2", "A1")
+      missing <- right_coln[which(! right_coln %in% coln)]
 
-      # get the studied df:
-      data <- clean_abund_list[[i]][[j]]
+      # for each missing column:
+      for (k in (1:length(missing))) {
 
-      # if not the right number of columns:
-      if (ncol(data) != 12) {
+        # add new column at the end of the df:
+        data$new_cam <- rep(0, nrow(clean_abund_list[[1]][[i]]))
 
-        # get the names and nb of columns missing:
-        coln <- colnames(data)
-        right_coln <- c("I", "H", "G", "F", "E", "D", "C2", "C1",
-                        "B2", "B1", "A2", "A1")
-        missing <- right_coln[which(! right_coln %in% coln)]
+        # rename the new column:
+        colnames(data)[ncol(data)] <- missing[k]
 
-        # for each missing column:
-        for (k in (1:length(missing))) {
+      } # end add and fill new column
 
-          # add new column at the end of the df:
-          data$new_cam <- rep(0, nrow(clean_abund_list[[i]][[j]]))
+      # reorder the columns:
+      data <- data[, right_coln]
 
-          # rename the new column:
-          colnames(data)[ncol(data)] <- missing[k]
-
-        } # end add and fill new column
-
-        # reorder the columns:
-        data <- data[, right_coln]
-
-      } # end if not the right number of columns
+    } # end if not the right number of columns
 
 
-      # fill the species list with new df (transformed if not enough columns or not):
-      final_abund_sp_list <- rlist::list.append(final_abund_sp_list, data)
+    # fill the species list with new df (transformed if not enough columns or not):
+    final_abund_list <- rlist::list.append(final_abund_list, data)
 
-    } # end loop on poses
+  } # end loop on poses
 
-
-    # change abundance dataframes in the list so they have all ...
-    # ... cameras:
-    final_abund_list <- rlist::list.append(final_abund_list, final_abund_sp_list)
-    names(final_abund_list)[i] <- names(clean_abund_list[i])
-
-  } # end loop on species
-
-  print(paste0(names(clean_abund_list)[i], sep = " ", "ends"))
-
-  # save the df which as for each species the abundance df with all cam ...
-  # ... and poses fusioned:
-  saveRDS(final_abund_list, here::here("transformed_data", "abund_list_allcam.rds"))
+  names(final_abund_list) <- names(clean_abund_list)
 
   # return the final list:
   return(final_abund_list)
