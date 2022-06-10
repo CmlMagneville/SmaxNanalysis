@@ -164,9 +164,19 @@ saveRDS(SmaxN_PM, here::here("transformed_data", "SmaxN_PM_raw.rds"))
 
 ## 2 - Arrange data from parallelisation process for plot
 
+# gather data for all species:
+all_sp_list <- list(SmaxN_AcCten, SmaxN_CT, SmaxN_GC, SmaxN_PM)
+names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
+                        "Gomphosus_caeruleus", "Parupeneus_macronemus")
+
+
+# to a clean table:
+SmaxN_df_all_sp <- clean.df.maxN(all_sp_list = all_sp_list)
+
 
 
 ## 3 - Plot
 
-plot_deltas <- deltas.plot(maxN_all_df, colors = c("#66c2a5", "#fc8d62",
+plot_deltas <- deltas.plot(maxN_all_df = SmaxN_df_all_sp,
+                           colors = c("#66c2a5", "#fc8d62",
                                                    "#8da0cb"))

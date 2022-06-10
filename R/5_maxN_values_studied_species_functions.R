@@ -260,6 +260,72 @@ automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os,
 
 
 
+#' Create a dataframe containing maxN values for one studied species and
+#' the three poses
+#'
+#' This function computes a dataframes containing maxN,SmaxN, maxN_row,
+#' for a one species and the three poses. This function uses
+#' parallelisation.
+#'
+#' @param all_sp_list a list containing for each species the output of the
+#' automat.maxN.spbysp() function. Names must be given for each
+#' species. See script 3.maxN_values_delta_analysis_spbysp.R part 2
+#' "arrange data".
+#'
+#' @return a dataframe with five columns: species_nm, pose_nb, maxN, SmaxN
+#' and maxN_timestep
+#'
+#' @importFrom magrittr %>%
+#'
+#' @export
+#'
+
+
+clean.df.maxN <- function(all_sp_list) {
+
+  # create a dataframe that will contains all value to plot:
+  maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
+  colnames(maxN_all) <- c("species_nm", "pose", "maxN", "SmaxN", "SmaxN_timestep")
+
+
+  # loop on the species list:
+  for (i in (1:length(all_sp_list))) {
+
+    sp_nm <- names(all_sp_list)[i]
+
+    # loop on the Poses:
+    for (j in (1:length(all_sp_list[[i]]))) {
+
+      pose_nb <- paste0("Pose", sep = "_", j)
+
+      # get the data for sp 1 and pose j:
+      data <- all_sp_list[[i]][[j]]
+
+      # get the values:
+      maxN <- data$maxN
+      SmaxN <- data$SmaxN
+      SmaxN_timestep <- data$SmaxN_timestep
+
+      # new row to add maxN:
+      new_row <- tibble::tibble(species_nm = sp_nm,
+                                pose = pose_nb,
+                                maxN = maxN,
+                                SmaxN = SmaxN,
+                                SmaxN_timestep = SmaxN_timestep)
+      # add:
+      maxN_all <- dplyr::add_row(maxN_all, new_row)
+
+    }
+
+  }
+
+  # remove first row with NA:
+  maxN_all <- maxN_all[-1, ]
+
+  return(maxN_all)
+
+}
+
 #' Create the plot showing delta between maxN values for a set of species
 #'
 #' This function computes a plot showing SmaxN, maxN, SmaxN_row (values on y)
@@ -282,7 +348,7 @@ automat.maxN.spbysp <- function(species_nm, abund_list, dist_df, fish_speed, os,
 deltas.plot <- function(maxN_all, colors) {
 
   # factorise poses:
-  maxN_all$pose_nb <- as.factor(maxN_all$pose_nb)
+  maxN_all$pose <- as.factor(maxN_all$pose)
 
   # factorise species:
   maxN_all$species_nm <- as.factor(maxN_all$species_nm)
@@ -292,16 +358,17 @@ deltas.plot <- function(maxN_all, colors) {
   maxN_all <- maxN_all[which(maxN_all$SmaxN != 0), ]
 
   # compute deltas:
-  maxN_all$delta_SmaxN_maxN <- maxN_all$maxN / maxN_all$SmaxN
-  maxN_all$delta_SmaxN_SmaxNrow <- maxN_all$SmaxN_row / maxN_all$SmaxN
+  maxN_all$delta_SmaxN_maxN <- maxN_all$SmaxN / maxN_all$maxN
+  maxN_all$delta_SmaxN_SmaxNtimestep <- maxN_all$SmaxN / maxN_all$SmaxN_timestep
 
 
   # plot for delta 1:
   plot_delta1 <- ggplot2::ggplot(data = maxN_all,
                                  ggplot2::aes(x = species_nm, y = delta_SmaxN_maxN)) +
 
-    ggplot2::geom_bar(ggplot2::aes(fill = pose_nb, colour = pose_nb),
-                        width = 0.15) +
+    ggplot2::geom_bar(stat = "identity", position = ggplot2::position_dodge(),
+                      ggplot2::aes(fill = pose, colour = pose),
+                        width = 0.40) +
 
     ggplot2::scale_fill_manual(values = colors,
                                name = "Pose number") +
@@ -311,28 +378,40 @@ deltas.plot <- function(maxN_all, colors) {
 
     ggplot2::scale_alpha_manual(labels = NULL) +
 
-  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
                  panel.background = ggplot2::element_rect(fill = "white",
                                                           colour = "grey"),
                  panel.grid.major = ggplot2::element_line(colour = "grey")) +
 
-  ggplot2::scale_y_continuous(limits = c(0, 1),
-                                breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
-                                           0.7, 0.8, 0.9, 1)) +
+    ggplot2::scale_y_continuous(limits = c(0, 5),
+                                breaks = c(0.5, 1, 1.5, 2, 2.5, 3,
+                                           3.5, 4, 4.5, 5)) +
 
-  ggplot2::xlab("Species name") +
+    ggplot2::scale_x_discrete(labels= c("Ctenochaetus striatus",
+                                      "Chaetodon trifasciatus",
+                                      "Gomphosus caeruleus",
+                                      "Parupeneus macronemus")) +
 
-  ggplot2::ylab("Delta 1 = maxN / SmaxN")
+    ggplot2::xlab("") +
+
+    ggplot2::ylab("Delta 1 = SmaxN / maxN") +
+
+    fishualize::add_fishape(family = "Acanthuridae",
+                            option = "Ctenochaetus_striatus",
+                            xmin = 0.5, xmax = 1.5, ymin = 4.1, ymax = 4.9,
+                            scaled = FALSE,
+                            fill = "grey38",
+                            alpha = 0.3)
+
 
 
   # plot for delta 2:
   plot_delta2 <- ggplot2::ggplot(data = maxN_all,
-                                 ggplot2::aes(x = species_nm, y = delta_SmaxN_SmaxNrow)) +
+                                 ggplot2::aes(x = species_nm, y = delta_SmaxN_SmaxNtimestep)) +
 
-    ggplot2::geom_jitter(ggplot2::aes(fill = pose_nb, colour = pose_nb),
-                         shape = 21, size = 2.5,
-                         width = 0.15,
-                         height = 0) +
+    ggplot2::geom_bar(stat = "identity", position = ggplot2::position_dodge(),
+                      ggplot2::aes(fill = pose, colour = pose),
+                      width = 0.40) +
 
     ggplot2::scale_fill_manual(values = colors,
                                name = "Pose number") +
@@ -347,13 +426,25 @@ deltas.plot <- function(maxN_all, colors) {
                                                             colour = "grey"),
                    panel.grid.major = ggplot2::element_line(colour = "grey")) +
 
-    ggplot2::scale_y_continuous(limits = c(0, 1),
-                                breaks = c(0.1, 0.2, 0.3, 0.4, 0.5, 0.6,
-                                           0.7, 0.8, 0.9, 1)) +
+    ggplot2::scale_y_continuous(limits = c(0, 4.5),
+                                breaks = c(0.5, 1, 1.5, 2, 2.5, 3,
+                                           3.5, 4, 4.5)) +
 
-    ggplot2::xlab("Species name") +
+    ggplot2::scale_x_discrete(labels= c("Ctenochaetus striatus",
+                                        "Chaetodon trifasciatus",
+                                        "Gomphosus caeruleus",
+                                        "Parupeneus macronemus")) +
 
-    ggplot2::ylab("Delta 2 = SmaxN_row / SmaxN")
+    ggplot2::xlab("") +
+
+    ggplot2::ylab("Delta 2 = SmaxN / SmaxN_timestep") +
+
+    fishualize::add_fishape(family = "Acanthuridae",
+                            option = "Ctenochaetus_striatus",
+                            xmin = 0.5, xmax = 1.5, ymin = 3.1, ymax = 3.9,
+                            scaled = FALSE,
+                            fill = "grey38",
+                            alpha = 0.3)
 
   # gather the two plots using patchwork:
   patchwork_plot <- plot_delta1 + plot_delta2 +
