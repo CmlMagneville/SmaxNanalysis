@@ -5,7 +5,7 @@
 ##
 ## 4_SmaxN_increasing_nb_cam_analysis.R
 ##
-## 07/03/2022
+## 07/03/2022 puis 10/06/2022
 ##
 ## Camille Magneville
 ##
@@ -17,6 +17,8 @@
 abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
 dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
 
+# ICRS: keep only 9 cameras (6 LD and 3 SD):
+dist_df <- dist_df[c(2, 4, 6, 7, 8, 9, 10, 11, 12), c(2, 4, 6, 7, 8, 9, 10, 11, 12)]
 
 
 ## 1 - Prepare data for plotting ####
@@ -66,15 +68,18 @@ abund_allcam_list_CT <- create.abundlist.allcam.poses(cam_set = cam_set,
 # ... : But this list is to heavy to be saved on Github so must run ...
 # ... this step and the next one only once and the dataframe from the next ...
 # ... step will be saved.
-abund_combcam_list <- create.abund.list.camcombn(cam_set = cam_set,
+abund_combcam_list_CT <- create.abund.list.camcombn(cam_set = cam_set,
                                                  abund_allcam_list = abund_allcam_list_CT)
 
-
 # create the df for plot (really long process so uncomment if want to run again):
-maxN_combcam <- final.combcam(abund_combcam_list = abund_combcam_list,
-                              dist_df = dist_df,
-                              fish_speed = 1,
-                              analysis_type = "combcam")
+maxN_combcam_CT <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list_CT,
+                                        dist_df = dist_df,
+                                        fish_speed = 0.5,
+                                        analysis_type = "combcam")
+saveRDS(maxN_combcam_CT, "maxN_combcam_raw_CT.rds")
+
+# clean data so easy to collide df for all species:
+
 
 
 

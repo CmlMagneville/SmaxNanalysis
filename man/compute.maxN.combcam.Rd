@@ -8,8 +8,8 @@ the different combinaison of cameras}
 compute.maxN.combcam(abund_combcam_list, dist_df, fish_speed, analysis_type)
 }
 \arguments{
-\item{abund_combcam_list}{a list gathering for a given pose, a list for each species of
-abundance dataframes for each combination of cameras (298 combinations).
+\item{abund_combcam_list}{a list gathering for a given pose
+for each combination of cameras (129 ICRS and 298 combinations paper).
 Retrieved from the create.abund.list.camcombn() function.}
 
 \item{dist_df}{a numerical dataframe containing the distance between each

@@ -81,10 +81,11 @@ create.abundlist.allcam.poses <- function(cam_set,
 
     # fill the species list with new df (transformed if not enough columns or not):
     final_abund_list <- rlist::list.append(final_abund_list, data)
+    names(final_abund_list)[i] <- paste0("Pose", sep = "_", i)
+
 
   } # end loop on poses
 
-  names(final_abund_list) <- names(clean_abund_list)
 
   # return the final list:
   return(final_abund_list)
@@ -104,11 +105,11 @@ create.abundlist.allcam.poses <- function(cam_set,
 #' @param cam_set a vector containing the names of cameras to use (camera names
 #' should be written as caracter stings)
 #'
-#' @param abund_all_cam_list a list gathering the abundance of each species in a
+#' @param abund_all_cam_list a list gathering the abundance of the studied species in a
 #' given dataframes with the 12 cameras. One dataframe for one Pose. Retrieved from the
 #' create.abundlist.allcam.poses() function.
 #'
-#' @return a list containing for each species, dataframes corresponding to the
+#' @return a list containing the dataframes corresponding to the
 #' combination of the different cameras
 #'
 #' @export
@@ -121,101 +122,57 @@ create.abund.list.camcombn <- function(cam_set,
   # compute all the possible combinations of cameras:
   comb_cam <- compute.comb(cam_set)
 
-  # create three lists that will contain for each species as many abundance df ...
+  # create three lists that will contain as many abundance df ...
   # ... as there are combinations of cameras. One list for one pose:
   final_list_pose1 <- list()
   final_list_pose2 <- list()
   final_list_pose3 <- list()
 
-  # loop on the different species:
-  for (i in (1:length(abund_allcam_list))) {
+
+  # loop on the poses:
+  for (k in (1:length(abund_allcam_list))) {
+
+    # retrieve the studied abundance df (for the studied species and pose):
+    data <- abund_allcam_list[[k]]
+
+    # loop on the different combinations:
+    for (j in (1:length(comb_cam))) {
+
+      print(paste0("Combination", sep = " ", j, sep = " ", "starts"))
 
 
-    print(paste0(names(abund_allcam_list)[i], sep = " ", "starts"))
+      # get the names of the camera(s) for the studied combination:
+      cam_nm <- comb_cam[[j]]
 
+      # only keep columns (= cameras) which are in the combination:
+      data2 <- as.data.frame(data[, which(colnames(data) %in% cam_nm)])
+      colnames(data2) <- cam_nm
 
-    # create a list that will contain the df for the studied species:
-    # ... one for each pose:
-    final_sp_list_pose1 <- list()
-    final_sp_list_pose2 <- list()
-    final_sp_list_pose3 <- list()
-
-
-    # loop on the poses:
-    for (k in (1:length(abund_allcam_list[[i]]))) {
-
-      # retrieve the studied abundance df (for the studied species and pose):
-      data <- abund_allcam_list[[i]][[k]]
-
-      # loop on the different combinations:
-      for (j in (1:length(comb_cam))) {
-
-        print(paste0("Combination", sep = " ", j, sep = " ", "starts"))
-
-
-        # get the names of the camera(s) for the studied combination:
-        cam_nm <- comb_cam[[j]]
-
-        # only keep columns (= cameras) which are in the combination:
-        data2 <- as.data.frame(data[, which(colnames(data) %in% cam_nm)])
-        colnames(data2) <- cam_nm
-
-        # add the df with studied cameras to the species list according to
-        # ... the studied pose:
-
-        # if pose 1:
-        if (k == 1) {
-          final_sp_list_pose1 <- rlist::list.append(final_sp_list_pose1, data2)
-        }
-
-        # if pose 2:
-        if (k == 2) {
-          final_sp_list_pose2 <- rlist::list.append(final_sp_list_pose2, data2)
-        }
-
-        # if pose 3:
-        if (k == 3) {
-          final_sp_list_pose3 <- rlist::list.append(final_sp_list_pose3, data2)
-        }
-
-
-      } # end loop on combinations
-
-      # add the list of the given species to the final list according to the ...
-      # ... pose number:
+      # add the df with studied cameras to the species list according to
+      # ... the studied pose:
 
       # if pose 1:
       if (k == 1) {
-        final_list_pose1 <- rlist::list.append(final_list_pose1, final_sp_list_pose1)
-        # rename with species name:
-        names(final_list_pose1)[i] <- names(abund_allcam_list)[i]
+        final_list_pose1 <- rlist::list.append(final_list_pose1, data2)
       }
 
       # if pose 2:
       if (k == 2) {
-        final_list_pose2 <- rlist::list.append(final_list_pose2, final_sp_list_pose2)
-        # rename with species name:
-        names(final_list_pose2)[i] <- names(abund_allcam_list)[i]
+        final_list_pose2 <- rlist::list.append(final_list_pose2, data2)
       }
 
       # if pose 3:
       if (k == 3) {
-        final_list_pose3 <- rlist::list.append(final_list_pose3, final_sp_list_pose3)
-        # rename with species name:
-        names(final_list_pose3)[i] <- names(abund_allcam_list)[i]
+        final_list_pose3 <- rlist::list.append(final_list_pose3, data2)
       }
 
-      print(paste0(k, sep = " ", "ends"))
+
+    } # end loop on combinations
+
+    print(paste0(k, sep = " ", "ends"))
 
 
-    } # end loop on poses
-
-
-    print(paste0(names(abund_allcam_list)[i], sep = " ", "ends"))
-
-
-  } # end loop on species
-
+  } # end loop on poses
 
   # create a list of poses list:
   final_list <- list(final_list_pose1, final_list_pose2, final_list_pose3)
@@ -240,9 +197,9 @@ create.abund.list.camcombn <- function(cam_set,
 #' for a given set of species and all the combinaisons of a given set of
 #' cameras
 #'
-#' @param abund_combcam_list a list gathering for a given pose, a list for each species of
-#' abundance dataframes for each combination of cameras (298 combinations).
-#' Retrieved from the create.abund.list.camcombn() function.
+#' @param abund_combcam_list a list gathering for a given pose
+#'  for each combination of cameras (129 ICRS and 298 combinations paper).
+#'  Retrieved from the create.abund.list.camcombn() function.
 #'
 #' @param dist_df  a numerical dataframe containing the distance between each
 #'  pair of camera. There are as many rows as there are cameras and there are
@@ -280,33 +237,20 @@ compute.maxN.combcam <- function(abund_combcam_list,
 
 
   if (analysis_type == "combcam") {
-    maxN_all <- as.data.frame(matrix(ncol = 6, nrow = 1))
-    colnames(maxN_all) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
+    maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
+    colnames(maxN_all) <- c("cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
   }
 
   if (analysis_type == "timespan") {
-    maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
-    colnames(maxN_all) <- c("species_nm", "time_span", "maxN", "SmaxN", "SmaxN_row")
+    maxN_all <- as.data.frame(matrix(ncol = 4, nrow = 1))
+    colnames(maxN_all) <- c("time_span", "maxN", "SmaxN", "SmaxN_row")
   }
 
 
-  # loop on species:
+  # loop on poses:
   for (i in (1:length(abund_combcam_list))) {
 
     print(paste0(names(abund_combcam_list[i]), sep = " ", "starts"))
-
-
-    # create a dataframe which will contain maxN data for the studied sp:
-
-    if (analysis_type == "combcam") {
-      maxN_sp <- as.data.frame(matrix(ncol = 6, nrow = 1))
-      colnames(maxN_sp) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
-    }
-
-    if (analysis_type == "timespan") {
-      maxN_sp <- as.data.frame(matrix(ncol = 5, nrow = 1))
-      colnames(maxN_sp) <- c("species_nm", "time_span", "maxN", "SmaxN", "SmaxN_row")
-    }
 
     # loop on the different combinaisons:
     for (j in (1:length(abund_combcam_list[[i]]))) {
@@ -319,15 +263,15 @@ compute.maxN.combcam <- function(abund_combcam_list,
                                          which(colnames(dist_df) %in% colnames(abund_combcam_list[[i]][[j]]))])
       colnames(data_dist) <- colnames(abund_combcam_list[[i]][[j]])
       rownames(data_dist) <- colnames(abund_combcam_list[[i]][[j]])
-      maxN_data <- SmaxN::compute.max.abund(dist_df = data_dist,
-                                            fish_speed = fish_speed,
+      maxN_data <- SmaxN::SmaxN.computation(dist_df = data_dist,
+                                            speed = fish_speed,
                                             abund_df = abund_combcam_list[[i]][[j]])
 
+      print("maxN computed")
 
       # put maxN values in the maxN_sp df:
       if (analysis_type == "combcam") {
-        new_row <- tibble::tibble(species_nm = names(abund_combcam_list[i]),
-                                  cam_nb = length(names(abund_combcam_list[[i]][[j]])),
+        new_row <- tibble::tibble(cam_nb = length(names(abund_combcam_list[[i]][[j]])),
                                   comb_nm = paste(names(abund_combcam_list[[i]][[j]]), collapse = '_'),
                                   maxN = maxN_data$maxN,
                                   SmaxN = maxN_data$SmaxN,
@@ -335,150 +279,27 @@ compute.maxN.combcam <- function(abund_combcam_list,
       }
 
       if (analysis_type == "timespan") {
-        new_row <- tibble::tibble(species_nm = names(abund_combcam_list[i]),
-                                  time_span = stringr::str_sub(names(abund_combcam_list[[i]])[j], 1, 4),
+        new_row <- tibble::tibble(time_span = stringr::str_sub(names(abund_combcam_list[[i]])[j], 1, 4),
                                   maxN = maxN_data$maxN,
                                   SmaxN = maxN_data$SmaxN,
                                   SmaxN_row = maxN_data$SmaxN_row)
       }
 
-      maxN_sp <- dplyr::add_row(maxN_sp, new_row)
+      maxN_all <- dplyr::add_row(maxN_all, new_row)
 
       print(paste0("Combinaison", sep = " ", j, p = " ", "ends"))
 
 
     }
 
-    maxN_all <- dplyr::bind_rows(maxN_all, maxN_sp)
-
     print(paste0(names(abund_combcam_list[i]), sep = " ", "ends"))
 
-  }
-
-  # save the maxN_all df:
-  if (analysis_type == "combcam") {
-    saveRDS(maxN_all, here::here("transformed_data", "maxN_combcam.rds"))
-  }
-  if (analysis_type == "timespan") {
-    saveRDS(maxN_all, here::here("transformed_data", "maxN_timespans.rds"))
   }
 
   # return
   return(maxN_all)
 
 }
-
-
-
-#' Create a dataframe containing maxN values for the studied species and
-#' the different combinaison of cameras and the different poses
-#'
-#' This function computes a dataframes containing maxN,SmaxN, maxN_row,
-#' for a given set of species, all the combinaisons of a given set of
-#' cameras and the different poses.
-#'
-#' @param abund_poses_combcam_list a list gathering for all poses, a list for each species of
-#' abundance dataframes for each combination of cameras (298 combinations).
-#' Retrieved from the create.abund.list.camcombn() function. and looks like:
-#' pose1 > pose1_sp1 > pose1_sp1_comb1 , pose1 > pose1_sp1 > pose1_sp1_comb2,
-#' ... , pose1 > pose1_sp2 > pose1_sp2_comb1, ...,
-#' ... , pose2 > pose2_sp1 > pose2_sp1_comb1 etc.
-#'
-#' @param dist_df  a numerical dataframe containing the distance between each
-#'  pair of camera. There are as many rows as there are cameras and there are
-#'  as many columns as there are cameras, thus the dataframe is symmetrical
-#'  and the diagonal is filled with 0. \strong{Rows names and columns names
-#'  must be cameras names}. \strong{BE CAREFUL that the cameras are
-#' the same and in the same order in the dist_df and in the abund_df!}
-#'
-#' @param fish_speed a numerical value refering to the maximal speed of the
-#'  studied species. \strong{Speed must be given in meters per second}. If the
-#'  computation of maxN values should not take into account fish speed (that is
-#'  to say if the camera pooling is done at the second level),
-#'  \code{fish_speed = NULL}
-#'
-#' @param analysis_type type of analysis to do
-#' as this function can be used either for the combination of camera analysis
-#' or for the timespan analysis. Can be either "combcam" for
-#' the analysis of camera combination or "timespan" for the
-#' analysis of timespans.
-#'
-#' @return a dataframe containing for each combination of cameras, maxN values
-#'
-#' @importFrom magrittr %>%
-#'
-#' @export
-#'
-
-
-final.combcam <- function(abund_combcam_list, dist_df,
-                          fish_speed, analysis_type) {
-
-  # for each list referring to a pose, run the compute.maxN.combcam() fct:
-
-  for (n in (1:length(abund_combcam_list))) {
-
-    #  if pose 1:
-    if (n == 1) {
-      combcam_pose1 <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list[[n]],
-                                           dist_df = dist_df,
-                                           fish_speed = fish_speed,
-                                           analysis_type = analysis_type)
-    }
-
-    #  if pose 2:
-    if (n == 2) {
-      combcam_pose2 <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list[[n]],
-                                            dist_df = dist_df,
-                                            fish_speed = fish_speed,
-                                            analysis_type = analysis_type)
-    }
-
-    #  if pose 3:
-    if (n == 3) {
-      combcam_pose3 <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list[[n]],
-                                            dist_df = dist_df,
-                                            fish_speed = fish_speed,
-                                            analysis_type = analysis_type)
-    }
-
-  } # end loop on the 3 poses
-
-  # add column to combcam_posen to add pose number:
-
-  ## pose1:
-  combcam_pose1_final <- combcam_pose1
-  combcam_pose1_final$Pose_nb <- "Pose_1"
-
-  ## pose2:
-  combcam_pose2_final <- combcam_pose2
-  combcam_pose2_final$Pose_nb <- "Pose_2"
-
-  ## pose3:
-  combcam_pose3_final <- combcam_pose3
-  combcam_pose3_final$Pose_nb <- "Pose_3"
-
-
-  # bind the three df:
-  final_combcam <- dplyr::bind_rows(combcam_pose1_final, combcam_pose2_final,
-                             combcam_pose3_final)
-
-
-  # save the final df:
-  if (analysis_type == "combcam") {
-    saveRDS(final_combcam, here::here("transformed_data", "final_combcam.rds"))
-
-  }
-  if (analysis_type == "timespan") {
-    saveRDS(final_combcam, here::here("transformed_data", "final_timespans.rds"))
-
-  }
-
-  # return the final df:
-  return(final_combcam)
-
-}
-
 
 
 #' Create the plot showing SmaxN values for an increasing number of cameras

@@ -96,6 +96,24 @@ saveRDS(Ac_Cten_P3, here::here("transformed_data", "Ac_Cten_P3.rds"))
 
 # ICRS 9 camera prend 12 minutes
 
+# combine all of them for ICRS:
+SmaxN_AcCten <- list(Ac_Cten_P1, Ac_Cten_P2, Ac_Cten_P3)
+
+
+# essaye en parallelisant:
+start <- Sys.time()
+SmaxN_AcCten <- automat.maxN.spbysp(species_nm = "Ac_Cten_dark",
+                                abund_list = clean_abund_list,
+                                dist_df = dist_df,
+                                fish_speed = 0.5,
+                                os = "windows",
+                                nb_cores = 3)
+stop <- Sys.time()
+time_taken_AcCten <- stop - start
+saveRDS(SmaxN_AcCten, here::here("transformed_data", "SmaxN_AcCten_raw.rds"))
+
+# ... h?
+
 
 
 ## Species 2: Gomphosus_caeruleus: j'ai essaye en parallelisant:
@@ -110,7 +128,7 @@ stop <- Sys.time()
 time_taken_GC <- stop - start
 saveRDS(SmaxN_GC, here::here("transformed_data", "SmaxN_GC_raw.rds"))
 
-
+# 3.78 heures
 
 
 ## Species 3 - Chaetodon_trifasciatus
@@ -126,7 +144,7 @@ stop <- Sys.time()
 time_taken_CT <- stop - start
 saveRDS(SmaxN_CT, here::here("transformed_data", "SmaxN_CT_raw.rds"))
 
-
+# 5 min
 
 
 ## Species 4 - Parupeneus_macronemus: "Parupeneus_macronemus"
@@ -142,7 +160,7 @@ stop <- Sys.time()
 time_taken_PM <- stop - start
 saveRDS(SmaxN_PM, here::here("transformed_data", "SmaxN_PM_raw.rds"))
 
-
+# 19 min
 
 ## 2 - Arrange data from parallelisation process for plot
 

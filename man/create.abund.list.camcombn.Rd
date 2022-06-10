@@ -11,12 +11,12 @@ create.abund.list.camcombn(cam_set, abund_allcam_list)
 \item{cam_set}{a vector containing the names of cameras to use (camera names
 should be written as caracter stings)}
 
-\item{abund_all_cam_list}{a list gathering the abundance of each species in a
+\item{abund_all_cam_list}{a list gathering the abundance of the studied species in a
 given dataframes with the 12 cameras. One dataframe for one Pose. Retrieved from the
 create.abundlist.allcam.poses() function.}
 }
 \value{
-a list containing for each species, dataframes corresponding to the
+a list containing the dataframes corresponding to the
 combination of the different cameras
 }
 \description{
