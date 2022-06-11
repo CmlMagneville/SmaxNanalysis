@@ -14,11 +14,9 @@
 
 ## 0 - 1 Load data ####
 
-#abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
-#dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
+abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
+dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
 
-abund_list <- readRDS("SmaxN_analysis/transformed_data/all_abund_list.rds")
-dist_df <- readRDS("SmaxN_analysis/data/dist_df.rds")
 
 # ICRS: keep only 9 cameras (6 LD and 3 SD):
 dist_df <- dist_df[c(2, 4, 6, 7, 8, 9, 10, 11, 12), c(2, 4, 6, 7, 8, 9, 10, 11, 12)]
