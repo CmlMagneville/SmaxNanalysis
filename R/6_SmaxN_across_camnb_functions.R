@@ -238,12 +238,12 @@ compute.maxN.combcam <- function(abund_combcam_list,
 
   if (analysis_type == "combcam") {
     maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
-    colnames(maxN_all) <- c("cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_row")
+    colnames(maxN_all) <- c("cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_timestep")
   }
 
   if (analysis_type == "timespan") {
     maxN_all <- as.data.frame(matrix(ncol = 4, nrow = 1))
-    colnames(maxN_all) <- c("time_span", "maxN", "SmaxN", "SmaxN_row")
+    colnames(maxN_all) <- c("time_span", "maxN", "SmaxN", "SmaxN_timestep")
   }
 
 
@@ -275,7 +275,7 @@ compute.maxN.combcam <- function(abund_combcam_list,
                                   comb_nm = paste(names(abund_combcam_list[[i]][[j]]), collapse = '_'),
                                   maxN = maxN_data$maxN,
                                   SmaxN = maxN_data$SmaxN,
-                                  SmaxN_row = maxN_data$SmaxN_row)
+                                  SmaxN_timestep = maxN_data$SmaxN_timestep)
       }
 
       if (analysis_type == "timespan") {
