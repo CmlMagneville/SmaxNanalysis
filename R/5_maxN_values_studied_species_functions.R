@@ -361,6 +361,10 @@ deltas.plot <- function(maxN_all, colors) {
   maxN_all$delta_SmaxN_maxN <- maxN_all$SmaxN / maxN_all$maxN
   maxN_all$delta_SmaxN_SmaxNtimestep <- maxN_all$SmaxN / maxN_all$SmaxN_timestep
 
+  # rename columns with AcCtendark to be Ctenochaetus striatus ...
+  # ... so Chaetodon is the first species and it helps for the graph:
+  maxN_all[which(maxN_all$species_nm == "AcCten_dark"), "species_nm"] <- rep("Ctenochaetus_striatus", 3)
+
 
   # plot for delta 1:
   plot_delta1 <- ggplot2::ggplot(data = maxN_all,
@@ -387,8 +391,8 @@ deltas.plot <- function(maxN_all, colors) {
                                 breaks = c(0.5, 1, 1.5, 2, 2.5, 3,
                                            3.5, 4, 4.5, 5)) +
 
-    ggplot2::scale_x_discrete(labels= c("Ctenochaetus striatus",
-                                      "Chaetodon trifasciatus",
+    ggplot2::scale_x_discrete(labels= c("Chaetodon trifasciatus",
+                                        "Ctenochaetus striatus",
                                       "Gomphosus caeruleus",
                                       "Parupeneus macronemus")) +
 
@@ -399,6 +403,27 @@ deltas.plot <- function(maxN_all, colors) {
     fishualize::add_fishape(family = "Acanthuridae",
                             option = "Ctenochaetus_striatus",
                             xmin = 0.5, xmax = 1.5, ymin = 4.1, ymax = 4.9,
+                            scaled = FALSE,
+                            fill = "grey38",
+                            alpha = 0.3) +
+
+    fishualize::add_fishape(family = "Chaetodontidae",
+                            option = "Chaetodon_trifasciatus",
+                            xmin = 1.5, xmax = 2.5, ymin = 2.1, ymax = 2.9,
+                            scaled = FALSE,
+                            fill = "grey38",
+                            alpha = 0.3) +
+
+    fishualize::add_fishape(family = "Labridae",
+                            option = "Gomphosus_caeruleus",
+                            xmin = 2.5, xmax = 3.5, ymin = 3.1, ymax = 3.9,
+                            scaled = FALSE,
+                            fill = "grey38",
+                            alpha = 0.3) +
+
+    fishualize::add_fishape(family = "Mullidae",
+                            option = "Parupeneus_macronemus",
+                            xmin = 3.5, xmax = 4.5, ymin = 1.6, ymax = 2.4,
                             scaled = FALSE,
                             fill = "grey38",
                             alpha = 0.3)
