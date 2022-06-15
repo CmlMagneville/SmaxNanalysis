@@ -41,10 +41,10 @@ cor.SmaxN.plot(maxN_all = maxN_all,
 
 
 # Load data:
-maxN_comb_cam <- readRDS(here::here("transformed_data", "final_combcam.rds"))
+maxN_combcam <- readRDS(here::here("transformed_data", "final_combcam.rds"))
 
 # Param:
-SmaxN_df <- maxN_comb_cam
+SmaxN_df <- maxN_combcam
 metric <- "cam_nb"
 
 # plot and kruskall-wallis (finally not used in the paper):
@@ -78,7 +78,7 @@ car::qqp(SmaxN_df$SmaxN, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$esti
 SmaxN_df <- maxN_comb_cam
 Y_var <- "SmaxN"
 X_var <- "cam_nb"
-X_var_random <- c("species_nm", "Pose_nb")
+X_var_random <- c("species_nm", "Pose")
 family_law <- "poisson"
 check_resid <- TRUE
 compute_RNakag <- TRUE
@@ -100,11 +100,11 @@ performance::model_performance(model_cam_nb[[1]])
 
 # NEW ANALYSIS: use fct and change it with that
 # https://mspeekenbrink.github.io/sdam-r-companion/linear-mixed-effects-models.html
-try <- glmmTMB::glmmTMB(SmaxN~cam_nb +(1 | species_nm) + (1 | Pose_nb), family = poisson, data=SmaxN_df)
+try <- glmmTMB::glmmTMB(SmaxN~cam_nb +(1 | species_nm) + (1 | Pose), family = "poisson", data=SmaxN_df)
 summary(try)
 glmmTMB:::Anova.glmmTMB(try)
 
-try2 <- glmmTMB::glmmTMB(SmaxN~cam_nb +(1 + species_nm) + (1 + Pose_nb), family = poisson, data=SmaxN_df)
+try2 <- glmmTMB::glmmTMB(SmaxN~cam_nb + (1 + species_nm) + (1 + Pose), family = "poisson", data=SmaxN_df)
 
 anova(try, try2)
 
@@ -113,12 +113,14 @@ summary(try2)
 glmmTMB:::Anova.glmmTMB(try2)
 
 tdat <- data.frame(predicted=predict(try2), residual = residuals(try2))
-ggplot(tdat,aes(x=predicted,y=residual, colour=species_nm)) + geom_point() + geom_hline(yintercept=0, lty=3)
-ggplot(tdat,aes(x=predicted,y=residual, colour=Pose_nb)) + geom_point() + geom_hline(yintercept=0, lty=3)
+ggplot2::ggplot(tdat,ggplot2::aes(x=predicted,y=residual, colour=species_nm)) + ggplot2::geom_point() +
+  ggplot2::geom_hline(yintercept=0, lty=3)
+ggplot2::ggplot(tdat,ggplot2::aes(x=predicted,y=residual, colour=Pose_nb)) + ggplot2::geom_point() +
+  ggplot2::geom_hline(yintercept=0, lty=3)
 
 
-ggplot(tdat,aes(x=residual)) + geom_histogram(bins=20, color="black")
-ggplot(tdat,aes(sample=residual)) + stat_qq() + stat_qq_line()
+ggplot2::ggplot(tdat,ggplot2::aes(x=residual)) + ggplot2::geom_histogram(bins=20, color="black")
+ggplot2::ggplot(tdat,ggplot2::aes(sample=residual)) + ggplot2::stat_qq() + ggplot2::stat_qq_line()
 
 performance::check_overdispersion(try2)
 performance::check_outliers(try2)
@@ -130,16 +132,18 @@ performance::check_model(try2)
 
 
 
-SmaxN_df2 <- reshape2::melt(SmaxN_df[, -c(3, 6)],
-                            id.vars = c("species_nm", "cam_nb", "Pose_nb"),
-                            variable.name = 'metric', value.name = 'values')
+SmaxN_df2 <- reshape2::melt(maxN_combcam,
+               id.vars = c("species_nm", "cam_nb", "comb_nm", "Pose"),
+               variable.name = 'metric', value.name = 'values')
 
-SmaxN_df2 <- SmaxN_df2[which(! is.na(SmaxN_df2$species_nm)), ]
+# remove the SmaxN_timespan metric which does not interest us for now:
+SmaxN_df2 <- SmaxN_df2[which(SmaxN_df2$metric != "SmaxN_timestep"), ]
+SmaxN_df2$Pose <- as.factor(SmaxN_df2$Pose)
+
 
 SmaxN_df2$values <- as.integer(SmaxN_df2$values)
 SmaxN_df2$cam_nb <- as.factor(SmaxN_df2$cam_nb)
 SmaxN_df2$species_nm <- as.factor(SmaxN_df2$species_nm)
-SmaxN_df2$Pose_nb <- as.factor(SmaxN_df2$Pose_nb)
 SmaxN_df2$metric <- as.factor(SmaxN_df2$metric)
 
 
@@ -170,13 +174,13 @@ car::qqp(SmaxN_df2$values, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$es
 # NEW ANALYSIS:
 # https://mspeekenbrink.github.io/sdam-r-companion/linear-mixed-effects-models.html
 
-try <- glmmTMB::glmmTMB(values ~ metric * cam_nb +(1 | species_nm) + (1 | Pose_nb),
-                        family = poisson, data=SmaxN_df2)
+try <- glmmTMB::glmmTMB(values ~ metric * cam_nb +(1 | species_nm) + (1 | Pose),
+                        family = "poisson", data=SmaxN_df2)
 summary(try)
 glmmTMB:::Anova.glmmTMB(try)
 
-try2 <- glmmTMB::glmmTMB(values ~ metric * cam_nb +(1 + species_nm) + (1 + Pose_nb),
-                         family = poisson, data=SmaxN_df2)
+try2 <- glmmTMB::glmmTMB(values ~ metric * cam_nb +(1 + species_nm) + (1 + Pose),
+                         family = "poisson", data=SmaxN_df2)
 
 anova(try, try2)
 
@@ -189,8 +193,8 @@ ggplot(tdat,aes(x=predicted,y=residual)) + geom_point() + geom_hline(yintercept=
 ggplot(tdat,aes(x=predicted,y=residual, colour=Pose_nb)) + geom_point() + geom_hline(yintercept=0, lty=3)
 
 
-ggplot(tdat,aes(x=residual)) + geom_histogram(bins=20, color="black")
-ggplot(tdat,aes(sample=residual)) + stat_qq() + stat_qq_line()
+ggplot2::ggplot(tdat,ggplot2::aes(x=residual)) + ggplot2::geom_histogram(bins=20, color="black")
+ggplot2::ggplot(tdat,ggplot2::aes(sample=residual)) + ggplot2::stat_qq() + ggplot2::stat_qq_line()
 
 performance::check_overdispersion(try2)
 performance::check_outliers(try2)

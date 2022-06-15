@@ -302,6 +302,113 @@ compute.maxN.combcam <- function(abund_combcam_list,
 }
 
 
+
+
+#' Create a dataframe containing SmaxN values for all studied species and
+#' combinaison of cameras
+#'
+#' This function computes a dataframes containing maxN,SmaxN, maxN_row,
+#' for all species and the combination of cameras.
+#'
+#' @param all_sp_list a list containing for each species the output of the
+#' compute.maxN.combcam() function. Names must be given for each
+#' species. See script 4.SmaxN_increasing_nbcam_analysis.R part 3
+#' "arrange data".
+#'
+#' @return a dataframe with six columns: species_nm, cam_nb, comb_nm, maxN, SmaxN
+#' and SmaxN_timestep
+#'
+#' @importFrom magrittr %>%
+#'
+#' @export
+#'
+
+
+clean.df.combcam.maxN <- function(all_sp_list) {
+
+  # create a dataframe that will contains all value to plot:
+  maxN_combcam <- as.data.frame(matrix(ncol = 6, nrow = 1))
+  colnames(maxN_combcam) <- c("species_nm", "cam_nb", "comb_nm", "maxN", "SmaxN", "SmaxN_timestep")
+
+
+  # loop on the species list:
+  for (i in (1:length(all_sp_list))) {
+
+    sp_nm <- names(all_sp_list)[i]
+    data <- as.data.frame(all_sp_list[[i]])
+    data <- data[-1, ]
+
+
+    # if the number of cam = 1, SmaxN and SmaxN_timestep = NA because rely on ...
+    # ... the use of several cameras:
+    # here I will set their value to the maxN value:
+    for (j in (1:nrow(data))) {
+
+      if (data$cam_nb[j] == 1) {
+        data$SmaxN[j] <- data$maxN[j]
+        data$SmaxN_timestep[j] <- data$maxN[j]
+      }
+
+    }
+
+
+    # create a df to add to the maxN_combcam df:
+
+    species_nm <- rep(sp_nm, nrow(data))
+    cam_nb <- data$cam_nb
+    comb_nm <- data$comb_nm
+    maxN <- data$maxN
+    SmaxN <- data$SmaxN
+    SmaxN_timestep <- data$SmaxN_timestep
+
+    data_to_add <- data.frame(species_nm, cam_nb, comb_nm, maxN,
+                              SmaxN, SmaxN_timestep)
+
+
+    # add the df of the studied species to the maxNcombcam df:
+    maxN_combcam <- rbind(maxN_combcam, data_to_add)
+
+  }
+
+
+  # now add the Pose number which has been forgotten in the maxN.combcam fct:
+  # for each species: the 129 first rows are Pose 1, then Pose 2 then Pose 3:
+
+  # add new column:
+  maxN_combcam$Pose <- rep(NA, nrow(maxN_combcam))
+
+  for (i in (1:length(unique(maxN_combcam$species_nm)))) {
+
+    sp_nm <- as.character(unique(maxN_combcam$species_nm)[i])
+
+    data_sp <- maxN_combcam[which(maxN_combcam$species_nm == sp_nm), ]
+
+
+    # Pose 1 (129 because 9 cam for ICRS):
+    data_sp[c(1:129), "Pose"] <- "Pose_1"
+
+    # Pose 2:
+    data_sp[c(130:258), "Pose"] <- "Pose_2"
+
+    # Pose 3:
+    data_sp[c(259:nrow(data_sp)), "Pose"] <- "Pose_3"
+
+
+    # collide data_sp in maxN_combcam:
+    maxN_combcam[which(maxN_combcam$species_nm == sp_nm), ] <- data_sp
+
+  }
+
+  # remove first row with NA:
+  maxN_combcam <- maxN_combcam[-1, ]
+
+  return(maxN_combcam)
+
+}
+
+
+
+
 #' Create the plot showing SmaxN values for an increasing number of cameras
 #'
 #' This function computes plots showing SmaxN and maxN values across an
@@ -320,29 +427,47 @@ compute.maxN.combcam <- function(abund_combcam_list,
 
 
 
-combcam.plot <- function(maxN_combcam, colors, alpha, shape, size) {
+combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
 
   # numerise cameras:
   maxN_combcam$cam_nb <- as.numeric(maxN_combcam$cam_nb)
 
-  # factorise pose_nb:
-  maxN_combcam$Pose_nb <- as.factor(maxN_combcam$Pose_nb)
+  # factorise pose:
+  maxN_combcam$Pose <- as.factor(maxN_combcam$Pose)
 
-  # remove NA rows:
-  maxN_combcam <- maxN_combcam[which(! is.na(maxN_combcam$species_nm)), ]
+  # factorise species:
+  maxN_combcam$species_nm <- as.factor(maxN_combcam$species_nm)
+
 
   # make in long format:
-  long_maxN_combcam <- reshape2::melt(maxN_combcam[, - (ncol(maxN_combcam) - 1)],
-                                      id.vars = c("species_nm", "cam_nb", "comb_nm", "Pose_nb"),
+  long_maxN_combcam <- reshape2::melt(maxN_combcam,
+                                      id.vars = c("species_nm", "cam_nb", "comb_nm", "Pose"),
                                       variable.name = 'metric', value.name = 'values')
 
+  # rename AcCten_dark in Ctenochaetus_striatus
+  long_maxN_combcam[which(long_maxN_combcam$species_nm == "AcCten_dark"), "species_nm"] <- "Ctenochaetus_striatus"
+
+
+  # remove unwanted rows according to the wanted graph = SmaxN vs maxN or SmaxN vs SmaxN_timestep:
+  if (compare == "maxN") {
+    long_maxN_combcam <- long_maxN_combcam[which(! long_maxN_combcam$metric == "SmaxN_timestep"), ]
+    long_maxN_combcam$metric <- as.factor(long_maxN_combcam$metric)
+  }
+
+  if (compare == "SmaxN_timestep") {
+    long_maxN_combcam <- long_maxN_combcam[which(! long_maxN_combcam$metric == "maxN"), ]
+    long_maxN_combcam$metric <- as.factor(long_maxN_combcam$metric)
+  }
+
   # create a list of new labels for species:
-  sp_labs <- c("C. auriga", "C. trifasciatus", "G. caeruleus",
-               "O. longirostris", "P. hexophtalma",
-               "P. macronemus", "T. hardwicke")
-  names(sp_labs) <- c("Chaetodon_auriga", "Chaetodon_trifasciatus", "Gomphosus_caeruleus",
-                      "Oxymonacanthus_longirostris", "Parapercis_hexophtalma",
-                      "Parupeneus_macronemus", "Thalassoma_hardwicke")
+  sp_labs <- c("Chaetodon trifasciatus",
+               "Ctenochaetus striatus",
+               "Gomphosus caeruleus",
+               "Parupeneus macronemus")
+  names(sp_labs) <- c("Chaetodon_trifasciatus",
+                      "Ctenochaetus_striatus",
+                      "Gomphosus_caeruleus",
+                      "Parupeneus_macronemus")
 
   # create a list of new labels for poses:
   pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
@@ -376,12 +501,12 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size) {
     ggplot2::scale_size_manual(values = size,
                               name = "Metric") +
 
-    ggplot2::scale_x_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+    ggplot2::scale_x_continuous(breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9)) +
 
-    ggplot2::facet_grid(cols = ggplot2::vars(Pose_nb),
+    ggplot2::facet_grid(cols = ggplot2::vars(Pose),
                         rows = ggplot2::vars(species_nm),
                         labeller = ggplot2::labeller(species_nm = sp_labs,
-                                                     Pose_nb = pose_labs)) +
+                                                     Pose = pose_labs)) +
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey"),
@@ -398,7 +523,7 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size) {
 
   # save in outputs:
   # save the plot in the outputs folder:
-  ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam_vers2.pdf"),
+  ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam.pdf"),
                   plot = plot_combcam,
                   device = "pdf",
                   scale = 1,

@@ -46,7 +46,7 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
   maxN_all$SmaxN <- as.numeric(maxN_all$SmaxN)
   maxN_all$SmaxN_row <- as.numeric(maxN_all$SmaxN_row)
 
-  maxN_all$pose_nb <- as.factor(maxN_all$pose_nb)
+  maxN_all$Pose <- as.factor(maxN_all$Pose)
 
 
   # plot maxN vs Smax for the 3 poses
@@ -56,11 +56,11 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
 
     SmaxN_plot <- ggplot2::ggplot(data = maxN_all) +
 
-      ggplot2::geom_jitter(ggplot2::aes(x = maxN, y = SmaxN, color = pose_nb,
-                                        fill = pose_nb,
+      ggplot2::geom_jitter(ggplot2::aes(x = maxN, y = SmaxN, color = Pose,
+                                        fill = Pose,
                                         shape = species_nm)) +
 
-      ggplot2::geom_smooth(ggplot2::aes(x = maxN, y = SmaxN, color = pose_nb),
+      ggplot2::geom_smooth(ggplot2::aes(x = maxN, y = SmaxN, color = Pose),
                            method = "lm", se = FALSE) +
 
       ggplot2::geom_abline(color = "grey50") +
@@ -101,11 +101,11 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
 
     SmaxN_plot <- ggplot2::ggplot(data = maxN_all) +
 
-      ggplot2::geom_jitter(ggplot2::aes(x = SmaxN_row, y = SmaxN, color = pose_nb,
-                                        fill = pose_nb,
+      ggplot2::geom_jitter(ggplot2::aes(x = SmaxN_row, y = SmaxN, color = Pose,
+                                        fill = Pose,
                                         shape = species_nm)) +
 
-      ggplot2::geom_smooth(ggplot2::aes(x = SmaxN_row, y = SmaxN, color = pose_nb),
+      ggplot2::geom_smooth(ggplot2::aes(x = SmaxN_row, y = SmaxN, color = Pose),
                            method = "lm", se = FALSE) +
 
       ggplot2::geom_abline(color = "grey50") +
@@ -325,7 +325,7 @@ kruskal.SmaxN.plot <- function(SmaxN_df, metric) {
 #' @param X_var_random a vector gathering the name of the random effect variable(s)
 #' (name(s) must be the same of the related SmaxN_df column). If no, NA. BUT
 #' the code does not use the names in the vector and uses species_nm if one
-#' random effect and species_nm and pose_nb if two random effects.
+#' random effect and species_nm and Pose if two random effects.
 #'
 #' @param family_law the family of the glmm
 #'
@@ -404,7 +404,7 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var,X_var_random,
     # if two random effects:
     if (! is.na(X_var_random) & length(X_var_random) == 2) {
       model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var) + (1 + species_nm)
-                                + (1 + Pose_nb),
+                                + (1 + Pose),
                                 family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)
@@ -437,7 +437,7 @@ glmm.compute <- function(SmaxN_df, Y_var, X_var,X_var_random,
     if (! is.na(X_var_random[1]) & length(X_var_random) == 2) {
       model <- glmmTMB::glmmTMB(get(Y_var) ~ get(X_var[1]) * get(X_var[2]) +
                                   (1 + species_nm)
-                                + (1 + Pose_nb),
+                                + (1 + Pose),
                                 family = family_law,
                                 data = SmaxN_df)
       anova_model <- glmmTMB:::Anova.glmmTMB(model)

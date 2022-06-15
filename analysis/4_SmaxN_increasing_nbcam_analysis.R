@@ -175,25 +175,35 @@ dist_df <- dist_df[c(2, 4, 6, 7, 8, 9, 10, 11, 12), c(2, 4, 6, 7, 8, 9, 10, 11, 
 ## 3 - Arrange data for plotting ####
 
 
+# call data:
+SmaxN_combcam_AcCten <- readRDS(here::here("transformed_data", "maxN_combcam_raw_AcCten.rds"))
+SmaxN_combcam_CT <- readRDS(here::here("transformed_data", "maxN_combcam_raw_CT.rds"))
+SmaxN_combcam_GC <- readRDS(here::here("transformed_data", "maxN_combcam_raw_GC.rds"))
+SmaxN_combcam_PM <- readRDS(here::here("transformed_data", "maxN_combcam_raw_PM.rds"))
 
 
+# gather data for all species:
+all_sp_list <- list(SmaxN_combcam_AcCten, SmaxN_combcam_CT, SmaxN_combcam_GC,
+                    SmaxN_combcam_PM)
+names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
+                        "Gomphosus_caeruleus", "Parupeneus_macronemus")
 
+
+# prepare df to plot:
+combcam_full_df <- clean.df.combcam.maxN(all_sp_list)
+saveRDS(combcam_full_df, here::here("transformed_data", "final_combcam.rds"))
 
 
 ## 4 - Plot ####
 
 
-## Load data:
-maxN_combcam <- readRDS(here::here("transformed_data", "maxN_combcam.rds"))
-
-
 ## Plot:
-colors <- c("gray86", "#66c2a5")
+colors <- c("gray78", "#66c2a5")
 alpha <- c(1, 1)
 shape <- c(22, 21)
 size <- c(2, 1)
 
-combcam_plot <- combcam.plot(maxN_combcam = maxN_combcam,
+combcam_plot <- combcam.plot(maxN_combcam = comb_cam_full_df,
                              colors = colors,
                              alpha = alpha,
                              shape = shape,
