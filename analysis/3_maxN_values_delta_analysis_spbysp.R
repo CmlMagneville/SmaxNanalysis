@@ -51,7 +51,7 @@ maxN_all <- as.data.frame(matrix(ncol = 5, nrow = 1))
 colnames(maxN_all) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timestep")
 
 
-## 2 - Compute SmaxN values for each species: code commented as long to run and no need to again
+## 2 - Compute SmaxN values for each species: code commented as long to run and no need to again ####
 
 
 
@@ -162,7 +162,7 @@ start <- Sys.time()
 
 # 19 min
 
-## 2 - Arrange data from parallelisation process for plot
+## 3 - Arrange data from parallelisation process for plot ####
 
 # call data:
 SmaxN_AcCten <- readRDS(here::here("transformed_data", "SmaxN_AcCten_raw.rds"))
@@ -182,7 +182,7 @@ SmaxN_df_all_sp <- clean.df.maxN(all_sp_list = all_sp_list)
 
 
 
-## 3 - Plot
+## 4 - Plot ####
 
 plot_deltas <- deltas.plot(maxN_all = SmaxN_df_all_sp,
                            colors = c("#66c2a5", "#fc8d62",
