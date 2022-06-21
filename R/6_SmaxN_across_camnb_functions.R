@@ -282,7 +282,7 @@ compute.maxN.combcam <- function(abund_combcam_list,
         new_row <- tibble::tibble(time_span = stringr::str_sub(names(abund_combcam_list[[i]])[j], 1, 4),
                                   maxN = maxN_data$maxN,
                                   SmaxN = maxN_data$SmaxN,
-                                  SmaxN_row = maxN_data$SmaxN_row)
+                                  SmaxN_timestep = maxN_data$SmaxN_timestep)
       }
 
       maxN_all <- dplyr::add_row(maxN_all, new_row)
@@ -445,7 +445,17 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
                                       variable.name = 'metric', value.name = 'values')
 
   # rename AcCten_dark in Ctenochaetus_striatus
-  long_maxN_combcam[which(long_maxN_combcam$species_nm == "AcCten_dark"), "species_nm"] <- "Ctenochaetus_striatus"
+  ac_cten <- long_maxN_combcam[which(long_maxN_combcam$species_nm == "AcCten_dark"), ]
+  ac_cten$species_nm <- rep("Ctenochaetus_striatus", nrow(ac_cten))
+  ac_cten$species_nm <- as.character(ac_cten$species_nm)
+  long_maxN_combcam <- long_maxN_combcam[which(! long_maxN_combcam$species_nm == "AcCten_dark"), ]
+
+  long_maxN_combcam <- rbind(long_maxN_combcam, ac_cten)
+  long_maxN_combcam$species_nm <- as.factor(long_maxN_combcam$species_nm)
+  long_maxN_combcam$species_nm <- forcats::fct_relevel(long_maxN_combcam$species_nm, c("Chaetodon_trifasciatus",
+                                              "Ctenochaetus_striatus",
+                                              "Gomphosus_caeruleus",
+                                              "Parupeneus_macronemus"))
 
 
   # remove unwanted rows according to the wanted graph = SmaxN vs maxN or SmaxN vs SmaxN_timestep:
@@ -506,7 +516,8 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
     ggplot2::facet_grid(cols = ggplot2::vars(Pose),
                         rows = ggplot2::vars(species_nm),
                         labeller = ggplot2::labeller(species_nm = sp_labs,
-                                                     Pose = pose_labs)) +
+                                                     Pose = pose_labs),
+                        scales = "free") +
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey"),

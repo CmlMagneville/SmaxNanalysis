@@ -39,102 +39,53 @@ create.abund.list.timespan <- function(spans_set,
 
 
 
-  # create the abundance lists which will contain for each species ...
-  # ... one df per studied tiemspan, for each pose:
-  abund_list_final_pose1 <- list()
-  abund_list_final_pose2 <- list()
-  abund_list_final_pose3 <- list()
+  # create three lists that will contain as many abundance df ...
+  # ... as there are combinations of cameras. One list for one pose:
+  final_list_pose1 <- list()
+  final_list_pose2 <- list()
+  final_list_pose3 <- list()
 
 
-  # for all species:
-  for (i in (1:length(abund_allcam_list))) {
+  # loop on the poses:
+  for (k in (1:length(abund_allcam_list))) {
+
+    # retrieve the studied abundance df (for the studied species and pose):
+    data <- abund_allcam_list[[k]]
+
+    # loop on the timespans:
+    for (t in (1:length(spans_set))) {
 
 
-    # create a list that will contain new abundance data for each species:
-    abund_time_sp_list <- list()
-
-    # create a list that will contain the df for the studied species:
-    # ... one for each pose:
-    final_sp_list_pose1 <- list()
-    final_sp_list_pose2 <- list()
-    final_sp_list_pose3 <- list()
+      # get the first n rows of the abundance data:
+      n <- spans_set[t]
+      data_span <- data[c(1:n), ]
 
 
-    # loop on the three poses:
-    for (k in (1:length(abund_allcam_list[[i]]))) {
-
-      # retrieve the studied abundance df (for the studied species and pose):
-      data <- abund_allcam_list[[i]][[k]]
-
-
-      # loop on the timespans:
-      for (t in (1:length(spans_set))) {
-
-
-          # get the first n rows of the abundance data:
-          n <- spans_set[t]
-          data_span <- data[c(1:n), ]
-
-
-          # store the new df with only interested rows in the pose list:
-          # if pose 1:
-          if (k == 1) {
-            final_sp_list_pose1 <- rlist::list.append(final_sp_list_pose1, data_span)
-            names(final_sp_list_pose1)[length(final_sp_list_pose1)] <- n
-          }
-
-          # if pose 2:
-          if (k == 2) {
-            final_sp_list_pose2 <- rlist::list.append(final_sp_list_pose2, data_span)
-            names(final_sp_list_pose2)[length(final_sp_list_pose2)] <- n
-          }
-
-          # if pose 3:
-          if (k == 3) {
-            final_sp_list_pose3 <- rlist::list.append(final_sp_list_pose3, data_span)
-            names(final_sp_list_pose3)[length(final_sp_list_pose3)] <- n
-          }
-
-      } # end loop on timepans
-
-
-      # add the list of the given species to the final list according to the ...
-      # ... pose number:
-
+      # store the new df with only interested rows in the pose list:
       # if pose 1:
       if (k == 1) {
-        abund_list_final_pose1 <- rlist::list.append(abund_list_final_pose1, final_sp_list_pose1)
-        # rename with species name:
-        names(abund_list_final_pose1)[i] <- names(abund_allcam_list)[i]
+        final_list_pose1 <- rlist::list.append(final_list_pose1, data_span)
+        names(final_list_pose1)[length(final_list_pose1)] <- n
       }
 
       # if pose 2:
       if (k == 2) {
-        abund_list_final_pose2 <- rlist::list.append(abund_list_final_pose2, final_sp_list_pose2)
-        # rename with species name:
-        names(abund_list_final_pose2)[i] <- names(abund_allcam_list)[i]
+        final_list_pose2 <- rlist::list.append(final_list_pose2, data_span)
+        names(final_list_pose2)[length(final_list_pose2)] <- n
       }
 
       # if pose 3:
       if (k == 3) {
-        abund_list_final_pose3 <- rlist::list.append(abund_list_final_pose3, final_sp_list_pose3)
-        # rename with species name:
-        names(abund_list_final_pose3)[i] <- names(abund_allcam_list)[i]
+        final_list_pose3 <- rlist::list.append(final_list_pose3, data_span)
+        names(final_list_pose3)[length(final_list_pose3)] <- n
       }
 
-      print(paste0(k, sep = " ", "ends"))
+    } # end loop on timepans
 
+  } # end loop on poses
 
-    } # end loop on poses
-
-    # create a list of poses list:
-    final_list <- list(abund_list_final_pose1, abund_list_final_pose2, abund_list_final_pose3)
-    names(final_list) <- c("Pose1", "Pose2", "Pose3")
-
-  } # end loop on species
-
-  # save the final df in transformed_data folder
-  saveRDS(final_list, here::here("transformed_data", "abund_list_timespans.rds"))
+  final_list <- list(final_list_pose1, final_list_pose2, final_list_pose3)
+  names(final_list) <- c("Pose1", "Pose2", "Pose3")
 
   # return the final abund list:
   return(final_list)

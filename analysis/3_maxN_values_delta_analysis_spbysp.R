@@ -17,25 +17,15 @@
 abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
 dist_df <- read.csv(here::here("data", "dist_df.csv"), row.names = 1)
 
-# ICRS: keep only 6 cameras:
-dist_df <- dist_df[c(2, 4, 6, 8, 10, 12), c(2, 4, 6, 8, 10, 12)]
-dist_df <- dist_df[c(1, 3, 5, 7, 9, 11), c(1, 3, 5, 7, 9, 11)]
-
 # ICRS: keep only 9 cameras (6 LD and 3 SD):
 dist_df <- dist_df[c(2, 4, 6, 7, 8, 9, 10, 11, 12), c(2, 4, 6, 7, 8, 9, 10, 11, 12)]
 
 
 ## 1 - Prepare data ####
 
-# get the names of species which are of interest:
-species_set <- c("Gomphosus_caeruleus", "Parupeneus_macronemus",
-                 "Chaetodon_auriga", "Parapercis_hexophtalma",
-                 "Chaetodon_trifasciatus", "Thalassoma_hardwicke",
-                 "Oxymonacanthus_longirostris", "Ac_Cten_dark")
 
 # PREPARE DATA
-# restrict the abund_list to the studied species:
-clean_abund_list <- abund_list[which(names(abund_list) %in% species_set)]
+clean_abund_list <- abund_list
 
 # ICRS: keep only 9 cameras:
 for (i in (1:length(clean_abund_list))) {
@@ -102,15 +92,15 @@ speed <- paral_list[[3]]$speed
 
 # essaye en parallelisant:
 start <- Sys.time()
-# SmaxN_AcCten <- automat.maxN.spbysp(species_nm = "Ac_Cten_dark",
-#                                 abund_list = clean_abund_list,
-#                                 dist_df = dist_df,
-#                                 fish_speed = 0.5,
-#                                 os = "windows",
-#                                 nb_cores = 3)
-# stop <- Sys.time()
-# time_taken_AcCten <- stop - start
-# saveRDS(SmaxN_AcCten, here::here("transformed_data", "SmaxN_AcCten_raw.rds"))
+SmaxN_AcCten <- automat.maxN.spbysp(species_nm = "Ac_Cten_dark",
+                                abund_list = clean_abund_list,
+                                dist_df = dist_df,
+                                fish_speed = 0.5,
+                                os = "windows",
+                                nb_cores = 3)
+stop <- Sys.time()
+time_taken_AcCten <- stop - start
+saveRDS(SmaxN_AcCten, here::here("transformed_data", "SmaxN_AcCten_raw.rds"))
 
 # ... h?
 
@@ -162,6 +152,50 @@ start <- Sys.time()
 
 # 19 min
 
+
+## Species 5 - Thalassoma hardwicke:
+
+start <- Sys.time()
+SmaxN_TH <- automat.maxN.spbysp(species_nm = "Thalassoma_hardwicke",
+                                abund_list = clean_abund_list,
+                                dist_df = dist_df,
+                                fish_speed = 0.5,
+                                os = "windows",
+                                nb_cores = 3)
+stop <- Sys.time()
+time_taken_TH <- stop - start
+saveRDS(SmaxN_TH, here::here("transformed_data", "SmaxN_TH_raw.rds"))
+
+
+## Species 6 - Parapercis hexophtalma:
+
+start <- Sys.time()
+SmaxN_PH <- automat.maxN.spbysp(species_nm = "Parapercis_hexophtalma",
+                                abund_list = clean_abund_list,
+                                dist_df = dist_df,
+                                fish_speed = 0.5,
+                                os = "windows",
+                                nb_cores = 3)
+stop <- Sys.time()
+time_taken_PH <- stop - start
+saveRDS(SmaxN_PH, here::here("transformed_data", "SmaxN_PH_raw.rds"))
+
+
+## Species 6 - Naso brevirostris:
+
+start <- Sys.time()
+SmaxN_NB <- automat.maxN.spbysp(species_nm = "Naso_brevirostris",
+                                abund_list = clean_abund_list,
+                                dist_df = dist_df,
+                                fish_speed = 0.5,
+                                os = "windows",
+                                nb_cores = 3)
+stop <- Sys.time()
+time_taken_NB <- stop - start
+saveRDS(SmaxN_NB, here::here("transformed_data", "SmaxN_NB_raw.rds"))
+
+
+
 ## 3 - Arrange data from parallelisation process for plot ####
 
 # call data:
@@ -169,12 +203,15 @@ SmaxN_AcCten <- readRDS(here::here("transformed_data", "SmaxN_AcCten_raw.rds"))
 SmaxN_CT <- readRDS(here::here("transformed_data", "SmaxN_CT_raw.rds"))
 SmaxN_GC <- readRDS(here::here("transformed_data", "SmaxN_GC_raw.rds"))
 SmaxN_PM <- readRDS(here::here("transformed_data", "SmaxN_PM_raw.rds"))
+SmaxN_TH <- readRDS(here::here("transformed_data", "SmaxN_TH_raw.rds"))
+SmaxN_PH <- readRDS(here::here("transformed_data", "SmaxN_PH_raw.rds"))
 
 
 # gather data for all species:
-all_sp_list <- list(SmaxN_AcCten, SmaxN_CT, SmaxN_GC, SmaxN_PM)
+all_sp_list <- list(SmaxN_AcCten, SmaxN_CT, SmaxN_GC, SmaxN_PH, SmaxN_PM, SmaxN_TH)
 names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
-                        "Gomphosus_caeruleus", "Parupeneus_macronemus")
+                        "Gomphosus_caeruleus", "Parapercis_hexophtalma",
+                        "Parupeneus_macronemus", "Thalassoma_hardwicke")
 
 
 # to a clean table:
@@ -183,6 +220,14 @@ SmaxN_df_all_sp <- clean.df.maxN(all_sp_list = all_sp_list)
 
 
 ## 4 - Plot ####
+
+
+# correct because bug for AcCten_dark, using wrong df but got data through combcam and check:
+# so I correct manually while the SmaxN_ActCten rerun:
+SmaxN_df_all_sp$SmaxN[c(1,2,3)] <- c(16,16,15)
+SmaxN_df_all_sp$maxN[c(1,2,3)] <- c(4,4,5)
+SmaxN_df_all_sp$SmaxN_timestep[c(1,2,3)] <- c(10,10,10)
+
 
 plot_deltas <- deltas.plot(maxN_all = SmaxN_df_all_sp,
                            colors = c("#66c2a5", "#fc8d62",

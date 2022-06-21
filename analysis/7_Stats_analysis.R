@@ -15,7 +15,7 @@
 # 1 - Test significant differences between SmaxN and maxN (and SmaxN_row) for all species ####
 
 # Load data
-maxN_all <- readRDS(here::here("transformed_data", "maxN_all.rds"))
+maxN_all <- readRDS(here::here("transformed_data", "final_combcam.rds"))
 
 # param:
 maxN_all <- maxN_all
@@ -75,7 +75,7 @@ car::qqp(SmaxN_df$SmaxN, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$esti
 
 ## 2 - 1/  Compute GLMM for camera number effect (pose and species random effects) ####
 
-SmaxN_df <- maxN_comb_cam
+SmaxN_df <- maxN_combcam
 Y_var <- "SmaxN"
 X_var <- "cam_nb"
 X_var_random <- c("species_nm", "Pose")
@@ -104,7 +104,7 @@ try <- glmmTMB::glmmTMB(SmaxN~cam_nb +(1 | species_nm) + (1 | Pose), family = "p
 summary(try)
 glmmTMB:::Anova.glmmTMB(try)
 
-try2 <- glmmTMB::glmmTMB(SmaxN~cam_nb + (1 + species_nm) + (1 + Pose), family = "poisson", data=SmaxN_df)
+try2 <- glmmTMB::glmmTMB((SmaxN - maxN) ~cam_nb + (1 + species_nm) + (1 + Pose), family = "poisson", data=SmaxN_df)
 
 anova(try, try2)
 
