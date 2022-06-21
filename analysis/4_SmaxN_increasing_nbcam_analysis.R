@@ -23,7 +23,7 @@ dist_df <- dist_df[c(2, 4, 6, 7, 8, 9, 10, 11, 12), c(2, 4, 6, 7, 8, 9, 10, 11, 
 
 ## 2 - Compute maxN, SmaxN values for all combinations of cameras and 4 species ####
 
-
+#
 # # get the names of species which are of interest:
 # species_set <- c("Gomphosus_caeruleus", "Parupeneus_macronemus",
 #                  "Chaetodon_auriga", "Parapercis_hexophtalma",
@@ -172,6 +172,62 @@ dist_df <- dist_df[c(2, 4, 6, 7, 8, 9, 10, 11, 12), c(2, 4, 6, 7, 8, 9, 10, 11, 
 
 
 
+# ## Species 5 - Thalassoma hardwicke
+#
+# # create a list of abund df with all cam (even if the species ...
+# # ... is not seen by several cam thus the abund df has 9 (ICRS) 12 (paper) columns).
+# # ... the list is build as follow:
+#
+# # be careful for paper, change create.abundlist.allcam.poses() function because 12 cam
+# abund_allcam_list_TH <- create.abundlist.allcam.poses(cam_set = cam_set,
+#                                                    species_nm = "Thalassoma_hardwicke",
+#                                                    abund_list = abund_list)
+#
+#
+# # create a list of abund df for each combination of the cameras BUT ...
+# # ... : But this list is to heavy to be saved on Github so must run ...
+# # ... this step and the next one only once and the dataframe from the next ...
+# # ... step will be saved.
+# abund_combcam_list_TH <- create.abund.list.camcombn(cam_set = cam_set,
+#                                                  abund_allcam_list = abund_allcam_list_TH)
+#
+# # create the df for plot (really long process so uncomment if want to run again):
+# maxN_combcam_TH <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list_TH,
+#                                         dist_df = dist_df,
+#                                         fish_speed = 0.5,
+#                                         analysis_type = "combcam")
+#
+# saveRDS(maxN_combcam_TH, "maxN_combcam_raw_TH.rds")
+
+
+# ## Species 6 - Parapercis hexophtalma
+#
+# # create a list of abund df with all cam (even if the species ...
+# # ... is not seen by several cam thus the abund df has 9 (ICRS) 12 (paper) columns).
+# # ... the list is build as follow:
+#
+# # be careful for paper, change create.abundlist.allcam.poses() function because 12 cam
+# abund_allcam_list_PH <- create.abundlist.allcam.poses(cam_set = cam_set,
+#                                                    species_nm = "Parapercis_hexophtalma",
+#                                                    abund_list = abund_list)
+#
+#
+# # create a list of abund df for each combination of the cameras BUT ...
+# # ... : But this list is to heavy to be saved on Github so must run ...
+# # ... this step and the next one only once and the dataframe from the next ...
+# # ... step will be saved.
+# abund_combcam_list_PH <- create.abund.list.camcombn(cam_set = cam_set,
+#                                                  abund_allcam_list = abund_allcam_list_PH)
+#
+# # create the df for plot (really long process so uncomment if want to run again):
+# maxN_combcam_PH <- compute.maxN.combcam(abund_combcam_list = abund_combcam_list_PH,
+#                                         dist_df = dist_df,
+#                                         fish_speed = 0.5,
+#                                         analysis_type = "combcam")
+#
+# saveRDS(maxN_combcam_PH, "maxN_combcam_raw_PH.rds")
+
+
 ## 3 - Arrange data for plotting ####
 
 
@@ -203,8 +259,9 @@ alpha <- c(1, 1)
 shape <- c(22, 21)
 size <- c(2, 1)
 
-combcam_plot <- combcam.plot(maxN_combcam = comb_cam_full_df,
+combcam_plot <- combcam.plot(maxN_combcam = combcam_full_df,
                              colors = colors,
                              alpha = alpha,
                              shape = shape,
-                             size = size)
+                             size = size,
+                             compare = "maxN")

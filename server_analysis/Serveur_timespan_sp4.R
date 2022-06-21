@@ -1,0 +1,87 @@
+###########################################################################
+##
+## Script to launch on the server to compute SmaxN and other metrics for
+## ... a given species and combination of cameras: Chaetodon trifasciatus
+##
+## Serveur_combcam_sp3.R
+##
+## 21/06/2022
+##
+## Camille Magneville
+##
+###########################################################################
+
+
+
+## 0 - 1 Load data ####
+
+abund_list <- readRDS(here::here("..", "transformed_data", "all_abund_list.rds"))
+dist_df <- read.csv(here::here("..", "data", "dist_df.csv"), row.names = 1)
+
+# ICRS: keep only 9 cameras (6 LD and 3 SD):
+dist_df <- dist_df[c(2, 4, 6, 7, 8, 9, 10, 11, 12), c(2, 4, 6, 7, 8, 9, 10, 11, 12)]
+
+# call the functions needed:
+source(here::here("..", "R", "6_SmaxN_across_camnb_functions.R"))
+source(here::here("..", "R", "7_SmaxN_time_functions.R"))
+source(here::here("..", "R", "3_Compute_combinaisons_functions.R"))
+
+
+# load SmaxN pkge:
+remotes::install_github("CmlMagneville/SmaxN", build_vignettes = TRUE, force = TRUE)
+
+
+
+## 1 - Prepare data for computing ####
+
+# PREPARE DATA: clean abund list:
+clean_abund_list <- abund_list
+
+# ICRS: keep only 9 cameras:
+for (i in (1:length(clean_abund_list))) {
+  for (j in (1:length(clean_abund_list[[i]]))) {
+    clean_abund_list[[i]][[j]] <- clean_abund_list[[i]][[j]][, which(colnames(clean_abund_list[[i]][[j]]) %in%
+                                                                       c("A1", "A2", "B1", "B2",
+                                                                         "C1", "C2", "D", "F", "H"))]
+  }
+}
+
+abund_list <- clean_abund_list
+
+# Get the timespans to work on:
+spans_set <- c(600, 1200, 1800, 2400, 3000, 3600)
+
+# get the names of cameras for which combinaisns must be computed:
+# ICRS 9 cameras:
+cam_set <- c("A1", "A2", "B1", "B2",
+             "C1", "C2", "D", "F", "H")
+
+
+## 3 - Compute SmaxN for all timespans
+
+
+# create a list of abund df with all cam (even if the species ...
+# ... is not seen by several cam thus the abund df has 9 (ICRS) 12 (paper) columns).
+# ... the list is build as follow:
+
+# be careful for paper, change create.abundlist.allcam.poses() function because 12 cam
+abund_allcam_list_CT <- create.abundlist.allcam.poses(cam_set = cam_set,
+                                                      species_nm = "Chaetodon_trifasciatus",
+                                                      abund_list = abund_list)
+
+
+# create a list of abund df for timespan
+abund_timespan_list_CT <- create.abund.list.timespan(spans_set = spans_set,
+                                                     abund_allcam_list = abund_allcam_list_CT)
+
+
+# create the df for plot (really long process so uncomment if want to run again):
+maxN_timespan_CT <- compute.maxN.combcam(abund_combcam_list = abund_timespan_list_CT,
+                                         dist_df = dist_df,
+                                         fish_speed = 0.5,
+                                         analysis_type = "timespan")
+
+# save
+saveRDS(maxN_timespan_CT, "maxN_timespan_raw_CT.rds")
+
+
