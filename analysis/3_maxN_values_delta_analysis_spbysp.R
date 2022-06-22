@@ -216,7 +216,7 @@ names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
 
 # to a clean table:
 SmaxN_df_all_sp <- clean.df.maxN(all_sp_list = all_sp_list)
-
+saveRDS(SmaxN_df_all_sp, here::here("transformed_data", "SmaxN_df_all_sp.rds"))
 
 
 ## 4 - Plot ####

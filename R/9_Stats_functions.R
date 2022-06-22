@@ -44,9 +44,9 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
   # be sure the variables have the right class:
   maxN_all$maxN <- as.numeric(maxN_all$maxN)
   maxN_all$SmaxN <- as.numeric(maxN_all$SmaxN)
-  maxN_all$SmaxN_row <- as.numeric(maxN_all$SmaxN_row)
+  maxN_all$SmaxN_timestep <- as.numeric(maxN_all$SmaxN_timestep)
 
-  maxN_all$Pose <- as.factor(maxN_all$Pose)
+  maxN_all$pose <- as.factor(maxN_all$pose)
 
 
   # plot maxN vs Smax for the 3 poses
@@ -56,11 +56,11 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
 
     SmaxN_plot <- ggplot2::ggplot(data = maxN_all) +
 
-      ggplot2::geom_jitter(ggplot2::aes(x = maxN, y = SmaxN, color = Pose,
-                                        fill = Pose,
+      ggplot2::geom_jitter(ggplot2::aes(x = maxN, y = SmaxN, color = pose,
+                                        fill = pose,
                                         shape = species_nm)) +
 
-      ggplot2::geom_smooth(ggplot2::aes(x = maxN, y = SmaxN, color = Pose),
+      ggplot2::geom_smooth(ggplot2::aes(x = maxN, y = SmaxN, color = pose),
                            method = "lm", se = FALSE) +
 
       ggplot2::geom_abline(color = "grey50") +
@@ -80,11 +80,11 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
       ggplot2::scale_fill_manual(values = color_poses,
                                  name = NULL) +
 
-      ggplot2::scale_x_continuous(limits = c(0, 12),
-                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+      ggplot2::scale_x_continuous(limits = c(0, 16),
+                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)) +
 
-      ggplot2::scale_y_continuous(limits = c(0, 12),
-                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+      ggplot2::scale_y_continuous(limits = c(0, 16),
+                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)) +
 
       ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                               colour = "grey"),
@@ -97,15 +97,15 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
 
 
   # if to be compared with SmaxN_row:
-  if (comp_metric == "SmaxN_row") {
+  if (comp_metric == "SmaxN_timestep") {
 
     SmaxN_plot <- ggplot2::ggplot(data = maxN_all) +
 
-      ggplot2::geom_jitter(ggplot2::aes(x = SmaxN_row, y = SmaxN, color = Pose,
+      ggplot2::geom_jitter(ggplot2::aes(x = SmaxN_timestep, y = SmaxN, color = Pose,
                                         fill = Pose,
                                         shape = species_nm)) +
 
-      ggplot2::geom_smooth(ggplot2::aes(x = SmaxN_row, y = SmaxN, color = Pose),
+      ggplot2::geom_smooth(ggplot2::aes(x = SmaxN_timestep, y = SmaxN, color = Pose),
                            method = "lm", se = FALSE) +
 
       ggplot2::geom_abline(color = "grey50") +
@@ -125,11 +125,11 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
       ggplot2::scale_fill_manual(values = color_poses,
                                  name = NULL) +
 
-      ggplot2::scale_x_continuous(limits = c(0, 12),
-                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+      ggplot2::scale_x_continuous(limits = c(0, 16),
+                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)) +
 
-      ggplot2::scale_y_continuous(limits = c(0, 12),
-                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+      ggplot2::scale_y_continuous(limits = c(0, 16),
+                                  breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)) +
 
       ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                               colour = "grey"),
@@ -154,8 +154,8 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
                     dpi = 600)
   }
 
-  if (comp_metric == "SmaxN_row") {
-    ggplot2::ggsave(filename = here::here("outputs/Stat_1_Correl_SmaxN_SmaxNrow.pdf"),
+  if (comp_metric == "SmaxN_timestep") {
+    ggplot2::ggsave(filename = here::here("outputs/Stat_1_Correl_SmaxN_SmaxNtimestep.pdf"),
                     plot = SmaxN_plot,
                     device = "pdf",
                     scale = 1,
@@ -168,10 +168,10 @@ cor.SmaxN.plot<- function(maxN_all, color_poses, shape_sp, comp_metric) {
 
   # test correlation:
   cor_maxN <- cor.test(x = maxN_all$maxN, y = maxN_all$SmaxN, method = 'spearman')
-  cor_SmaxNrow <- cor.test(x = maxN_all$SmaxN_row, y = maxN_all$SmaxN, method = 'spearman')
+  cor_SmaxNtimestep <- cor.test(x = maxN_all$SmaxN_timestep, y = maxN_all$SmaxN, method = 'spearman')
 
   # create the returned list
-  return_list <- list(SmaxN_plot, cor_maxN, cor_SmaxNrow)
+  return_list <- list(SmaxN_plot, cor_maxN, cor_SmaxNtimestep)
 
   return(return_list)
 

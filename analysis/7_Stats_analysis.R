@@ -15,13 +15,20 @@
 # 1 - Test significant differences between SmaxN and maxN (and SmaxN_row) for all species ####
 
 # Load data
-maxN_all <- readRDS(here::here("transformed_data", "final_combcam.rds"))
+SmaxN_all <- readRDS(here::here("transformed_data", "SmaxN_df_all_sp.rds"))
+
+
+# correct because bug for AcCten_dark, using wrong df but got data through combcam and check:
+# so I correct manually while the SmaxN_ActCten rerun:
+SmaxN_all$SmaxN[c(1,2,3)] <- c(16,16,15)
+SmaxN_all$maxN[c(1,2,3)] <- c(4,4,5)
+SmaxN_all$SmaxN_timestep[c(1,2,3)] <- c(10,10,10)
 
 # param:
-maxN_all <- maxN_all
+maxN_all <- SmaxN_all
 color_poses <- c("#66c2a5", "#fc8d62", "#8da0cb")
 shape_sp <- c(3, 10, 4, 13, 21, 23, 24)
-comp_metric <- "SmaxN_row"
+comp_metric <- "maxN"
 
 # call fct to do the plot and the analysis (can do it for each pose also
 # ... by using maxN_all[which(pose_nb == 1), ] but here keep all poses ...
@@ -31,6 +38,10 @@ cor.SmaxN.plot(maxN_all = maxN_all,
                shape_sp = shape_sp,
                comp_metric = comp_metric)
 
+
+# compute mean abundance per camera for each Pose and each species:
+
+abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
 
 
 ################################################################################
