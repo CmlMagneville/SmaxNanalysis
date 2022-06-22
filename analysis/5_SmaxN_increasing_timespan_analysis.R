@@ -78,7 +78,7 @@ maxN_timespan_AcCten <- compute.maxN.combcam(abund_combcam_list = abund_timespan
                                          analysis_type = "timespan")
 
 # save
-saveRDS(maxN_timespan_AcCten, "maxN_timespan_raw_AcCten.rds")
+saveRDS(maxN_timespan_AcCten, here::here("transformed_data","maxN_timespan_raw_AcCten.rds"))
 
 
 
@@ -106,7 +106,7 @@ maxN_timespan_GC <- compute.maxN.combcam(abund_combcam_list = abund_timespan_lis
                                         analysis_type = "timespan")
 
 # save
-saveRDS(maxN_timespan_GC, "maxN_timespan_raw_GC.rds")
+saveRDS(maxN_timespan_GC, here::here("transformed_data", "maxN_timespan_raw_GC.rds"))
 
 
 # Species 3 - Parupeneus macronemus
@@ -133,7 +133,7 @@ maxN_timespan_PM <- compute.maxN.combcam(abund_combcam_list = abund_timespan_lis
                                          analysis_type = "timespan")
 
 # save
-saveRDS(maxN_timespan_PM, "maxN_timespan_raw_PM.rds")
+saveRDS(maxN_timespan_PM, here::here("transformed_data", "maxN_timespan_raw_PM.rds"))
 
 
 
@@ -161,7 +161,7 @@ maxN_timespan_CT <- compute.maxN.combcam(abund_combcam_list = abund_timespan_lis
                                          analysis_type = "timespan")
 
 # save
-saveRDS(maxN_timespan_CT, "maxN_timespan_raw_CT.rds")
+saveRDS(maxN_timespan_CT, here::here("transformed_data","maxN_timespan_raw_CT.rds"))
 
 
 
@@ -189,7 +189,7 @@ maxN_timespan_TH <- compute.maxN.combcam(abund_combcam_list = abund_timespan_lis
                                          analysis_type = "timespan")
 
 # save
-saveRDS(maxN_timespan_TH, "maxN_timespan_raw_TH.rds")
+saveRDS(maxN_timespan_TH, here::here("transformed_data", "maxN_timespan_raw_TH.rds"))
 
 
 
@@ -217,7 +217,7 @@ maxN_timespan_PH <- compute.maxN.combcam(abund_combcam_list = abund_timespan_lis
                                          analysis_type = "timespan")
 
 # save
-saveRDS(maxN_timespan_PH, "maxN_timespan_raw_PH.rds")
+saveRDS(maxN_timespan_PH, here::here("transformed_data", "maxN_timespan_raw_PH.rds"))
 
 
 
