@@ -404,9 +404,9 @@ deltas.plot <- function(maxN_all, colors) {
     ggplot2::scale_x_discrete(labels= c("Chaetodon trifasciatus",
                                         "Ctenochaetus striatus",
                                       "Gomphosus caeruleus",
-                                      "Parapercis_hexophtalma",
+                                      "Parapercis hexophtalma",
                                       "Parupeneus macronemus",
-                                      "Thalassoma_hardwicke")) +
+                                      "Thalassoma hardwicke")) +
 
     ggplot2::xlab("") +
 

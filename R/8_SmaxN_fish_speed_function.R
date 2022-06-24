@@ -182,15 +182,32 @@ speed.plot2 <- function(maxN_speed1, maxN_speed2, color_poses, alpha, size, shap
 
   # factorise:
   final_speed_df$species_nm <- as.factor(final_speed_df$species_nm)
-  final_speed_df$pose_nb <- as.factor(final_speed_df$pose_nb)
+  final_speed_df$pose_nb <- as.factor(final_speed_df$pose)
+
+  # ceate a new column with SmaxN_speed1/SmaxN_speed2 info:
+  final_speed_df$ratio_sp1sp2 <- final_speed_df$SmaxN_speed1 / final_speed_df$SmaxN_speed2
+
+
+  # rename columns with AcCtendark to be Ctenochaetus striatus ...
+  # ... so Chaetodon is the first species and it helps for the graph:
+  ac_cten <- final_speed_df[which(final_speed_df$species_nm == "AcCten_dark"), ]
+  ac_cten$species_nm <- rep("Ctenochaetus_striatus", 3)
+  final_speed_df <- final_speed_df[which(! final_speed_df$species_nm == "AcCten_dark"), ]
+  final_speed_df <- rbind(final_speed_df, ac_cten)
+
+  final_speed_df$species_nm <- forcats::fct_relevel(final_speed_df$species_nm, c("Chaetodon_trifasciatus",
+                                                                     "Ctenochaetus_striatus",
+                                                                     "Gomphosus_caeruleus",
+                                                                     "Parapercis_hexophtalma",
+                                                                     "Parupeneus_macronemus",
+                                                                     "Thalassoma_hardwicke"))
 
 
   # plot:
-  speed_plot <- ggplot2::ggplot(data = final_speed_df) +
+  speed_plot <- ggplot2::ggplot(data = final_speed_df, ggplot2::aes(x = species_nm, y = ratio_sp1sp2)) +
 
-    ggplot2::geom_bar(ggplot2::aes(y = SmaxN_speed2/SmaxN_speed1, x = species_nm, colour = pose_nb,
-                                      fill = pose_nb), alpha = alpha,
-                         width = 0.01) +
+    ggplot2::geom_bar(ggplot2::aes(colour = pose, fill = pose), alpha = alpha,
+                         width = 0.4, stat = "identity", position = ggplot2::position_dodge()) +
 
     ggplot2::scale_fill_manual(values = color_poses,
                                name = "Pose",
@@ -206,15 +223,21 @@ speed.plot2 <- function(maxN_speed1, maxN_speed2, color_poses, alpha, size, shap
                                                             colour = "grey"),
                    panel.grid.major = ggplot2::element_line(colour = "grey")) +
 
-    ggplot2::xlab("Species names") +
+    ggplot2::ylab("SmaxN 0.5 m/s / SmaxN 1 m/s ") +
 
-    ggplot2::ylab("SmaxN 1 m/s / SmaxN 0.5 m/s ") +
+    ggplot2::scale_y_continuous(limits = c(0, 1.75),
+                                breaks = c(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75)) +
 
-    ggplot2::scale_y_continuous(limits = c(0.5, 1.1),
-                                breaks = c(0.5, 0.6, 0.7,
-                                           0.8, 0.9, 1, 1.1)) +
+    ggplot2::guides(colour = "none", alpha = "none", size = "none") +
 
-    ggplot2::guides(colour = "none", alpha = "none", size = "none")
+    ggplot2::scale_x_discrete(labels= c("Chaetodon trifasciatus",
+                                        "Ctenochaetus striatus",
+                                        "Gomphosus caeruleus",
+                                        "Parapercis hexophtalma",
+                                        "Parupeneus macronemus",
+                                        "Thalassoma hardwicke")) +
+
+    ggplot2::xlab("")
 
 
   # save in outputs:
