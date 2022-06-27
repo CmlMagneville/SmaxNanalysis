@@ -236,13 +236,17 @@ SmaxN_combcam_AcCten <- readRDS(here::here("transformed_data", "maxN_combcam_raw
 SmaxN_combcam_CT <- readRDS(here::here("transformed_data", "maxN_combcam_raw_CT.rds"))
 SmaxN_combcam_GC <- readRDS(here::here("transformed_data", "maxN_combcam_raw_GC.rds"))
 SmaxN_combcam_PM <- readRDS(here::here("transformed_data", "maxN_combcam_raw_PM.rds"))
+SmaxN_combcam_PH <- readRDS(here::here("transformed_data", "maxN_combcam_raw_PH.rds"))
+SmaxN_combcam_TH <- readRDS(here::here("transformed_data", "maxN_combcam_raw_TH.rds"))
+
 
 
 # gather data for all species:
 all_sp_list <- list(SmaxN_combcam_AcCten, SmaxN_combcam_CT, SmaxN_combcam_GC,
-                    SmaxN_combcam_PM)
+                    SmaxN_combcam_PM, SmaxN_combcam_PH, SmaxN_combcam_TH)
 names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
-                        "Gomphosus_caeruleus", "Parupeneus_macronemus")
+                        "Gomphosus_caeruleus", "Parupeneus_macronemus",
+                        "Parapercis_hexophtalma", "Thalassoma_hardwicke")
 
 
 # prepare df to plot:

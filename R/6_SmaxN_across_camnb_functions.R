@@ -455,7 +455,9 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
   long_maxN_combcam$species_nm <- forcats::fct_relevel(long_maxN_combcam$species_nm, c("Chaetodon_trifasciatus",
                                               "Ctenochaetus_striatus",
                                               "Gomphosus_caeruleus",
-                                              "Parupeneus_macronemus"))
+                                              "Parupeneus_macronemus",
+                                              "Parapercis_hexophtalma",
+                                              "Thalassoma_hardwicke"))
 
 
   # remove unwanted rows according to the wanted graph = SmaxN vs maxN or SmaxN vs SmaxN_timestep:
@@ -470,14 +472,18 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
   }
 
   # create a list of new labels for species:
-  sp_labs <- c("Chaetodon trifasciatus",
-               "Ctenochaetus striatus",
-               "Gomphosus caeruleus",
-               "Parupeneus macronemus")
+  sp_labs <- c("C. trifasciatus",
+               "C. striatus",
+               "G. caeruleus",
+               "P. macronemus",
+               "P. hexophtalma",
+               "T. hardwicke")
   names(sp_labs) <- c("Chaetodon_trifasciatus",
                       "Ctenochaetus_striatus",
                       "Gomphosus_caeruleus",
-                      "Parupeneus_macronemus")
+                      "Parupeneus_macronemus",
+                      "Parapercis_hexophtalma",
+                      "Thalassoma_hardwicke")
 
   # create a list of new labels for poses:
   pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
