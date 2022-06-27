@@ -223,6 +223,24 @@ saveRDS(maxN_timespan_PH, here::here("transformed_data", "maxN_timespan_raw_PH.r
 
 # 3 - Plot ####
 
+
+# call data:
+SmaxN_combcam_AcCten <- readRDS(here::here("transformed_data", "maxN_timespan_raw_AcCten.rds"))
+SmaxN_combcam_CT <- readRDS(here::here("transformed_data", "maxN_combcam_raw_CT.rds"))
+SmaxN_combcam_GC <- readRDS(here::here("transformed_data", "maxN_combcam_raw_GC.rds"))
+SmaxN_combcam_PM <- readRDS(here::here("transformed_data", "maxN_combcam_raw_PM.rds"))
+
+
+all_sp_list <- list(SmaxN_combcam_AcCten, SmaxN_combcam_CT, SmaxN_combcam_GC,
+                    SmaxN_combcam_PM)
+names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
+                        "Gomphosus_caeruleus", "Parupeneus_macronemus")
+
+
+# prepare df to plot:
+combcam_full_df <- clean.df.combcam.maxN(all_sp_list)
+saveRDS(combcam_full_df, here::here("transformed_data", "final_combcam.rds"))
+
 colors <- c("gray70", "#66c2a5")
 alpha <- c(0.7, 0.7)
 shape_pose <- c(22, 21, 24)
