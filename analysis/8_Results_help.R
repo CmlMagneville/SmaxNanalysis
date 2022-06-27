@@ -159,9 +159,171 @@ final_speed_df$ratio <- final_speed_df$SmaxN_speed1 / final_speed_df$SmaxN_speed
 (nrow(final_speed_df[which(final_speed_df$ratio == 1), ]) / nrow(final_speed_df)) * 100
 
 
+# correlation between the SmaxN metrics with 2 speeds:
+cor.test(x = final_speed_df$SmaxN_speed1, y = final_speed_df$SmaxN_speed2, method = 'spearman')
+
+
 # compute mean, sd, var for each species:
 final_speed_gped_df <- dplyr::group_by(final_speed_df, species_nm)
 summary_speed <- dplyr::summarise(final_speed_gped_df,
                                   mean.ratio = mean(ratio),
                                   var.ratio = var(ratio),
                                   sd.ratio = sd(ratio))
+
+
+
+# 3 - Help for Figure 3 ####
+
+
+final_combcam_df <- readRDS(here::here("transformed_data", "final_combcam.rds"))
+
+
+## a - compute the mean delta per species across poses between cam 1 and cam 9:
+
+# only keep those cam:
+final_combcam_19_df <- dplyr::filter(final_combcam_df, cam_nb %in% c(1, 9))
+
+# mean on 9 cam (3 values as 1 time per pose) - mean on 1 cam (9 values per pose as 9 cam) for each pose ...
+# ... so compare values from the same pose
+# and then mean across poses:
+
+# AcCten dark:
+CS_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("AcCten_dark"))
+
+P1 <- CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Chaetodon trifasciatus:
+CT_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Chaetodon_trifasciatus"))
+
+P1 <- CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Gomphosus caeruleus:
+GC_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Gomphosus_caeruleus"))
+
+P1 <- GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parapercis hexophtalma:
+PH_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Parapercis_hexophtalma"))
+
+P1 <- PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parupeneus macronemus:
+PM_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Parupeneus_macronemus"))
+
+P1 <- PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Thalassoma hardwicke:
+TH_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Thalassoma_hardwicke"))
+
+P1 <- TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+## b - GLMM SmaxN:
+
+# levels:
+final_combcam_df$species_nm <- as.factor(final_combcam_df$species_nm)
+final_combcam_df$cam_nb <- as.factor(final_combcam_df$cam_nb)
+final_combcam_df$Pose <- as.factor(final_combcam_df$Pose)
+final_combcam_df$SmaxN <- as.numeric(final_combcam_df$SmaxN)
+final_combcam_df$maxN <- as.numeric(final_combcam_df$maxN)
+
+
+# does SmaxN data fits poisson distrib?
+poisson <- MASS::fitdistr(final_combcam_df$SmaxN, "Poisson")
+car::qqp(final_combcam_df$SmaxN, "pois", lambda = poisson$estimate)
+
+# does SmaxN data fits nbinom distrib?
+nbinom <- MASS::fitdistr(final_combcam_df$SmaxN, "Negative Binomial")
+car::qqp(final_combcam_df$SmaxN, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$estimate[[2]])
+
+
+# try model with only sloe variation:
+try <- glmmTMB::glmmTMB(SmaxN ~ cam_nb +(1 | species_nm) + (1 | Pose), family = "poisson", data = final_combcam_df)
+summary(try)
+glmmTMB:::Anova.glmmTMB(try)
+
+# try model with slode and intercept variation:
+try2 <- glmmTMB::glmmTMB(SmaxN ~ cam_nb + (1 + species_nm) + (1 + Pose), family = "poisson", data = final_combcam_df)
+
+# which one is the best? try2 so wor with it
+anova(try, try2)
+
+summary(try2)
+
+glmmTMB:::Anova.glmmTMB(try2)
+
+# check the model:
+performance::check_overdispersion(try2)
+performance::check_outliers(try2)
+performance::check_model(try2)
