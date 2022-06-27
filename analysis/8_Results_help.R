@@ -122,3 +122,46 @@ apply(try, 2, sum)/ sum(apply(try, 2, sum))
 
 # 4 cameras are doing between 10 and 13% of the annotations. Others: 3, 9, 7, 8, 5, 6, 5, 3
 
+
+
+# 2 - Help for Figure 2 ####
+
+
+## 1 - Prepare data :
+
+# Load data:
+speed1_df <- readRDS(here::here("transformed_data", "SmaxN_df_all_sp.rds"))
+speed2_df <- readRDS(here::here("transformed_data", "SmaxN_df_all_sp_speed2.rds"))
+
+# Compute mean and var and sd for ratio speed1/speed 2:
+
+# but first compute a dataframe with all information:
+speed1_df_final <- speed1_df[, c(1, 2, 4)]
+speed2_df_final <- speed2_df[, c(1, 2, 4)]
+
+# rename columns of SmaxN
+colnames(speed1_df_final)[ncol(speed1_df_final)] <- "SmaxN_speed1"
+colnames(speed2_df_final)[ncol(speed2_df_final)] <- "SmaxN_speed2"
+# rename columns of maxN
+
+
+# bind the two dfs:
+final_speed_df <- dplyr::left_join(speed1_df_final,
+                                   speed2_df_final)
+# compute ratio:
+final_speed_df$ratio <- final_speed_df$SmaxN_speed1 / final_speed_df$SmaxN_speed2
+
+
+## 2 -  Compute interesting figures:
+
+
+# prop of combination sp*poses which equals 0:
+(nrow(final_speed_df[which(final_speed_df$ratio == 1), ]) / nrow(final_speed_df)) * 100
+
+
+# compute mean, sd, var for each species:
+final_speed_gped_df <- dplyr::group_by(final_speed_df, species_nm)
+summary_speed <- dplyr::summarise(final_speed_gped_df,
+                                  mean.ratio = mean(ratio),
+                                  var.ratio = var(ratio),
+                                  sd.ratio = sd(ratio))
