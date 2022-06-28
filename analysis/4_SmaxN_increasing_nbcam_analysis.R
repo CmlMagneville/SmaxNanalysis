@@ -250,7 +250,7 @@ names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
 
 
 # prepare df to plot:
-combcam_full_df <- clean.df.combcam.maxN(all_sp_list)
+combcam_full_df <- clean.df.combcam.maxN(all_sp_list, type = "combcam")
 saveRDS(combcam_full_df, here::here("transformed_data", "final_combcam.rds"))
 
 

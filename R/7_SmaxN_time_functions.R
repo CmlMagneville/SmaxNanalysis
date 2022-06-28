@@ -51,6 +51,8 @@ create.abund.list.timespan <- function(spans_set,
 
     # retrieve the studied abundance df (for the studied species and pose):
     data <- abund_allcam_list[[k]]
+    # remove first NA row:
+    data <- data[-1, ]
 
     # loop on the timespans:
     for (t in (1:length(spans_set))) {
@@ -115,51 +117,86 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size) {
 
   # remove the "_" in the pose_nb and timespans columns:
   maxN_timespans$time_span <- gsub("_", "", as.character(maxN_timespans$time_span))
-  maxN_timespans$Pose_nb <- gsub("_", "", as.character(maxN_timespans$Pose_nb))
+  maxN_timespans$Pose <- gsub("_", "", as.character(maxN_timespans$Pose))
 
   # pose_nb as factor:
-  maxN_timespans$Pose_nb <- as.factor(maxN_timespans$Pose_nb)
+  maxN_timespans$Pose <- as.factor(maxN_timespans$Pose)
 
   # timespan as numeric:
   maxN_timespans$time_span <- as.numeric(maxN_timespans$time_span)
 
-  # remove NA rows:
-  maxN_timespans <- maxN_timespans[which(! is.na(maxN_timespans$species_nm)), ]
-
   # make in long format:
-  long_maxN_timespans <- reshape2::melt(maxN_timespans[, - (ncol(maxN_timespans) - 1)],
-                                      id.vars = c("species_nm", "time_span", "Pose_nb"),
+  long_maxN_timespans <- reshape2::melt(maxN_timespans,
+                                      id.vars = c("species_nm", "time_span", "Pose"),
                                       variable.name = 'metric', value.name = 'values')
 
-  # create a list of new labels for species:
-  sp_labs <- c("C. auriga", "C. trifasciatus", "G. caeruleus",
-               "O. longirostris", "P. hexophtalma",
-               "P. macronemus", "T. hardwicke")
-  names(sp_labs) <- c("Chaetodon_auriga", "Chaetodon_trifasciatus", "Gomphosus_caeruleus",
-                      "Oxymonacanthus_longirostris", "Parapercis_hexophtalma",
-                      "Parupeneus_macronemus", "Thalassoma_hardwicke")
+  # rename AcCten_dark in Ctenochaetus_striatus
+  ac_cten <- long_maxN_timespans[which(long_maxN_timespans$species_nm == "AcCten_dark"), ]
+  ac_cten$species_nm <- rep("Ctenochaetus_striatus", nrow(ac_cten))
+  ac_cten$species_nm <- as.character(ac_cten$species_nm)
+  long_maxN_timespans <- long_maxN_timespans[which(! long_maxN_timespans$species_nm == "AcCten_dark"), ]
 
+  long_maxN_timespans <- rbind(long_maxN_timespans, ac_cten)
+  long_maxN_timespans$species_nm <- as.factor(long_maxN_timespans$species_nm)
+  long_maxN_timespans$species_nm <- forcats::fct_relevel(long_maxN_timespans$species_nm, c("Chaetodon_trifasciatus",
+                                                                                       "Ctenochaetus_striatus",
+                                                                                       "Gomphosus_caeruleus",
+                                                                                       "Parupeneus_macronemus",
+                                                                                       "Parapercis_hexophtalma",
+                                                                                       "Thalassoma_hardwicke"))
+
+  # remove unwanted rows according to the wanted graph = SmaxN vs maxN or SmaxN vs SmaxN_timestep:
+  if (compare == "maxN") {
+    long_maxN_timespans <- long_maxN_timespans[which(! long_maxN_timespans$metric == "SmaxN_timestep"), ]
+    long_maxN_timespans$metric <- as.factor(long_maxN_timespans$metric)
+  }
+
+  if (compare == "SmaxN_timestep") {
+    long_maxN_timespans <- long_maxN_timespans[which(! long_maxN_timespans$metric == "maxN"), ]
+    long_maxN_timespans$metric <- as.factor(long_maxN_timespans$metric)
+  }
+
+
+  # create a list of new labels for species:
+  # create a list of new labels for species:
+  sp_labs <- c("C. trifasciatus",
+               "C. striatus",
+               "G. caeruleus",
+               "P. macronemus",
+               "P. hexophtalma",
+               "T. hardwicke")
+  names(sp_labs) <- c("Chaetodon_trifasciatus",
+                      "Ctenochaetus_striatus",
+                      "Gomphosus_caeruleus",
+                      "Parupeneus_macronemus",
+                      "Parapercis_hexophtalma",
+                      "Thalassoma_hardwicke")
+
+  # create a list of new labels for poses:
+  pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
+  names(pose_labs) <- c("Pose_1", "Pose_2", "Pose_3")
+  names(sp_labs) <- c("Chaetodon_trifasciatus",
+                      "Ctenochaetus_striatus",
+                      "Gomphosus_caeruleus",
+                      "Parupeneus_macronemus",
+                      "Parapercis_hexophtalma",
+                      "Thalassoma_hardwicke")
+
+  # create a list of new labels for poses:
+  pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
+  names(pose_labs) <- c("Pose1", "Pose2", "Pose3")
 
 
   # plot:
   plot_timespan <- ggplot2::ggplot(data = long_maxN_timespans) +
 
-     # ggplot2::geom_point(ggplot2::aes(x = time_span, y = values, colour = Pose_nb,
-     #                                  shape = metric),
-     #                                  fill = NA, show.legend = FALSE) +
-
+    ggplot2::geom_point(ggplot2::aes(x = time_span, y = values, colour = metric,
+                                     fill = metric, alpha = metric, shape = metric,
+                                     size = metric)) +
 
     ggplot2::geom_smooth(ggplot2::aes(x = time_span, y = values, colour = metric,
-                                       fill = metric),
-                          method = "loess", show.legend = FALSE) +
-
-
-    ggplot2::geom_jitter(ggplot2::aes(x = time_span, y = values, colour = metric,
-                                      fill =  metric, alpha =  metric, shape = Pose_nb,
-                                      size = metric),
-                         width = 80,
-                         height = 0) +
-
+                                      fill = metric),
+                         method = "loess", show.legend = FALSE) +
 
     ggplot2::scale_fill_manual(values = colors,
                                name = "Metric") +
@@ -170,24 +207,23 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size) {
     ggplot2::scale_alpha_manual(values = alpha,
                                 labels = NULL) +
 
-    ggplot2::scale_shape_manual(values = shape_pose,
-                                name = "Pose number") +
+    ggplot2::scale_shape_manual(values = shape,
+                                name = "Metric") +
 
     ggplot2::scale_size_manual(values = size,
                                name = "Metric") +
 
     ggplot2::scale_x_continuous(breaks = c(600, 1200, 1800, 2400, 3000, 3600)) +
 
-    ggplot2::scale_y_continuous(breaks = c(1:10)) +
-
     ggplot2::facet_wrap(~ species_nm, ncol = 3,
-                        labeller = ggplot2::labeller(species_nm = sp_labs)) +
+                        labeller = ggplot2::labeller(species_nm = sp_labs),
+                        scales = "free") +
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey80"),
                    panel.grid.major = ggplot2::element_line(colour = "grey80")) +
 
-    ggplot2::guides(alpha = "none", size = "none") +
+    ggplot2::guides(alpha = "none", size = "none", colour = "none") +
 
     ggplot2::xlab("Recording time (s)") +
 

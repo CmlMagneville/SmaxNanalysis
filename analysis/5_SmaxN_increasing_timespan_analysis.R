@@ -225,29 +225,36 @@ saveRDS(maxN_timespan_PH, here::here("transformed_data", "maxN_timespan_raw_PH.r
 
 
 # call data:
-SmaxN_combcam_AcCten <- readRDS(here::here("transformed_data", "maxN_timespan_raw_AcCten.rds"))
-SmaxN_combcam_CT <- readRDS(here::here("transformed_data", "maxN_combcam_raw_CT.rds"))
-SmaxN_combcam_GC <- readRDS(here::here("transformed_data", "maxN_combcam_raw_GC.rds"))
-SmaxN_combcam_PM <- readRDS(here::here("transformed_data", "maxN_combcam_raw_PM.rds"))
+SmaxN_timespan_AcCten <- readRDS(here::here("transformed_data", "maxN_timespan_raw_AcCten.rds"))
+SmaxN_timespan_CT <- readRDS(here::here("transformed_data", "maxN_timespan_raw_CT.rds"))
+SmaxN_timespan_GC <- readRDS(here::here("transformed_data", "maxN_timespan_raw_GC.rds"))
+SmaxN_timespan_PM <- readRDS(here::here("transformed_data", "maxN_timespan_raw_PM.rds"))
+SmaxN_timespan_PH <- readRDS(here::here("transformed_data", "maxN_timespan_raw_PH.rds"))
+SmaxN_timespan_TH <- readRDS(here::here("transformed_data", "maxN_timespan_raw_TH.rds"))
 
 
-all_sp_list <- list(SmaxN_combcam_AcCten, SmaxN_combcam_CT, SmaxN_combcam_GC,
-                    SmaxN_combcam_PM)
+
+# gather data for all species:
+all_sp_list <- list(SmaxN_timespan_AcCten, SmaxN_timespan_CT, SmaxN_timespan_GC,
+                    SmaxN_timespan_PM, SmaxN_timespan_PH, SmaxN_timespan_TH)
 names(all_sp_list) <- c("AcCten_dark", "Chaetodon_trifasciatus",
-                        "Gomphosus_caeruleus", "Parupeneus_macronemus")
+                        "Gomphosus_caeruleus", "Parupeneus_macronemus",
+                        "Parapercis_hexophtalma", "Thalassoma_hardwicke")
 
 
 # prepare df to plot:
-combcam_full_df <- clean.df.combcam.maxN(all_sp_list)
-saveRDS(combcam_full_df, here::here("transformed_data", "final_combcam.rds"))
+timespan_full_df <- clean.df.combcam.maxN(all_sp_list = all_sp_list,
+                                          type = "timespan")
+saveRDS(timespan_full_df, here::here("transformed_data", "final_timespan.rds"))
 
-colors <- c("gray70", "#66c2a5")
-alpha <- c(0.7, 0.7)
-shape_pose <- c(22, 21, 24)
-size <- c(2, 2)
+
+colors <- c("gray78", "#66c2a5")
+alpha <- c(1, 1)
+shape <- c(22, 21)
+size <- c(2, 1)
 
 # plot and save in trasformed data forlder:
-plot_time <- timespans.plot(maxN_timespans = maxN_timespans,
+plot_time <- timespans.plot(maxN_timespans = timespan_full_df,
                             colors = colors,
                             alpha = alpha,
                             shape_pose = shape_pose,
