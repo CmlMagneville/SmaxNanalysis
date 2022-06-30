@@ -178,7 +178,137 @@ summary_speed <- dplyr::summarise(final_speed_gped_df,
 final_combcam_df <- readRDS(here::here("transformed_data", "final_combcam.rds"))
 
 
-## a - compute the mean delta per species across poses between cam 1 and cam 9:
+## a - compute the mean delta per species across poses between cam 1 and cam 9  - SmaxN ####
+
+# only keep those cam:
+final_combcam_df <- dplyr::filter(final_combcam_df, cam_nb %in% c(1, 9))
+
+# mean on 9 cam (3 values as 1 time per pose) - mean on 1 cam (9 values per pose as 9 cam) for each pose ...
+# ... so compare values from the same pose
+# and then mean across poses:
+
+# AcCten dark:
+CS_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("AcCten_dark"))
+
+P1 <- (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_1"), "SmaxN"])) /
+  (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_2"), "SmaxN"]))/
+  (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_3"), "SmaxN"]))/
+  (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_3"), "SmaxN"])
+
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Chaetodon trifasciatus:
+CT_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Chaetodon_trifasciatus"))
+
+P1 <- (CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_1"), "SmaxN"])) /
+  CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_1"), "SmaxN"]
+
+P2 <- (CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_2"), "SmaxN"]))/
+  CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_2"), "SmaxN"]
+
+P3 <- (CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_3"), "SmaxN"]))/
+  CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_3"), "SmaxN"]
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Gomphosus caeruleus:
+GC_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Gomphosus_caeruleus"))
+
+P1 <- (GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_1"), "SmaxN"]))/
+  GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_1"), "SmaxN"]
+
+P2 <- (GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_2"), "SmaxN"]))/
+  GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_2"), "SmaxN"]
+
+P3 <- (GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_3"), "SmaxN"]))/
+  GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_3"), "SmaxN"]
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parapercis hexophtalma:
+PH_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Parapercis_hexophtalma"))
+
+P1 <- (PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_1"), "SmaxN"]))/
+  PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_1"), "SmaxN"]
+
+P2 <- (PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_2"), "SmaxN"]))/
+  PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_2"), "SmaxN"]
+
+P3 <- (PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_3"), "SmaxN"]))/
+  PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_3"), "SmaxN"]
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parupeneus macronemus:
+PM_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Parupeneus_macronemus"))
+
+P1 <- (PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_1"), "SmaxN"]))/
+  PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_1"), "SmaxN"]
+
+P2 <- (PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_2"), "SmaxN"]))/
+  PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_2"), "SmaxN"]
+
+P3 <- (PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_3"), "SmaxN"]))/
+  PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_3"), "SmaxN"]
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Thalassoma hardwicke:
+TH_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Thalassoma_hardwicke"))
+
+P1 <- (TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_1"), "SmaxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_1"), "SmaxN"]))/
+  TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_1"), "SmaxN"]
+
+P2 <- (TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_2"), "SmaxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_2"), "SmaxN"]))/
+  TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_2"), "SmaxN"]
+
+P3 <- (TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_3"), "SmaxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_3"), "SmaxN"]))/
+  TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_3"), "SmaxN"]
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+## b - compute the mean delta per species across poses between cam 1 and cam 9  - maxN ####
 
 # only keep those cam:
 final_combcam_19_df <- dplyr::filter(final_combcam_df, cam_nb %in% c(1, 9))
@@ -190,14 +320,17 @@ final_combcam_19_df <- dplyr::filter(final_combcam_df, cam_nb %in% c(1, 9))
 # AcCten dark:
 CS_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("AcCten_dark"))
 
-P1 <- CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_1"), "SmaxN"] -
-  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_1"), "SmaxN"])
+P1 <- (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_1"), "maxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_1"), "maxN"])) /
+  CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_1"), "maxN"]
 
-P2 <- CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_2"), "SmaxN"] -
-  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_2"), "SmaxN"])
+P2 <- (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_2"), "maxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_2"), "maxN"])) /
+  CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_2"), "maxN"]
 
-P3 <- CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_3"), "SmaxN"] -
-  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_3"), "SmaxN"])
+P3 <- (CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_3"), "maxN"] -
+  mean(CS_data[which(CS_data$cam_nb == 1 & CS_data$Pose == "Pose_3"), "maxN"]))/
+  CS_data[which(CS_data$cam_nb == 9 & CS_data$Pose == "Pose_3"), "maxN"]
 
 mean(c(P1, P2, P3))
 var(c(P1, P2, P3))
@@ -207,14 +340,17 @@ sd(c(P1, P2, P3))
 # Chaetodon trifasciatus:
 CT_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Chaetodon_trifasciatus"))
 
-P1 <- CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_1"), "SmaxN"] -
-  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_1"), "SmaxN"])
+P1 <- (CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_1"), "maxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_1"), "maxN"])) /
+  CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_1"), "maxN"]
 
-P2 <- CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_2"), "SmaxN"] -
-  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_2"), "SmaxN"])
+P2 <- (CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_2"), "maxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_2"), "maxN"])) /
+  CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_2"), "maxN"]
 
-P3 <- CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_3"), "SmaxN"] -
-  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_3"), "SmaxN"])
+P3 <- (CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_3"), "maxN"] -
+  mean(CT_data[which(CT_data$cam_nb == 1 & CT_data$Pose == "Pose_3"), "maxN"])) /
+  CT_data[which(CT_data$cam_nb == 9 & CT_data$Pose == "Pose_3"), "maxN"]
 
 mean(c(P1, P2, P3))
 var(c(P1, P2, P3))
@@ -224,14 +360,17 @@ sd(c(P1, P2, P3))
 # Gomphosus caeruleus:
 GC_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Gomphosus_caeruleus"))
 
-P1 <- GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_1"), "SmaxN"] -
-  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_1"), "SmaxN"])
+P1 <- (GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_1"), "maxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_1"), "maxN"])) /
+  GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_1"), "maxN"]
 
-P2 <- GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_2"), "SmaxN"] -
-  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_2"), "SmaxN"])
+P2 <- (GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_2"), "maxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_2"), "maxN"])) /
+  GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_2"), "maxN"]
 
-P3 <- GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_3"), "SmaxN"] -
-  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_3"), "SmaxN"])
+P3 <- (GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_3"), "maxN"] -
+  mean(GC_data[which(GC_data$cam_nb == 1 & GC_data$Pose == "Pose_3"), "maxN"]))/
+  GC_data[which(GC_data$cam_nb == 9 & GC_data$Pose == "Pose_3"), "maxN"]
 
 mean(c(P1, P2, P3))
 var(c(P1, P2, P3))
@@ -241,14 +380,17 @@ sd(c(P1, P2, P3))
 # Parapercis hexophtalma:
 PH_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Parapercis_hexophtalma"))
 
-P1 <- PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_1"), "SmaxN"] -
-  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_1"), "SmaxN"])
+P1 <- (PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_1"), "maxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_1"), "maxN"]))/
+  PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_1"), "maxN"]
 
-P2 <- PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_2"), "SmaxN"] -
-  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_2"), "SmaxN"])
+P2 <- (PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_2"), "maxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_2"), "maxN"]))/
+  PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_2"), "maxN"]
 
-P3 <- PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_3"), "SmaxN"] -
-  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_3"), "SmaxN"])
+P3 <- (PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_3"), "maxN"] -
+  mean(PH_data[which(PH_data$cam_nb == 1 & PH_data$Pose == "Pose_3"), "maxN"])) /
+  PH_data[which(PH_data$cam_nb == 9 & PH_data$Pose == "Pose_3"), "maxN"]
 
 mean(c(P1, P2, P3))
 var(c(P1, P2, P3))
@@ -258,14 +400,17 @@ sd(c(P1, P2, P3))
 # Parupeneus macronemus:
 PM_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Parupeneus_macronemus"))
 
-P1 <- PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_1"), "SmaxN"] -
-  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_1"), "SmaxN"])
+P1 <- (PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_1"), "maxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_1"), "maxN"]))/
+  PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_1"), "maxN"]
 
-P2 <- PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_2"), "SmaxN"] -
-  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_2"), "SmaxN"])
+P2 <- (PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_2"), "maxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_2"), "maxN"]))/
+  PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_2"), "maxN"]
 
-P3 <- PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_3"), "SmaxN"] -
-  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_3"), "SmaxN"])
+P3 <- (PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_3"), "maxN"] -
+  mean(PM_data[which(PM_data$cam_nb == 1 & PM_data$Pose == "Pose_3"), "maxN"]))/
+  PM_data[which(PM_data$cam_nb == 9 & PM_data$Pose == "Pose_3"), "maxN"]
 
 mean(c(P1, P2, P3))
 var(c(P1, P2, P3))
@@ -275,21 +420,37 @@ sd(c(P1, P2, P3))
 # Thalassoma hardwicke:
 TH_data <- dplyr::filter(final_combcam_19_df, species_nm %in% c("Thalassoma_hardwicke"))
 
-P1 <- TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_1"), "SmaxN"] -
-  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_1"), "SmaxN"])
+P1 <- (TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_1"), "maxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_1"), "maxN"]))/
+  TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_1"), "maxN"]
 
-P2 <- TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_2"), "SmaxN"] -
-  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_2"), "SmaxN"])
+P2 <- (TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_2"), "maxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_2"), "maxN"]))/
+  TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_2"), "maxN"]
 
-P3 <- TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_3"), "SmaxN"] -
-  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_3"), "SmaxN"])
+P3 <- (TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_3"), "maxN"] -
+  mean(TH_data[which(TH_data$cam_nb == 1 & TH_data$Pose == "Pose_3"), "maxN"]))/
+  TH_data[which(TH_data$cam_nb == 9 & TH_data$Pose == "Pose_3"), "maxN"]
 
 mean(c(P1, P2, P3))
 var(c(P1, P2, P3))
 sd(c(P1, P2, P3))
 
 
-## b - GLMM SmaxN:
+## c - compute the mSmaxN-maxN info ####
+
+
+mean((final_combcam_df[which(final_combcam_df$cam_nb == 5), "SmaxN"] -
+   final_combcam_df[which(final_combcam_df$cam_nb == 5), "maxN"])/
+  final_combcam_df[which(final_combcam_df$cam_nb == 5), "SmaxN"])
+
+mean((final_combcam_df[which(final_combcam_df$cam_nb == 9), "SmaxN"] -
+        final_combcam_df[which(final_combcam_df$cam_nb == 9), "maxN"])/
+       final_combcam_df[which(final_combcam_df$cam_nb == 9), "SmaxN"])
+
+
+
+## d - GLMM SmaxN ####
 
 # levels:
 final_combcam_df$species_nm <- as.factor(final_combcam_df$species_nm)
@@ -308,15 +469,22 @@ nbinom <- MASS::fitdistr(final_combcam_df$SmaxN, "Negative Binomial")
 car::qqp(final_combcam_df$SmaxN, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$estimate[[2]])
 
 
-# try model with only sloe variation:
-try <- glmmTMB::glmmTMB(SmaxN ~ cam_nb +(1 | species_nm) + (1 | Pose), family = "poisson", data = final_combcam_df)
+# but the fact is that to use the Poisson distribution: mean ~ var which is not the case here:
+mean(final_combcam_df$SmaxN)
+var(final_combcam_df$SmaxN)
+# so use negbinom which is loosens the restrictive assumption that var ~ mean.
+
+# try model with only slope variation:
+try <- glmmTMB::glmmTMB(SmaxN ~ cam_nb + (1 | species_nm) + (1 | Pose), family = "nbinom2", data = final_combcam_df,
+                        control = glmmTMBControl(optimizer = optim, optArgs = list(method="BFGS")))
 summary(try)
 glmmTMB:::Anova.glmmTMB(try)
 
 # try model with slode and intercept variation:
-try2 <- glmmTMB::glmmTMB(SmaxN ~ cam_nb + (1 + species_nm) + (1 + Pose), family = "poisson", data = final_combcam_df)
+try2 <- glmmTMB::glmmTMB(SmaxN ~ cam_nb + (1 + species_nm) + (1 + Pose), family = "nbinom2", data = final_combcam_df,
+                         control = glmmTMBControl(optimizer = optim, optArgs = list(method="BFGS")))
 
-# which one is the best? try2 so wor with it
+# which one is the best? try2 so work with it
 anova(try, try2)
 
 summary(try2)
@@ -327,3 +495,493 @@ glmmTMB:::Anova.glmmTMB(try2)
 performance::check_overdispersion(try2)
 performance::check_outliers(try2)
 performance::check_model(try2)
+
+
+## e - GLMM maxN: ####
+
+# levels:
+final_combcam_df$species_nm <- as.factor(final_combcam_df$species_nm)
+final_combcam_df$cam_nb <- as.factor(final_combcam_df$cam_nb)
+final_combcam_df$Pose <- as.factor(final_combcam_df$Pose)
+final_combcam_df$SmaxN <- as.numeric(final_combcam_df$SmaxN)
+final_combcam_df$maxN <- as.numeric(final_combcam_df$maxN)
+
+
+# does SmaxN data fits poisson distrib?
+poisson <- MASS::fitdistr(final_combcam_df$maxN, "Poisson")
+car::qqp(final_combcam_df$maxN, "pois", lambda = poisson$estimate)
+
+# does SmaxN data fits nbinom distrib?
+nbinom <- MASS::fitdistr(final_combcam_df$maxN, "Negative Binomial")
+car::qqp(final_combcam_df$maxN, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$estimate[[2]])
+
+# thereafter I use nbinom2 (explanation before for SmaxN)
+
+# try model with only slope variation:
+try <- glmmTMB::glmmTMB(maxN ~ cam_nb + (1 | species_nm) + (1 | Pose), family = "nbinom2", data = final_combcam_df,
+                        control = glmmTMBControl(optimizer = optim, optArgs = list(method="BFGS")))
+summary(try)
+glmmTMB:::Anova.glmmTMB(try)
+
+# try model with slode and intercept variation:
+try2 <- glmmTMB::glmmTMB(maxN ~ cam_nb + (1 + species_nm) + (1 + Pose), family = "nbinom2", data = final_combcam_df,
+                         control = glmmTMBControl(optimizer = optim, optArgs = list(method="BFGS")))
+
+# which one is the best? try2 so work with it
+anova(try, try2)
+
+summary(try2)
+
+glmmTMB:::Anova.glmmTMB(try2)
+
+# check the model:
+performance::check_overdispersion(try2)
+performance::check_outliers(try2)
+performance::check_model(try2)
+
+
+## f - GLMM (SmaxN - maxN) ####
+
+# levels:
+final_combcam_df$species_nm <- as.factor(final_combcam_df$species_nm)
+final_combcam_df$cam_nb <- as.factor(final_combcam_df$cam_nb)
+final_combcam_df$Pose <- as.factor(final_combcam_df$Pose)
+final_combcam_df$SmaxN <- as.numeric(final_combcam_df$SmaxN)
+final_combcam_df$maxN <- as.numeric(final_combcam_df$maxN)
+
+
+# does SmaxN data fits poisson distrib?
+poisson <- MASS::fitdistr((final_combcam_df$SmaxN - final_combcam_df$maxN), "Poisson")
+car::qqp(final_combcam_df$SmaxN - final_combcam_df$maxN, "pois", lambda = poisson$estimate)
+
+# does SmaxN data fits nbinom distrib?
+nbinom <- MASS::fitdistr(final_combcam_df$SmaxN - final_combcam_df$maxN, "Negative Binomial")
+car::qqp(final_combcam_df$SmaxN - final_combcam_df$maxN, "nbinom", size = nbinom$estimate[[1]], mu = nbinom$estimate[[2]])
+
+# thereafter I use negative binomial distribution (explanation before)
+
+# try model with only slope variation:
+try <- glmmTMB::glmmTMB((SmaxN - maxN) ~ cam_nb + (1 | species_nm) + (1 | Pose), family = "nbinom2", data = final_combcam_df,
+                        control = glmmTMBControl(optimizer = optim, optArgs = list(method="BFGS")))
+summary(try)
+glmmTMB:::Anova.glmmTMB(try)
+
+# try model with slode and intercept variation:
+try2 <- glmmTMB::glmmTMB((SmaxN - maxN) ~ cam_nb + (1 + species_nm) + (1 + Pose), family = "nbinom2", data = final_combcam_df,
+                         control = glmmTMBControl(optimizer = optim, optArgs = list(method="BFGS")))
+
+# which one is the best? try2 so work with it
+anova(try, try2)
+
+summary(try2)
+
+glmmTMB:::Anova.glmmTMB(try2)
+
+# check the model:
+performance::check_outliers(try2)
+performance::check_model(try2)
+
+
+
+#
+
+
+
+# 4 - Help for Figure 4 ####
+
+# load data:
+final_timespan_df <- readRDS(here::here("transformed_data", "final_timespan.rds"))
+
+## a - compute the mean delta per species across poses between 600s and 3600s  - SmaxN ####
+
+# mean on 3600s cam (3 values as 1 time per pose) - mean on 600s (3 values as 1 time per pose) for each pose ...
+# ... so compare values from the same pose
+# and then mean across poses:
+
+# AcCten dark:
+CS_data <- dplyr::filter(final_timespan_df, species_nm %in% c("AcCten_dark"))
+
+P1 <- (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_1"), "SmaxN"] -
+         mean(CS_data[which(CS_data$time_span == 600 & CS_data$Pose == "Pose_1"), "SmaxN"])) /
+  (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_2"), "SmaxN"] -
+         mean(CS_data[which(CS_data$time_span == 600 & CS_data$Pose == "Pose_2"), "SmaxN"])) /
+  (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_3"), "SmaxN"] -
+         mean(CS_data[which(CS_data$time_span == 600 & CS_data$Pose == "Pose_3"), "SmaxN"])) /
+  (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_3"), "SmaxN"])
+
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Chaetodon trifasciatus:
+CT_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Chaetodon_trifasciatus"))
+
+P1 <- (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_1"), "SmaxN"] -
+         mean(CT_data[which(CT_data$time_span == 600 & CT_data$Pose == "Pose_1"), "SmaxN"])) /
+  (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_2"), "SmaxN"] -
+         mean(CT_data[which(CT_data$time_span == 600 & CT_data$Pose == "Pose_2"), "SmaxN"])) /
+  (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_3"), "SmaxN"] -
+         mean(CT_data[which(CT_data$time_span == 600 & CT_data$Pose == "Pose_3"), "SmaxN"])) /
+  (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Gomphosus caeruleus:
+GC_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Gomphosus_caeruleus"))
+
+P1 <- (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_1"), "SmaxN"] -
+         mean(GC_data[which(GC_data$time_span == 600 & GC_data$Pose == "Pose_1"), "SmaxN"])) /
+  (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_2"), "SmaxN"] -
+         mean(GC_data[which(GC_data$time_span == 600 & GC_data$Pose == "Pose_2"), "SmaxN"])) /
+  (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_3"), "SmaxN"] -
+         mean(GC_data[which(GC_data$time_span == 600 & GC_data$Pose == "Pose_3"), "SmaxN"])) /
+  (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parapercis hexophtalma:
+PH_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Parapercis_hexophtalma"))
+
+P1 <- (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_1"), "SmaxN"] -
+         mean(PH_data[which(PH_data$time_span == 600 & PH_data$Pose == "Pose_1"), "SmaxN"])) /
+  (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_2"), "SmaxN"] -
+         mean(PH_data[which(PH_data$time_span == 600 & PH_data$Pose == "Pose_2"), "SmaxN"])) /
+  (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_3"), "SmaxN"] -
+         mean(PH_data[which(PH_data$time_span == 600 & PH_data$Pose == "Pose_3"), "SmaxN"])) /
+  (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parupeneus macronemus:
+PM_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Parupeneus_macronemus"))
+
+P1 <- (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_1"), "SmaxN"] -
+         mean(PM_data[which(PM_data$time_span == 600 & PM_data$Pose == "Pose_1"), "SmaxN"])) /
+  (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_2"), "SmaxN"] -
+         mean(PM_data[which(PM_data$time_span == 600 & PM_data$Pose == "Pose_2"), "SmaxN"])) /
+  (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_3"), "SmaxN"] -
+         mean(PM_data[which(PM_data$time_span == 600 & PM_data$Pose == "Pose_3"), "SmaxN"])) /
+  (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Thalassoma hardwicke:
+TH_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Thalassoma_hardwicke"))
+
+P1 <- (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_1"), "SmaxN"] -
+         mean(TH_data[which(TH_data$time_span == 600 & TH_data$Pose == "Pose_1"), "SmaxN"])) /
+  (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_1"), "SmaxN"])
+
+P2 <- (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_2"), "SmaxN"] -
+         mean(TH_data[which(TH_data$time_span == 600 & TH_data$Pose == "Pose_2"), "SmaxN"])) /
+  (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_2"), "SmaxN"])
+
+P3 <- (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_3"), "SmaxN"] -
+         mean(TH_data[which(TH_data$time_span == 600 & TH_data$Pose == "Pose_3"), "SmaxN"])) /
+  (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_3"), "SmaxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+## b - compute the mean delta per species across poses between 600s and cam 3600s  - maxN ####
+
+# mean on 3600s cam (3 values as 1 time per pose) - mean on 600s (3 values as 1 time per pose) for each pose ...
+# ... so compare values from the same pose
+# and then mean across poses:
+
+# AcCten dark:
+CS_data <- dplyr::filter(final_timespan_df, species_nm %in% c("AcCten_dark"))
+
+P1 <- (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_1"), "maxN"] -
+         mean(CS_data[which(CS_data$time_span == 600 & CS_data$Pose == "Pose_1"), "maxN"])) /
+  (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_1"), "maxN"])
+
+P2 <- (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_2"), "maxN"] -
+         mean(CS_data[which(CS_data$time_span == 600 & CS_data$Pose == "Pose_2"), "maxN"])) /
+  (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_2"), "maxN"])
+
+P3 <- (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_3"), "maxN"] -
+         mean(CS_data[which(CS_data$time_span == 600 & CS_data$Pose == "Pose_3"), "maxN"])) /
+  (CS_data[which(CS_data$time_span == 3600 & CS_data$Pose == "Pose_3"), "maxN"])
+
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Chaetodon trifasciatus:
+CT_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Chaetodon_trifasciatus"))
+
+P1 <- (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_1"), "maxN"] -
+         mean(CT_data[which(CT_data$time_span == 600 & CT_data$Pose == "Pose_1"), "maxN"])) /
+  (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_1"), "maxN"])
+
+P2 <- (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_2"), "maxN"] -
+         mean(CT_data[which(CT_data$time_span == 600 & CT_data$Pose == "Pose_2"), "maxN"])) /
+  (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_2"), "maxN"])
+
+P3 <- (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_3"), "maxN"] -
+         mean(CT_data[which(CT_data$time_span == 600 & CT_data$Pose == "Pose_3"), "maxN"])) /
+  (CT_data[which(CT_data$time_span == 3600 & CT_data$Pose == "Pose_3"), "maxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Gomphosus caeruleus:
+GC_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Gomphosus_caeruleus"))
+
+P1 <- (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_1"), "maxN"] -
+         mean(GC_data[which(GC_data$time_span == 600 & GC_data$Pose == "Pose_1"), "maxN"])) /
+  (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_1"), "maxN"])
+
+P2 <- (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_2"), "maxN"] -
+         mean(GC_data[which(GC_data$time_span == 600 & GC_data$Pose == "Pose_2"), "maxN"])) /
+  (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_2"), "maxN"])
+
+P3 <- (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_3"), "maxN"] -
+         mean(GC_data[which(GC_data$time_span == 600 & GC_data$Pose == "Pose_3"), "maxN"])) /
+  (GC_data[which(GC_data$time_span == 3600 & GC_data$Pose == "Pose_3"), "maxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parapercis hexophtalma:
+PH_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Parapercis_hexophtalma"))
+
+P1 <- (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_1"), "maxN"] -
+         mean(PH_data[which(PH_data$time_span == 600 & PH_data$Pose == "Pose_1"), "maxN"])) /
+  (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_1"), "maxN"])
+
+P2 <- (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_2"), "maxN"] -
+         mean(PH_data[which(PH_data$time_span == 600 & PH_data$Pose == "Pose_2"), "maxN"])) /
+  (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_2"), "maxN"])
+
+P3 <- (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_3"), "maxN"] -
+         mean(PH_data[which(PH_data$time_span == 600 & PH_data$Pose == "Pose_3"), "maxN"])) /
+  (PH_data[which(PH_data$time_span == 3600 & PH_data$Pose == "Pose_3"), "maxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Parupeneus macronemus:
+PM_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Parupeneus_macronemus"))
+
+P1 <- (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_1"), "maxN"] -
+         mean(PM_data[which(PM_data$time_span == 600 & PM_data$Pose == "Pose_1"), "maxN"])) /
+  (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_1"), "maxN"])
+
+P2 <- (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_2"), "maxN"] -
+         mean(PM_data[which(PM_data$time_span == 600 & PM_data$Pose == "Pose_2"), "maxN"])) /
+  (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_2"), "maxN"])
+
+P3 <- (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_3"), "maxN"] -
+         mean(PM_data[which(PM_data$time_span == 600 & PM_data$Pose == "Pose_3"), "maxN"])) /
+  (PM_data[which(PM_data$time_span == 3600 & PM_data$Pose == "Pose_3"), "maxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+# Thalassoma hardwicke:
+TH_data <- dplyr::filter(final_timespan_df, species_nm %in% c("Thalassoma_hardwicke"))
+
+P1 <- (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_1"), "maxN"] -
+         mean(TH_data[which(TH_data$time_span == 600 & TH_data$Pose == "Pose_1"), "maxN"])) /
+  (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_1"), "maxN"])
+
+P2 <- (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_2"), "maxN"] -
+         mean(TH_data[which(TH_data$time_span == 600 & TH_data$Pose == "Pose_2"), "maxN"])) /
+  (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_2"), "maxN"])
+
+P3 <- (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_3"), "maxN"] -
+         mean(TH_data[which(TH_data$time_span == 600 & TH_data$Pose == "Pose_3"), "maxN"])) /
+  (TH_data[which(TH_data$time_span == 3600 & TH_data$Pose == "Pose_3"), "maxN"])
+
+mean(c(P1, P2, P3))
+var(c(P1, P2, P3))
+sd(c(P1, P2, P3))
+
+
+## c - compute the mSmaxN-maxN info ####
+
+
+mean((final_timespan_df[which(final_timespan_df$time_span == 600), "SmaxN"] -
+        final_timespan_df[which(final_timespan_df$time_span == 600), "maxN"])/
+       final_timespan_df[which(final_timespan_df$time_span == 600), "SmaxN"])
+
+mean((final_timespan_df[which(final_timespan_df$time_span == 1800), "SmaxN"] -
+        final_timespan_df[which(final_timespan_df$time_span == 1800), "maxN"])/
+       final_timespan_df[which(final_timespan_df$time_span == 1800), "SmaxN"])
+
+mean((final_timespan_df[which(final_timespan_df$time_span == 3600), "SmaxN"] -
+        final_timespan_df[which(final_timespan_df$time_span == 3600), "maxN"])/
+       final_timespan_df[which(final_timespan_df$time_span == 3600), "SmaxN"])
+
+
+
+## d - GLMM SmaxN ####
+
+# levels:
+final_timespan_df$species_nm <- as.factor(final_timespan_df$species_nm)
+final_timespan_df$time_span <- as.factor(final_timespan_df$time_span)
+final_timespan_df$Pose <- as.factor(final_timespan_df$Pose)
+final_timespan_df$SmaxN <- as.numeric(final_timespan_df$SmaxN)
+final_timespan_df$maxN <- as.numeric(final_timespan_df$maxN)
+
+# check distrib:
+ggplot2::ggplot(final_timespan_df, ggplot2::aes(SmaxN)) +
+       ggplot2::geom_bar(fill = "#1E90FF") +
+       ggplot2::theme_classic() +
+       ggplot2::theme(legend.position="none")
+# does not look like any known distribution
+
+
+# try scaling data:
+final_timespan_scaled_df <- final_timespan_df
+final_timespan_scaled_df <- scale(final_timespan_scaled_df[, c(3, 4, 5)])
+final_timespan_scaled_df <- cbind(final_timespan_scaled_df, final_timespan_df[, c(1, 2, 6)])
+
+# plot new distribution
+ggplot2::ggplot(final_timespan_scaled_df, ggplot2::aes(SmaxN)) +
+  ggplot2::geom_bar(fill = "#1E90FF") +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position="none")
+# no
+
+# try loging data:
+final_timespan_log_df <- final_timespan_df
+final_timespan_log_df$maxN <- log(final_timespan_log_df$maxN + 1)
+final_timespan_log_df$SmaxN <- log(final_timespan_log_df$SmaxN + 1)
+final_timespan_log_df$SmaxN_timestep<- log(final_timespan_log_df$SmaxN_timestep + 1)
+
+
+# plot new distribution
+ggplot2::ggplot(final_timespan_log_df, ggplot2::aes(SmaxN)) +
+  ggplot2::geom_bar(fill = "#1E90FF") +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position="none")
+# still no
+
+# raw data looks like a quasi poisson with the end of the distrib:
+
+try <- stats::glm(SmaxN ~ time_span + (1+species_nm) + (1+Pose),
+                  family = "quasipoisson", data = final_timespan_df)
+
+car::Anova(try)
+summary(try)
+
+performance::check_overdispersion(try)
+performance::check_outliers(try)
+performance::check_model(try)
+
+
+## e - GLMM maxN: ####
+
+# levels:
+final_timespan_df$species_nm <- as.factor(final_timespan_df$species_nm)
+final_timespan_df$cam_nb <- as.factor(final_timespan_df$cam_nb)
+final_timespan_df$Pose <- as.factor(final_timespan_df$Pose)
+final_timespan_df$SmaxN <- as.numeric(final_timespan_df$SmaxN)
+final_timespan_df$maxN <- as.numeric(final_timespan_df$maxN)
+
+# check distrib:
+ggplot2::ggplot(final_timespan_df, ggplot2::aes(SmaxN)) +
+  ggplot2::geom_bar(fill = "#1E90FF") +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position="none")
+# does not look like any known distribution
+
+
+# raw data looks like a quasi poisson with the end of the distrib:
+
+try <- stats::glm(maxN ~ time_span + (1+species_nm) + (1+Pose),
+                  family = "quasipoisson", data = final_timespan_df)
+
+car::Anova(try)
+summary(try)
+
+performance::check_overdispersion(try)
+performance::check_outliers(try)
+performance::check_model(try)
+
+
+
+
+## f - GLMM (SmaxN - maxN) ####
+
+# levels:
+final_timespan_df$species_nm <- as.factor(final_timespan_df$species_nm)
+final_timespan_df$cam_nb <- as.factor(final_timespan_df$cam_nb)
+final_timespan_df$Pose <- as.factor(final_timespan_df$Pose)
+final_timespan_df$SmaxN <- as.numeric(final_timespan_df$SmaxN)
+final_timespan_df$maxN <- as.numeric(final_timespan_df$maxN)
+
+
+# check distrib:
+ggplot2::ggplot(final_timespan_df, ggplot2::aes(SmaxN - maxN)) +
+  ggplot2::geom_bar(fill = "#1E90FF") +
+  ggplot2::theme_classic() +
+  ggplot2::theme(legend.position="none")
+# does not look like any known distribution
+
+
+# raw data looks like a quasi poisson with the end of the distrib:
+
+try <- stats::glm(SmaxN - maxN ~ time_span + (1+species_nm) + (1+Pose),
+                  family = "quasipoisson", data = final_timespan_df)
+
+car::Anova(try)
+summary(try)
+
+performance::check_overdispersion(try)
+performance::check_outliers(try)
+performance::check_model(try)
+
+
+
+
+

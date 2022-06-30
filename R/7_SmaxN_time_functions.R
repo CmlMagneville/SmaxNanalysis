@@ -107,13 +107,16 @@ create.abund.list.timespan <- function(spans_set,
 #'
 #' @param colors a vector containing the different colors for SmaxN and maxN
 #'
+#' @param compare a caracter string refering to the metric which is compared
+#' to SmaxN: either "maxN" or "SmaxN_timestep"
+#'
 #' @return a ggplot2 object showing the plots of SmaxN and maxN for each
 #' species and this plot is saved as pdf in the output folder
 #'
 #' @export
 #'
 
-timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size) {
+timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, compare) {
 
   # remove the "_" in the pose_nb and timespans columns:
   maxN_timespans$time_span <- gsub("_", "", as.character(maxN_timespans$time_span))
@@ -174,29 +177,27 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size) {
 
   # create a list of new labels for poses:
   pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
-  names(pose_labs) <- c("Pose_1", "Pose_2", "Pose_3")
-  names(sp_labs) <- c("Chaetodon_trifasciatus",
-                      "Ctenochaetus_striatus",
-                      "Gomphosus_caeruleus",
-                      "Parupeneus_macronemus",
-                      "Parapercis_hexophtalma",
-                      "Thalassoma_hardwicke")
-
-  # create a list of new labels for poses:
-  pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
   names(pose_labs) <- c("Pose1", "Pose2", "Pose3")
+
+  # add a column which is a combination af Pose and metric (to be able to plot acc curves):
+  long_maxN_timespans$metric_pose <- paste0(long_maxN_timespans$metric, sep = "_",
+                                            long_maxN_timespans$Pose)
 
 
   # plot:
-  plot_timespan <- ggplot2::ggplot(data = long_maxN_timespans) +
+  plot_timespan <- ggplot2::ggplot(data = long_maxN_timespans, group = metric_pose) +
 
     ggplot2::geom_point(ggplot2::aes(x = time_span, y = values, colour = metric,
-                                     fill = metric, alpha = metric, shape = metric,
+                                     fill = metric, alpha = metric, shape = Pose,
                                      size = metric)) +
 
-    ggplot2::geom_smooth(ggplot2::aes(x = time_span, y = values, colour = metric,
-                                      fill = metric),
-                         method = "loess", show.legend = FALSE) +
+    ggplot2::geom_line(ggplot2::aes(x = time_span, y = values,
+                                    linetype = metric_pose,
+                                    color = metric),
+                                    size = 0.8) +
+
+    ggplot2::scale_linetype_manual(values = c("dotdash", "dashed", "dotted",
+                                              "dotdash", "dashed", "dotted")) +
 
     ggplot2::scale_fill_manual(values = colors,
                                name = "Metric") +
@@ -208,7 +209,7 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size) {
                                 labels = NULL) +
 
     ggplot2::scale_shape_manual(values = shape,
-                                name = "Metric") +
+                                name = "Pose number") +
 
     ggplot2::scale_size_manual(values = size,
                                name = "Metric") +
@@ -223,7 +224,7 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size) {
                                                             colour = "grey80"),
                    panel.grid.major = ggplot2::element_line(colour = "grey80")) +
 
-    ggplot2::guides(alpha = "none", size = "none", colour = "none") +
+    ggplot2::guides(alpha = "none", size = "none", linetype = "none") +
 
     ggplot2::xlab("Recording time (s)") +
 

@@ -258,7 +258,7 @@ saveRDS(combcam_full_df, here::here("transformed_data", "final_combcam.rds"))
 
 
 ## Plot:
-colors <- c("gray78", "#66c2a5")
+colors <- c("gray50", "#0ABFD6")
 alpha <- c(1, 1)
 shape <- c(22, 21)
 size <- c(2, 1)

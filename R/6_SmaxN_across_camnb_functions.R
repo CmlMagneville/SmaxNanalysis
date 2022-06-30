@@ -421,15 +421,32 @@ clean.df.combcam.maxN <- function(all_sp_list, type) {
 
     data_sp <- maxN_combcam[which(maxN_combcam$species_nm == sp_nm), ]
 
+    if (type == "timespan") {
 
-    # Pose 1 (6 because 6 timespans):
-    data_sp[c(1:6), "Pose"] <- "Pose_1"
+      # Pose 1 (6 because 6 timespans):
+      data_sp[c(1:6), "Pose"] <- "Pose_1"
 
-    # Pose 2:
-    data_sp[c(7:12), "Pose"] <- "Pose_2"
+      # Pose 2:
+      data_sp[c(7:12), "Pose"] <- "Pose_2"
 
-    # Pose 3:
-    data_sp[c(13:nrow(data_sp)), "Pose"] <- "Pose_3"
+      # Pose 3:
+      data_sp[c(13:nrow(data_sp)), "Pose"] <- "Pose_3"
+
+    }
+
+    if (type == "combcam") {
+
+      # Pose 1 (129 because 9 cameras and 129 combinations):
+      data_sp[c(1:129), "Pose"] <- "Pose_1"
+
+      # Pose 2:
+      data_sp[c(130:258), "Pose"] <- "Pose_2"
+
+      # Pose 3:
+      data_sp[c(259:nrow(data_sp)), "Pose"] <- "Pose_3"
+
+    }
+
 
 
     # collide data_sp in maxN_combcam:

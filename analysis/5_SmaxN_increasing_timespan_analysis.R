@@ -248,15 +248,16 @@ timespan_full_df <- clean.df.combcam.maxN(all_sp_list = all_sp_list,
 saveRDS(timespan_full_df, here::here("transformed_data", "final_timespan.rds"))
 
 
-colors <- c("gray78", "#66c2a5")
+colors <- c("gray50", "#0ABFD6")
 alpha <- c(1, 1)
-shape <- c(22, 21)
-size <- c(2, 1)
+shape <- c(21, 22, 24)
+size <- c(3, 2)
 
 # plot and save in trasformed data forlder:
 plot_time <- timespans.plot(maxN_timespans = timespan_full_df,
                             colors = colors,
                             alpha = alpha,
-                            shape_pose = shape_pose,
-                            size = size)
+                            shape_pose = shape,
+                            size = size,
+                            compare = "maxN")
 
