@@ -261,3 +261,18 @@ plot_time <- timespans.plot(maxN_timespans = timespan_full_df,
                             size = size,
                             compare = "maxN")
 
+
+
+# 4 - Compute time to maximal SmaxN value and plot it ####
+
+
+final_timespan_df <- readRDS(timespan_full_df, here::here("transformed_data", "final_timespan.rds"))
+colors <- c("#66c2a5", "#fc8d62", "#8da0cb")
+
+time_to_max_SmaxN <- time.to.max(final_timespan_df,
+                                 plot = TRUE,
+                                 colors)
+
+time_to_max_df <- time_to_max_SmaxN[[1]]
+
+

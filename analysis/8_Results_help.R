@@ -982,6 +982,6 @@ performance::check_outliers(try)
 performance::check_model(try)
 
 
-
+# g - Compute the time it takes for each species to arrive at their max SmaxN value: ####
 
 
