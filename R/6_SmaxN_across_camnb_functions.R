@@ -605,3 +605,142 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
 
 
 }
+
+
+
+
+
+#' Create a dataframe with the minimal number of cameras it takes to achieve the
+#' maximal SmaxN value
+#'
+#' This function computes a dataframe with the minimal number of cameras it takes to achieve the
+#' maximal SmaxN value for each species and each pose and associated plot if asked
+#'
+#' @param final_timespan_df a dataframe from the \code{clean.df.combcam.maxN}
+#' function, type = combcam.
+#'
+#' @param plot a logical value indicating whether the associated plot should be
+#' computed.
+#'
+#' @param colors a vector containing the different colors for the poses (if
+#' not plot should be computed: NA)
+#'
+#' @return a dataframe with four columns (species, pose, nbcam_to_max, SmaxN) and
+#' if asked the associated plot
+#'
+#' @export
+#'
+
+
+nbcam.to.max <- function(final_combcam_df, plot, colors) {
+
+
+  # create big df which contains the data:
+  nbcam_to_max_df <- as.data.frame(matrix(ncol = 4, nrow = 1))
+  colnames(nbcam_to_max_df) <- c("species_nm", "Pose", "nbcam_to_max", "SmaxN")
+
+
+  for (j in (c("AcCten_dark", "Chaetodon_trifasciatus", "Gomphosus_caeruleus",
+               "Parupeneus_macronemus", "Parapercis_hexophtalma",
+               "Thalassoma_hardwicke"))) {
+
+    sp_data <- dplyr::filter(final_combcam_df, species_nm %in% c(j))
+
+    for (i in (c("Pose_1", "Pose_2", "Pose_3"))) {
+
+      maxP1 <- max(sp_data$SmaxN[sp_data$Pose == i])
+      timeP1 <- sp_data$cam_nb[sp_data$Pose == i & sp_data$SmaxN == maxP1]
+      timeP1 <- min(as.numeric(timeP1))
+      nbcam_to_max_df <- dplyr::add_row(nbcam_to_max_df,
+                                       species_nm = j,
+                                       Pose = i,
+                                       nbcam_to_max = timeP1,
+                                       SmaxN = maxP1)
+
+    }
+
+  }
+
+  nbcam_to_max_df <- nbcam_to_max_df[-1, ]
+
+
+  if (plot == TRUE) {
+
+    # factorise poses:
+    nbcam_to_max_df$Pose <- as.factor(nbcam_to_max_df$Pose)
+
+    # factorise species:
+    nbcam_to_max_df$species_nm <- as.factor(nbcam_to_max_df$species_nm)
+
+    # rename columns with AcCtendark to be Ctenochaetus striatus ...
+    # ... so Chaetodon is the first species and it helps for the graph:
+    ac_cten <- nbcam_to_max_df[which(nbcam_to_max_df$species_nm == "AcCten_dark"), ]
+    ac_cten$species_nm <- rep("Ctenochaetus_striatus", 3)
+    nbcam_to_max_df <- nbcam_to_max_df[which(! nbcam_to_max_df$species_nm == "AcCten_dark"), ]
+    nbcam_to_max_df <- rbind(nbcam_to_max_df, ac_cten)
+
+    nbcam_to_max_df$species_nm <- forcats::fct_relevel(nbcam_to_max_df$species_nm, c("Chaetodon_trifasciatus",
+                                                                                   "Ctenochaetus_striatus",
+                                                                                   "Gomphosus_caeruleus",
+                                                                                   "Parapercis_hexophtalma",
+                                                                                   "Parupeneus_macronemus",
+                                                                                   "Thalassoma_hardwicke"))
+
+
+    # plot for delta 1:
+    plot_max <- ggplot2::ggplot(data = nbcam_to_max_df,
+                                ggplot2::aes(x = species_nm, y = nbcam_to_max)) +
+
+      ggplot2::geom_bar(stat = "identity", position = ggplot2::position_dodge(),
+                        ggplot2::aes(fill = Pose, colour = Pose),
+                        width = 0.40) +
+
+      ggplot2::scale_fill_manual(values = colors,
+                                 name = "Pose number") +
+
+      ggplot2::scale_colour_manual(values = colors,
+                                   name = "Pose number") +
+
+      ggplot2::scale_alpha_manual(labels = NULL) +
+
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+                     panel.background = ggplot2::element_rect(fill = "white",
+                                                              colour = "grey"),
+                     panel.grid.major = ggplot2::element_line(colour = "grey")) +
+
+      ggplot2::scale_y_continuous(limits = c(0, 10),
+                                  breaks = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)) +
+
+      ggplot2::scale_x_discrete(labels= c("Chaetodon trifasciatus",
+                                          "Ctenochaetus striatus",
+                                          "Gomphosus caeruleus",
+                                          "Parapercis hexophtalma",
+                                          "Parupeneus macronemus",
+                                          "Thalassoma hardwicke")) +
+
+      ggplot2::xlab("") +
+
+      ggplot2::ylab("Number of cameras needed to achieve the maximal SmaxN value")
+
+
+    # save in outputs:
+    # save the plot in the outputs folder:
+    ggplot2::ggsave(filename = here::here("outputs/3_B_nbcam_to_max.pdf"),
+                    plot = plot_max,
+                    device = "pdf",
+                    scale = 1,
+                    height = 5000,
+                    width = 5500,
+                    units = "px",
+                    dpi = 600)
+  }
+
+  if (plot == TRUE) {
+    return(list(nbcam_to_max_df, plot_max))
+  }
+
+  if (plot == FALSE) {
+    return(nbcam_to_max_df)
+  }
+
+}

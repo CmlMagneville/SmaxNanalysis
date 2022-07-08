@@ -269,3 +269,19 @@ combcam_plot <- combcam.plot(maxN_combcam = combcam_full_df,
                              shape = shape,
                              size = size,
                              compare = "maxN")
+
+
+# 4 - NUmber of cameras to maximal SmaxN value and plot it ####
+
+
+
+final_combcam_df <- readRDS(here::here("transformed_data", "final_combcam.rds"))
+colors <- c("#66c2a5", "#fc8d62", "#8da0cb")
+
+nbcam_to_max_SmaxN <- nbcam.to.max(final_combcam_df,
+                                 plot = TRUE,
+                                 colors)
+
+nbcam_to_max_df <- nbcam_to_max_SmaxN[[1]]
+
+saveRDS(time_to_max_df, here::here("transformed_data", "nb_to_max_df.rds"))

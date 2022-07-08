@@ -264,7 +264,7 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, comp
 #' @param plot a logical value indicating whether the associated plot should be
 #' computed.
 #'
-#' @param colors a vector containing the different colors for SmaxN and maxN (if
+#' @param colors a vector containing the different colors for the poses (if
 #' not plot should be computed: NA)
 #'
 #' @return a dataframe with four columns (species, pose, time_to_max, SmaxN) and
