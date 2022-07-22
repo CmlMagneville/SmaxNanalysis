@@ -538,7 +538,7 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
                       "Thalassoma_hardwicke")
 
   # create a list of new labels for poses:
-  pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
+  pose_labs <- c("Recording 1", "Recording 2", "Recording 3")
   names(pose_labs) <- c("Pose_1", "Pose_2", "Pose_3")
 
 
@@ -666,11 +666,16 @@ nbcam.to.max <- function(final_combcam_df, plot, colors) {
 
   if (plot == TRUE) {
 
-    # factorise poses:
-    nbcam_to_max_df$Pose <- as.factor(nbcam_to_max_df$Pose)
 
     # factorise species:
     nbcam_to_max_df$species_nm <- as.factor(nbcam_to_max_df$species_nm)
+
+    # rename Pose -> Recordings:
+    nbcam_to_max_df[which(nbcam_to_max_df$Pose == "Pose_1"), "Pose"] <- "Recording 1"
+    nbcam_to_max_df[which(nbcam_to_max_df$Pose == "Pose_2"), "Pose"] <- "Recording 2"
+    nbcam_to_max_df[which(nbcam_to_max_df$Pose == "Pose_3"), "Pose"] <- "Recording 3"
+
+
 
     # rename columns with AcCtendark to be Ctenochaetus striatus ...
     # ... so Chaetodon is the first species and it helps for the graph:
@@ -686,6 +691,8 @@ nbcam.to.max <- function(final_combcam_df, plot, colors) {
                                                                                    "Parupeneus_macronemus",
                                                                                    "Thalassoma_hardwicke"))
 
+    # factorise poses:
+    nbcam_to_max_df$Pose <- as.factor(nbcam_to_max_df$Pose)
 
     # plot for delta 1:
     plot_max <- ggplot2::ggplot(data = nbcam_to_max_df,
@@ -696,10 +703,10 @@ nbcam.to.max <- function(final_combcam_df, plot, colors) {
                         width = 0.40) +
 
       ggplot2::scale_fill_manual(values = colors,
-                                 name = "Pose number") +
+                                 name = "Recording number") +
 
       ggplot2::scale_colour_manual(values = colors,
-                                   name = "Pose number") +
+                                   name = "Recording number") +
 
       ggplot2::scale_alpha_manual(labels = NULL) +
 

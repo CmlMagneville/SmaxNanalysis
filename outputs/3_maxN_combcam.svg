@@ -312,7 +312,7 @@
      id="namedview4"
      showgrid="false"
      inkscape:zoom="0.295"
-     inkscape:cx="640"
+     inkscape:cx="617.9661"
      inkscape:cy="400"
      inkscape:window-x="1911"
      inkscape:window-y="-9"
@@ -21171,13 +21171,13 @@
            style="fill:#d9d9d9;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="path10646"
            inkscape:connector-curvature="0" /><text
-           transform="matrix(1,0,0,-1,133.65,582.68)"
+           transform="matrix(1,0,0,-1,145.82,582.68)"
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;fill:#1a1a1a;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="text10650"><tspan
-             x="0 5.553 10.557 15.057 20.061001 22.563 27.566999 30.069 32.570999 37.575001 40.077 45.081001 50.084999 55.341 60.345001 62.847 67.850998"
+             x="0 6.4980001 11.502 16.002001 21.006001 24.003 29.007 31.004999 36.008999 41.013 43.514999"
              y="0"
              sodipodi:role="line"
-             id="tspan10648">Pose 1: 7:30−8:30</tspan></text>
+             id="tspan10648">Recording 1</tspan></text>
 </g></g><g
        id="g10652"><g
          id="g10654"
@@ -21196,13 +21196,13 @@
            style="fill:#d9d9d9;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="path10686"
            inkscape:connector-curvature="0" /><text
-           transform="matrix(1,0,0,-1,407.34,582.68)"
+           transform="matrix(1,0,0,-1,424.51,582.68)"
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;fill:#1a1a1a;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="text10690"><tspan
-             x="0 5.553 10.557 15.057 20.061001 22.563 27.566999 30.069 32.570999 37.575001 42.578999 45.081001 50.084999 55.089001 60.345001 65.348999 70.352997 72.855003 77.859001"
+             x="0 6.4980001 11.502 16.002001 21.006001 24.003 29.007 31.004999 36.008999 41.013 43.514999"
              y="0"
              sodipodi:role="line"
-             id="tspan10688">Pose 2: 11:30−12:30</tspan></text>
+             id="tspan10688">Recording 2</tspan></text>
 </g></g><g
        id="g10692"><g
          id="g10694"
@@ -21221,13 +21221,13 @@
            style="fill:#d9d9d9;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="path10726"
            inkscape:connector-curvature="0" /><text
-           transform="matrix(1,0,0,-1,687.28,582.68)"
+           transform="matrix(1,0,0,-1,703.2,582.68)"
            style="font-variant:normal;font-weight:normal;font-size:9px;font-family:Helvetica;-inkscape-font-specification:Helvetica;writing-mode:lr-tb;fill:#1a1a1a;fill-opacity:1;fill-rule:nonzero;stroke:none"
            id="text10730"><tspan
-             x="0 5.553 10.557 15.057 20.061001 25.065001 27.566999 30.069 35.073002 40.077 42.578999 47.583 52.587002 57.842999 62.847 67.850998 70.352997 75.357002"
+             x="0 6.4980001 11.502 16.002001 21.006001 24.003 29.007 31.004999 36.008999 41.013 43.514999"
              y="0"
              sodipodi:role="line"
-             id="tspan10728">Pose3: 15:30−16:30</tspan></text>
+             id="tspan10728">Recording 3</tspan></text>
 </g></g><g
        id="g10732"><g
          id="g10734"

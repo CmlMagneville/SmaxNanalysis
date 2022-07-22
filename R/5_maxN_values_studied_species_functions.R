@@ -347,9 +347,6 @@ clean.df.maxN <- function(all_sp_list) {
 
 deltas.plot <- function(maxN_all, colors) {
 
-  # factorise poses:
-  maxN_all$pose <- as.factor(maxN_all$pose)
-
   # factorise species:
   maxN_all$species_nm <- as.factor(maxN_all$species_nm)
 
@@ -375,6 +372,14 @@ deltas.plot <- function(maxN_all, colors) {
                                                                       "Parupeneus_macronemus",
                                                                     "Thalassoma_hardwicke"))
 
+  # rename Pose -> Recording:
+  maxN_all[which(maxN_all$pose == "Pose_1"), "pose"] <- "Recording 1"
+  maxN_all[which(maxN_all$pose == "Pose_2"), "pose"] <- "Recording 2"
+  maxN_all[which(maxN_all$pose == "Pose_3"), "pose"] <- "Recording 3"
+
+  # factorise poses:
+  maxN_all$pose <- as.factor(maxN_all$pose)
+
 
   # plot for delta 1:
   plot_delta1 <- ggplot2::ggplot(data = maxN_all,
@@ -385,10 +390,10 @@ deltas.plot <- function(maxN_all, colors) {
                         width = 0.40) +
 
     ggplot2::scale_fill_manual(values = colors,
-                               name = "Pose number") +
+                               name = "Recording number") +
 
     ggplot2::scale_colour_manual(values = colors,
-                               name = "Pose number") +
+                               name = "Recording number") +
 
     ggplot2::scale_alpha_manual(labels = NULL) +
 
@@ -397,8 +402,9 @@ deltas.plot <- function(maxN_all, colors) {
                                                           colour = "grey"),
                  panel.grid.major = ggplot2::element_line(colour = "grey")) +
 
-    ggplot2::scale_y_continuous(limits = c(0, 5),
-                                breaks = c(0.5, 1, 1.5, 2, 2.5, 3,
+    ggplot2::scale_y_continuous(limits = c(1, 5),
+                                oob = scales::rescale_none,
+                                breaks = c(1, 1.5, 2, 2.5, 3,
                                            3.5, 4, 4.5, 5)) +
 
     ggplot2::scale_x_discrete(labels= c("Chaetodon trifasciatus",
@@ -410,7 +416,7 @@ deltas.plot <- function(maxN_all, colors) {
 
     ggplot2::xlab("") +
 
-    ggplot2::ylab("Delta 1 = SmaxN / maxN")
+    ggplot2::ylab("SmaxN / maxN")
 
     # fishualize::add_fishape(family = "Acanthuridae",
     #                         option = "Ctenochaetus_striatus",
@@ -451,10 +457,10 @@ deltas.plot <- function(maxN_all, colors) {
                       width = 0.40) +
 
     ggplot2::scale_fill_manual(values = colors,
-                               name = "Pose number") +
+                               name = "Recording number") +
 
     ggplot2::scale_colour_manual(values = colors,
-                                 name = "Pose number") +
+                                 name = "Recording number") +
 
     ggplot2::scale_alpha_manual(labels = NULL) +
 
@@ -463,20 +469,21 @@ deltas.plot <- function(maxN_all, colors) {
                                                             colour = "grey"),
                    panel.grid.major = ggplot2::element_line(colour = "grey")) +
 
-    ggplot2::scale_y_continuous(limits = c(0, 5),
-                                breaks = c(0.5, 1, 1.5, 2, 2.5, 3,
+    ggplot2::scale_y_continuous(limits = c(1, 5),
+                                oob = scales::rescale_none,
+                                breaks = c(1, 1.5, 2, 2.5, 3,
                                            3.5, 4, 4.5, 5)) +
 
     ggplot2::scale_x_discrete(labels= c("Chaetodon trifasciatus",
                                           "Ctenochaetus striatus",
                                           "Gomphosus caeruleus",
-                                          "Parapercis_hexophtalma",
+                                          "Parapercis hexophtalma",
                                           "Parupeneus macronemus",
-                                          "Thalassoma_hardwicke")) +
+                                          "Thalassoma hardwicke")) +
 
     ggplot2::xlab("") +
 
-    ggplot2::ylab("Delta 2 = SmaxN / SmaxN_timestep")
+    ggplot2::ylab("SmaxN / iSmaxN")
 
     # fishualize::add_fishape(family = "Acanthuridae",
     #                         option = "Ctenochaetus_striatus",

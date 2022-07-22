@@ -118,9 +118,10 @@ create.abund.list.timespan <- function(spans_set,
 
 timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, compare) {
 
-  # remove the "_" in the pose_nb and timespans columns:
-  maxN_timespans$time_span <- gsub("_", "", as.character(maxN_timespans$time_span))
-  maxN_timespans$Pose <- gsub("_", "", as.character(maxN_timespans$Pose))
+  # change Pose -> Recording:
+  maxN_timespans[which(maxN_timespans$Pose == "Pose_1"), "Pose"] <- "Recording 1"
+  maxN_timespans[which(maxN_timespans$Pose == "Pose_2"), "Pose"] <- "Recording 2"
+  maxN_timespans[which(maxN_timespans$Pose == "Pose_3"), "Pose"] <- "Recording 3"
 
   # pose_nb as factor:
   maxN_timespans$Pose <- as.factor(maxN_timespans$Pose)
@@ -175,9 +176,7 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, comp
                       "Parapercis_hexophtalma",
                       "Thalassoma_hardwicke")
 
-  # create a list of new labels for poses:
-  pose_labs <- c("Pose 1: 7:30-8:30", "Pose 2: 11:30-12:30", "Pose3: 15:30-16:30")
-  names(pose_labs) <- c("Pose1", "Pose2", "Pose3")
+
 
   # add a column which is a combination af Pose and metric (to be able to plot acc curves):
   long_maxN_timespans$metric_pose <- paste0(long_maxN_timespans$metric, sep = "_",
@@ -209,7 +208,7 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, comp
                                 labels = NULL) +
 
     ggplot2::scale_shape_manual(values = shape,
-                                name = "Pose number") +
+                                name = "Recording number") +
 
     ggplot2::scale_size_manual(values = size,
                                name = "Metric") +
@@ -307,6 +306,11 @@ time.to.max <- function(final_timespan_df, plot, colors) {
 
   if (plot == TRUE) {
 
+    # rename Pose -> Recordings:
+    time_to_max_df[which(time_to_max_df$Pose == "Pose_1"), "Pose"] <- "Recording 1"
+    time_to_max_df[which(time_to_max_df$Pose == "Pose_2"), "Pose"] <- "Recording 2"
+    time_to_max_df[which(time_to_max_df$Pose == "Pose_3"), "Pose"] <- "Recording 3"
+
     # factorise poses:
     time_to_max_df$Pose <- as.factor(time_to_max_df$Pose)
 
@@ -337,10 +341,10 @@ time.to.max <- function(final_timespan_df, plot, colors) {
                         width = 0.40) +
 
       ggplot2::scale_fill_manual(values = colors,
-                                 name = "Pose number") +
+                                 name = "Recording number") +
 
       ggplot2::scale_colour_manual(values = colors,
-                                   name = "Pose number") +
+                                   name = "Recording number") +
 
       ggplot2::scale_alpha_manual(labels = NULL) +
 

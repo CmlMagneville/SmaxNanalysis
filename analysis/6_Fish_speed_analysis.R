@@ -199,7 +199,7 @@ shape <- 21
 
 
 
-fish_speed <- speed.plot2(maxN_speed1 = maxN_all_df_speed1, maxN_speed2 = maxN_all_df_speed2,
+fish_speed <- speed.plot2(maxN_speed1, maxN_speed2,
            color_poses = color_poses,
            alpha = alpha,
            size = size,

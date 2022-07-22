@@ -89,10 +89,10 @@ speed.plot <- function(maxN_speed1, maxN_speed2, color_sp, alpha, size, shape_po
                                             "P. macronemus", "T. hardwicke")) +
 
     ggplot2::scale_shape_manual(values = shape_pose,
-                                 name = "Pose",
-                                 labels = c("Pose 1: 7:30-8:30",
-                                            "Pose 2: 11:30-12:30",
-                                            "Pose 3: 15:30-16:30")) +
+                                 name = "Recording number",
+                                 labels = c("Recording 1",
+                                            "Recording 2",
+                                            "Recording 3")) +
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey"),
@@ -210,10 +210,10 @@ speed.plot2 <- function(maxN_speed1, maxN_speed2, color_poses, alpha, size, shap
                          width = 0.4, stat = "identity", position = ggplot2::position_dodge()) +
 
     ggplot2::scale_fill_manual(values = color_poses,
-                               name = "Pose",
-                               labels = c("Pose 1: 7:30-8:30",
-                                          "Pose 2: 11:30-12:30",
-                                          "Pose 3: 15:30-16:30")) +
+                               name = "Recording number",
+                               labels = c("Recording 1",
+                                          "Recording 2",
+                                          "Recording 3")) +
 
     ggplot2::scale_colour_manual(values = color_poses,
                                  name = NULL) +
