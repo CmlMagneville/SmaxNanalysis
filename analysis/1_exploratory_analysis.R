@@ -1,7 +1,7 @@
 ###########################################################################
 ##
 ## Script to explore maxN data: load Capucine presence-absence dfs, compute
-## the different maxN values and plot them
+## the different maxN values and plot them (in Capucine's folder my code)
 ##
 ## 1_exploratory analysis.R
 ##
