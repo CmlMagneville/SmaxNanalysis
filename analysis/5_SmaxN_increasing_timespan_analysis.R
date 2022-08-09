@@ -249,9 +249,9 @@ saveRDS(timespan_full_df, here::here("transformed_data", "final_timespan.rds"))
 
 
 colors <- c("gray50", "#0ABFD6")
-alpha <- c(1, 1)
+alpha <- c(0.4, 0.4)
 shape <- c(21, 22, 24)
-size <- c(3, 2)
+size <- c(3.5, 3.5)
 
 # plot and save in trasformed data forlder:
 plot_time <- timespans.plot(maxN_timespans = timespan_full_df,

@@ -193,10 +193,11 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, comp
     ggplot2::geom_line(ggplot2::aes(x = time_span, y = values,
                                     linetype = metric_pose,
                                     color = metric),
-                                    size = 0.8) +
+                                    size = 1) +
 
     ggplot2::scale_linetype_manual(values = c("dotdash", "dashed", "dotted",
-                                              "dotdash", "dashed", "dotted")) +
+                                              "dotdash", "dashed", "dotted"),
+                                   name = "Recording number") +
 
     ggplot2::scale_fill_manual(values = colors,
                                name = "Metric") +
@@ -223,7 +224,7 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, comp
                                                             colour = "grey80"),
                    panel.grid.major = ggplot2::element_line(colour = "grey80")) +
 
-    ggplot2::guides(alpha = "none", size = "none", linetype = "none") +
+    ggplot2::guides(alpha = "none", size = "none") +
 
     ggplot2::xlab("Recording time (s)") +
 
