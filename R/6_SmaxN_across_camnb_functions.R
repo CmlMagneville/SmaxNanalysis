@@ -545,9 +545,9 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
   # plot:
   plot_combcam <- ggplot2::ggplot(data = long_maxN_combcam) +
 
-    ggplot2::geom_point(ggplot2::aes(x = cam_nb, y = values, colour = metric,
+    ggplot2::geom_jitter(ggplot2::aes(x = cam_nb, y = values, colour = metric,
                                      fill = metric, alpha = metric, shape = metric,
-                                     size = metric)) +
+                                     size = metric), width = 0.1) +
 
     ggplot2::geom_smooth(ggplot2::aes(x = cam_nb, y = values, colour = metric,
                                       fill = metric),
