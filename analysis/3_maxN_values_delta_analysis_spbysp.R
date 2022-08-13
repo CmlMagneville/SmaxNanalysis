@@ -47,10 +47,6 @@ colnames(maxN_all) <- c("species_nm", "pose_nb", "maxN", "SmaxN", "SmaxN_timeste
 
 ## Species 1: Ac_Cten_Dark: j'ai essaye pose apres pose:
 
-# Pose 1 voir si ça marche:
-abund_df <- paral_list[[1]]$abund_df
-dist_df <- paral_list[[1]]$dist_df
-speed <- paral_list[[1]]$speed
 
 #start <- Sys.time()
 # Ac_Cten_P1 <- SmaxN::SmaxN.computation(abund_df, speed, dist_df)
@@ -59,12 +55,6 @@ speed <- paral_list[[1]]$speed
 
 # ICRS 9 cameras prend 3min30
 
-
-# Pose 2:
-abund_df <- paral_list[[2]]$abund_df
-dist_df <- paral_list[[2]]$dist_df
-speed <- paral_list[[2]]$speed
-
 # start <- Sys.time()
 # Ac_Cten_P2 <- SmaxN::SmaxN.computation(abund_df, speed, dist_df)
 # stop <- Sys.time()
@@ -72,11 +62,6 @@ speed <- paral_list[[2]]$speed
 
 # ICRS avec 9 cameras: prend: 3h30
 
-
-# Pose 3:
-abund_df <- paral_list[[3]]$abund_df
-dist_df <- paral_list[[3]]$dist_df
-speed <- paral_list[[3]]$speed
 
 # start <- Sys.time()
 # Ac_Cten_P3 <- SmaxN::SmaxN.computation(abund_df, speed, dist_df)
@@ -100,7 +85,7 @@ SmaxN_AcCten <- automat.maxN.spbysp(species_nm = "Ac_Cten_dark",
                                 nb_cores = 3)
 stop <- Sys.time()
 time_taken_AcCten <- stop - start
-saveRDS(SmaxN_AcCten, here::here("transformed_data", "SmaxN_AcCten_raw.rds"))
+saveRDS(SmaxN_AcCten, here::here("transformed_data", "SmaxN_AcCten_raw_new.rds"))
 
 # ... h?
 
