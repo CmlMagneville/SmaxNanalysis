@@ -184,7 +184,7 @@ saveRDS(SmaxN_NB, here::here("transformed_data", "SmaxN_NB_raw.rds"))
 ## 3 - Arrange data from parallelisation process for plot ####
 
 # call data:
-SmaxN_AcCten <- readRDS(here::here("transformed_data", "SmaxN_AcCten_raw.rds"))
+SmaxN_AcCten <- readRDS(here::here("transformed_data", "SmaxN_AcCten_raw_new.rds"))
 SmaxN_CT <- readRDS(here::here("transformed_data", "SmaxN_CT_raw.rds"))
 SmaxN_GC <- readRDS(here::here("transformed_data", "SmaxN_GC_raw.rds"))
 SmaxN_PM <- readRDS(here::here("transformed_data", "SmaxN_PM_raw.rds"))

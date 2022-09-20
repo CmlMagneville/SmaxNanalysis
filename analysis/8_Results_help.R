@@ -18,7 +18,7 @@
 # 0 - Load data:
 
 # SmaxN values:
-SmaxN_all <- readRDS(here::here("transformed_data", "SmaxN_df_all_sp.rds"))
+maxN_all <- readRDS(here::here("transformed_data", "SmaxN_df_all_sp.rds"))
 
 # general abundance list:
 abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
@@ -32,29 +32,29 @@ abund_list <- readRDS(here::here("transformed_data", "all_abund_list.rds"))
 # compute mean/var/sd values of ratios for each sp SmaxN/maxN:
 maxN_all %>%
   dplyr::group_by(species_nm) %>%
-  dplyr::summarise(avg = mean(delta_SmaxN_maxN))
+  dplyr::summarise(avg = mean(SmaxN - maxN))
 
 maxN_all %>%
   dplyr::group_by(species_nm) %>%
-  dplyr::summarise(avg = var(delta_SmaxN_maxN))
+  dplyr::summarise(avg = var(SmaxN - maxN))
 
 maxN_all %>%
   dplyr::group_by(species_nm) %>%
-  dplyr::summarise(avg = sd(delta_SmaxN_maxN))
+  dplyr::summarise(avg = sd(SmaxN - maxN))
 
 
 # compute mean/var/sd values of ratios for each sp SmaxN/SmaxN_timestep:
 maxN_all %>%
   dplyr::group_by(species_nm) %>%
-  dplyr::summarise(avg = mean(delta_SmaxN_SmaxNtimestep))
+  dplyr::summarise(avg = mean(SmaxN - SmaxN_timestep))
 
 maxN_all %>%
   dplyr::group_by(species_nm) %>%
-  dplyr::summarise(avg = var(delta_SmaxN_SmaxNtimestep))
+  dplyr::summarise(avg = var(SmaxN - SmaxN_timestep))
 
 maxN_all %>%
   dplyr::group_by(species_nm) %>%
-  dplyr::summarise(avg = sd(delta_SmaxN_SmaxNtimestep))
+  dplyr::summarise(avg = sd(SmaxN - SmaxN_timestep))
 
 
 

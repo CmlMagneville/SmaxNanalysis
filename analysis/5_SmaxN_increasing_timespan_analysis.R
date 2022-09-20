@@ -248,7 +248,7 @@ timespan_full_df <- clean.df.combcam.maxN(all_sp_list = all_sp_list,
 saveRDS(timespan_full_df, here::here("transformed_data", "final_timespan.rds"))
 
 
-colors <- c("gray50", "#0ABFD6")
+colors <- c("gray40", "#0ABFD6")
 alpha <- c(0.4, 0.4)
 shape <- c(21, 22, 24)
 size <- c(3.5, 3.5)
