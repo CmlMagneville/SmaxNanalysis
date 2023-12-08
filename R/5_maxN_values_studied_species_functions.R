@@ -397,10 +397,15 @@ deltas.plot <- function(maxN_all, colors) {
 
     ggplot2::scale_alpha_manual(labels = NULL) +
 
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90,
+                                                       face = "italic"),
+                   axis.text = ggplot2::element_text(size = 10),
+                   axis.title = ggplot2::element_text(size = 10),
                  panel.background = ggplot2::element_rect(fill = "white",
                                                           colour = "grey"),
-                 panel.grid.major = ggplot2::element_line(colour = "grey")) +
+                 panel.grid.major = ggplot2::element_line(colour = "grey"),
+                 legend.title = ggplot2::element_text(size = 11),
+                 legend.text = ggplot2::element_text(size = 10)) +
 
     ggplot2::scale_y_continuous(limits = c(1, 5),
                                 oob = scales::rescale_none,
@@ -464,10 +469,15 @@ deltas.plot <- function(maxN_all, colors) {
 
     ggplot2::scale_alpha_manual(labels = NULL) +
 
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90,
+                                                       face = "italic"),
+                   axis.text = ggplot2::element_text(size = 10),
+                   axis.title = ggplot2::element_text(size = 10),
                    panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey"),
-                   panel.grid.major = ggplot2::element_line(colour = "grey")) +
+                   panel.grid.major = ggplot2::element_line(colour = "grey"),
+                   legend.title = ggplot2::element_text(size = 11),
+                   legend.text = ggplot2::element_text(size = 10)) +
 
     ggplot2::scale_y_continuous(limits = c(1, 5),
                                 oob = scales::rescale_none,
@@ -495,7 +505,8 @@ deltas.plot <- function(maxN_all, colors) {
   # gather the two plots using patchwork:
   patchwork_plot <- plot_delta1 + plot_delta2 +
     patchwork::plot_layout(byrow = TRUE, ncol = 2, nrow = 1,
-                           guides = "collect")
+                           guides = "collect") +
+    patchwork::plot_annotation(tag_levels = 'A')
 
 
   # save in outputs:
@@ -503,7 +514,7 @@ deltas.plot <- function(maxN_all, colors) {
   ggplot2::ggsave(filename = here::here("outputs/2_Deltas_maxN.pdf"),
                   plot = patchwork_plot,
                   device = "pdf",
-                  scale = 1,
+                  scale = 0.8,
                   height = 4000,
                   width = 7500,
                   units = "px",
