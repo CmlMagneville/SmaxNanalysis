@@ -45,7 +45,8 @@
 #'
 
 
-speed.plot <- function(maxN_speed1, maxN_speed2, color_sp, alpha, size, shape_poses) {
+speed.plot <- function(maxN_speed1, maxN_speed2, color_poses, shape_sp, alpha,
+                       size_sp) {
 
 
   ## bind the two dfs and only keep SmaxN values:
@@ -62,51 +63,67 @@ speed.plot <- function(maxN_speed1, maxN_speed2, color_sp, alpha, size, shape_po
   final_speed_df <- dplyr::left_join(maxN_speed1_final,
                                      maxN_speed2_final)
 
-  # factorise:
-  final_speed_df$species_nm <- as.factor(final_speed_df$species_nm)
-  final_speed_df$pose_nb <- as.factor(final_speed_df$pose_nb)
+  # Correct AcCten Dark and factorise species name:
+  ac_cten <- final_speed_df[which(final_speed_df$species_nm == "AcCten_dark"), ]
+  ac_cten$species_nm <- rep("Ctenochaetus_striatus", 3)
+  final_speed_df <- final_speed_df[which(! final_speed_df$species_nm == "AcCten_dark"), ]
+  final_speed_df <- rbind(final_speed_df, ac_cten)
+
+  final_speed_df$species_nm <- forcats::fct_relevel(final_speed_df$species_nm, c("Chaetodon_trifasciatus",
+                                                                                 "Ctenochaetus_striatus",
+                                                                                 "Gomphosus_caeruleus",
+                                                                                 "Parapercis_hexophtalma",
+                                                                                 "Parupeneus_macronemus",
+                                                                                 "Thalassoma_hardwicke"))
+
+  # factorise pose:
+  final_speed_df$pose <- as.factor(final_speed_df$pose)
+
+
 
 
   # plot:
   speed_plot <- ggplot2::ggplot(data = final_speed_df) +
 
-    ggplot2::geom_jitter(ggplot2::aes(x = SmaxN_speed2, y = SmaxN_speed1, colour = species_nm,
-                                      fill =  species_nm, shape = pose_nb), alpha = alpha,
+    ggplot2::geom_jitter(ggplot2::aes(x = SmaxN_speed2, y = SmaxN_speed1, colour = pose,
+                                      fill =  pose, shape = species_nm), alpha = alpha,
                                       size = size,
                                       width = 0.15,
                                       height = 0.15) +
 
-    ggplot2::geom_abline(color = "grey50") +
-
-    ggplot2::scale_fill_manual(values = color_sp,
+    ggplot2::scale_fill_manual(values = color_poses,
                                name = NULL,
                                labels = NULL) +
 
-    ggplot2::scale_colour_manual(values = color_sp,
-                                 name = "Species",
-                                 labels = c("C. auriga", "C. trifasciatus", "G. caeruleus",
-                                            "O. longirostris", "P. hexophtalma",
-                                            "P. macronemus", "T. hardwicke")) +
-
-    ggplot2::scale_shape_manual(values = shape_pose,
+    ggplot2::scale_colour_manual(values = color_poses,
                                  name = "Recording number",
-                                 labels = c("Recording 1",
-                                            "Recording 2",
+                                 labels = c("Recording 1", "Recording 2",
                                             "Recording 3")) +
 
+    ggplot2::scale_shape_manual(values = shape_sp,
+                                 name = "Species",
+                                 labels = c("Chaetodon trifasciatus",
+                                            "Ctenochaetus striatus",
+                                            "Gomphosus caeruleus",
+                                            "Parapercis hexophtalma",
+                                            "Parupeneus macronemus",
+                                            "Thalassoma hardwicke")) +
+
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
-                                                            colour = "grey"),
-                   panel.grid.major = ggplot2::element_line(colour = "grey")) +
+                                                            colour = "grey83"),
+                   panel.grid.major = ggplot2::element_line(colour = "grey83"),
+                   legend.title = ggplot2::element_text(size = 11),
+                   legend.text = ggplot2::element_text(size = 10)) +
 
-    ggplot2::xlab("SmaxN - 2m/s") +
+    ggplot2::xlab("SmaxN - 1m/s") +
 
-    ggplot2::ylab("SmaxN - 1m/s") +
+    ggplot2::ylab("SmaxN - 0.5m/s") +
 
-    ggplot2::scale_x_continuous(limits = c(1, 12),
-                                breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+    ggplot2::scale_x_continuous(limits = c(1, 17),
+                                breaks = c(1, 3, 5, 7, 9, 11, 13, 15, 17)) +
 
-    ggplot2::scale_y_continuous(limits = c(1, 12),
-                                breaks = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)) +
+    ggplot2::scale_y_continuous(limits = c(1, 17),
+                                breaks = c(1, 3, 5, 7, 9, 11, 13, 15, 17)) +
 
     ggplot2::guides(fill = "none", alpha = "none", size = "none")
 
@@ -116,6 +133,15 @@ speed.plot <- function(maxN_speed1, maxN_speed2, color_sp, alpha, size, shape_po
   ggplot2::ggsave(filename = here::here("outputs/6_Fish_speed_SmaxN.pdf"),
                   plot = speed_plot,
                   device = "pdf",
+                  scale = 1,
+                  height = 4000,
+                  width = 5000,
+                  units = "px",
+                  dpi = 600)
+
+  ggplot2::ggsave(filename = here::here("outputs/6_Fish_speed_SmaxN.png"),
+                  plot = speed_plot,
+                  device = "png",
                   scale = 1,
                   height = 4000,
                   width = 5000,

@@ -193,9 +193,9 @@ maxN_speed1 <- SmaxN_df_all_sp
 maxN_speed2 <- SmaxN_df_all_sp_speed2
 
 color_poses <- c("#66c2a5", "#fc8d62", "#8da0cb")
-alpha <- 0.8
+shape_sp <- c(4, 8, 15, 16, 17, 18)
+alpha <- 0.85
 size <- 2.5
-shape <- 21
 
 
 
