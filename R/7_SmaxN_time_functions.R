@@ -222,7 +222,14 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, comp
 
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey80"),
-                   panel.grid.major = ggplot2::element_line(colour = "grey80")) +
+                   panel.grid.major = ggplot2::element_line(colour = "grey80"),
+                   strip.text.x = ggplot2::element_text(size = 11,
+                                                        face = "italic"),
+                   legend.title = ggplot2::element_text(size = 12),
+                   legend.text = ggplot2::element_text(size = 11),
+                   axis.text = ggplot2::element_text(size = 11),
+                   axis.title = ggplot2::element_text(size = 11)
+                   ) +
 
     ggplot2::guides(alpha = "none", size = "none") +
 
@@ -239,7 +246,15 @@ timespans.plot <- function(maxN_timespans, colors, alpha, shape_pose, size, comp
   ggplot2::ggsave(filename = here::here("outputs/4_maxN_timespans_vers3.pdf"),
                   plot = plot_timespan,
                   device = "pdf",
-                  scale = 1,
+                  scale = 0.9,
+                  height = 6000,
+                  width = 9000,
+                  units = "px",
+                  dpi = 600)
+  ggplot2::ggsave(filename = here::here("outputs/4_maxN_timespans_vers3.png"),
+                  plot = plot_timespan,
+                  device = "png",
+                  scale = 0.9,
                   height = 6000,
                   width = 9000,
                   units = "px",
