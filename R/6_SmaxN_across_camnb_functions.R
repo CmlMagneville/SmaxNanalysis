@@ -579,7 +579,11 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
     ggplot2::theme(panel.background = ggplot2::element_rect(fill = "white",
                                                             colour = "grey80"),
                    panel.grid.major = ggplot2::element_line(colour = "grey80"),
-                   strip.text.y = ggplot2::element_text(size = 8)) +
+                   strip.text.y = ggplot2::element_text(size = 11,
+                                                        face = "italic"),
+                   strip.text.x = ggplot2::element_text(size = 11),
+                   legend.title = ggplot2::element_text(size = 12),
+                   legend.text = ggplot2::element_text(size = 11)) +
 
     ggplot2::guides(colour = "none", alpha = "none", size = "none") +
 
@@ -594,8 +598,17 @@ combcam.plot <- function(maxN_combcam, colors, alpha, shape, size, compare) {
   ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam.pdf"),
                   plot = plot_combcam,
                   device = "pdf",
-                  scale = 1,
-                  height = 5000,
+                  scale = 0.85,
+                  height = 6000,
+                  width = 8000,
+                  units = "px",
+                  dpi = 600)
+
+  ggplot2::ggsave(filename = here::here("outputs/3_maxN_combcam.png"),
+                  plot = plot_combcam,
+                  device = "png",
+                  scale = 0.85,
+                  height = 6000,
                   width = 8000,
                   units = "px",
                   dpi = 600)
