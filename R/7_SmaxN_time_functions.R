@@ -364,10 +364,15 @@ time.to.max <- function(final_timespan_df, plot, colors) {
 
       ggplot2::scale_alpha_manual(labels = NULL) +
 
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90,
+                                                         face = "italic"),
                      panel.background = ggplot2::element_rect(fill = "white",
                                                               colour = "grey"),
-                     panel.grid.major = ggplot2::element_line(colour = "grey")) +
+                     panel.grid.major = ggplot2::element_line(colour = "grey"),
+                     legend.title = ggplot2::element_text(size = 12),
+                     legend.text = ggplot2::element_text(size = 11),
+                     axis.text = ggplot2::element_text(size = 11),
+                     axis.title = ggplot2::element_text(size = 11)) +
 
       ggplot2::scale_y_continuous(limits = c(0, 4200),
                                   breaks = c(600, 1200, 1800, 2400, 3000, 3600, 4200)) +
@@ -389,7 +394,15 @@ time.to.max <- function(final_timespan_df, plot, colors) {
     ggplot2::ggsave(filename = here::here("outputs/4_B_time_to_max.pdf"),
                     plot = plot_max,
                     device = "pdf",
-                    scale = 1,
+                    scale = 0.9,
+                    height = 5000,
+                    width = 5500,
+                    units = "px",
+                    dpi = 600)
+    ggplot2::ggsave(filename = here::here("outputs/4_B_time_to_max.png"),
+                    plot = plot_max,
+                    device = "pdf",
+                    scale = 0.9,
                     height = 5000,
                     width = 5500,
                     units = "px",
