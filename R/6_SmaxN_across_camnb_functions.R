@@ -723,10 +723,15 @@ nbcam.to.max <- function(final_combcam_df, plot, colors) {
 
       ggplot2::scale_alpha_manual(labels = NULL) +
 
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90),
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90,
+                                                         face = "italic"),
+                     axis.text = ggplot2::element_text(size = 10),
+                     axis.title = ggplot2::element_text(size = 10),
                      panel.background = ggplot2::element_rect(fill = "white",
                                                               colour = "grey"),
-                     panel.grid.major = ggplot2::element_line(colour = "grey")) +
+                     panel.grid.major = ggplot2::element_line(colour = "grey"),
+                     legend.title = ggplot2::element_text(size = 12),
+                     legend.text = ggplot2::element_text(size = 11)) +
 
       ggplot2::scale_y_continuous(limits = c(0, 10),
                                   breaks = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)) +
@@ -748,7 +753,15 @@ nbcam.to.max <- function(final_combcam_df, plot, colors) {
     ggplot2::ggsave(filename = here::here("outputs/3_B_nbcam_to_max.pdf"),
                     plot = plot_max,
                     device = "pdf",
-                    scale = 1,
+                    scale = 0.85,
+                    height = 5000,
+                    width = 5500,
+                    units = "px",
+                    dpi = 600)
+    ggplot2::ggsave(filename = here::here("outputs/3_B_nbcam_to_max.png"),
+                    plot = plot_max,
+                    device = "png",
+                    scale = 0.85,
                     height = 5000,
                     width = 5500,
                     units = "px",
